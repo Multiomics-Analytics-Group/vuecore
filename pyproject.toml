@@ -1,0 +1,68 @@
+[project]
+authors = [{ name = "Alberto Santos Delgado", email = "albsad@dtu.dk" },
+           { name = "Henry Webel", email = "heweb@dtu.dk"}]
+name = "vuecore"
+version = "0.0.1"
+description = "A Python package for plotting related to multimodal molecular data. Works with acore."
+license = { text = "GNU General Public License v3" }
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    "numpy",
+    "pandas",
+    # "dsp-pandas", # has only pandas related dependencies
+    "scipy",
+    "plotly",
+    # "biopython",
+    "beautifulsoup4",
+    "requests",
+    "dash", # from dash import html
+    # "networkx",
+    "matplotlib",
+    # "cy-jupyterlab",
+    # "nltk",
+    # "webweb"
+    # "acore",
+]
+
+[project.optional-dependencies]
+docs = [
+  "sphinx",
+  "sphinx-book-theme",
+  "myst-nb",
+  "ipywidgets",
+  "sphinx-new-tab-link!=0.2.2",
+  "jupytext",
+]
+dev = [
+  "black",
+  "flake8",
+  "ruff",
+  "isort",
+  "pytest",
+  "pytest-cov",
+  "twine",
+  "wheel",
+  "jupytext",
+  "ipykernel",
+]
+
+[project.urls]
+Homepage = "https://github.com/Multiomics-Analytics-Group/vuecore"
+Issues = "https://github.com/Multiomics-Analytics-Group/vuecore/issues"
+Documentation = "https://analytics-core.readthedocs.io/"
+
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
