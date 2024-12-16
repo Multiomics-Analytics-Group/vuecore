@@ -31,7 +31,9 @@ from scipy.stats import zscore
 from webweb import Web
 from wordcloud import STOPWORDS, WordCloud
 
-from . import dendrogram, utils, wgcna
+from . import utils
+from .linkers import get_clustergrammer_link
+from .translate import hex2rgb, mpl_to_html_image
 
 # matplotlib.use("Agg")
 
@@ -2128,7 +2130,7 @@ def get_sankey_plot(
                 label=nodes,
                 color=[
                     (
-                        "rgba" + str(utils.hex2rgb(node_colors[c]))
+                        "rgba" + str(hex2rgb(node_colors[c]))
                         if node_colors[c].startswith("#")
                         else node_colors[c]
                     )
@@ -2140,7 +2142,7 @@ def get_sankey_plot(
                 target=[list(nodes).index(i) for i in data[args["target"]].tolist()],
                 value=data[args["weight"]].tolist(),
                 color=[
-                    "rgba" + str(utils.hex2rgb(c)) if c.startswith("#") else c
+                    "rgba" + str(hex2rgb(c)) if c.startswith("#") else c
                     for c in data[args["source_colors"]].tolist()
                 ],
                 label=hover_data,
@@ -2413,7 +2415,7 @@ def get_clustergrammer_plot(data, identifier, args):
                 )
         clustergrammer_net.load_df(data)
 
-        link = utils.get_clustergrammer_link(clustergrammer_net, filename=None)
+        link = get_clustergrammer_link(clustergrammer_net, filename=None)
 
         iframe = html.Iframe(src=link, width=1000, height=900)
 
@@ -2547,7 +2549,7 @@ def get_WGCNAPlots(data, identifier):
                 height=800,
             )
         )
-        dendro_tree = wgcnaAnalysis.get_dendrogram(
+        dendro_tree = wgcna_analysis.get_dendrogram(
             METDiss, METDiss.index, distfun=None, linkagefun="ward", div_clusters=False
         )
         if dendro_tree is not None:
@@ -2611,12 +2613,12 @@ def get_WGCNAPlots(data, identifier):
                     )
                 )
             ):
-                df = wgcnaAnalysis.get_percentiles_heatmap(
+                df = wgcna_analysis.get_percentiles_heatmap(
                     METcor, dendro_tree, bydendro=True, bycols=False
                 ).T
             else:
-                df = wgcnaAnalysis.df_sort_by_dendrogram(
-                    wgcnaAnalysis.df_sort_by_dendrogram(METcor, dendro_tree).T,
+                df = wgcna_analysis.df_sort_by_dendrogram(
+                    wgcna_analysis.df_sort_by_dendrogram(METcor, dendro_tree).T,
                     dendro_tree,
                 )
 
@@ -3271,7 +3273,7 @@ def get_km_plot(data, identifier, args):
             plot.set_xlabel(xlabel)
             plot.set_ylabel(ylabel)
             if environment == "app":
-                figure = utils.mpl_to_html_image(plot.figure, width=800)
+                figure = mpl_to_html_image(plot.figure, width=800)
                 result = html.Div(id=identifier, children=[figure])
             else:
                 result = plot.figure
@@ -3311,7 +3313,7 @@ def get_cumulative_hazard_plot(data, identifier, args):
             plot.set_xlabel(xlabel)
             plot.set_ylabel(ylabel)
             if environment == "app":
-                figure = utils.mpl_to_html_image(plot.figure, width=800)
+                figure = mpl_to_html_image(plot.figure, width=800)
                 result = html.Div(id=identifier, children=[figure])
             else:
                 result = plot.figure

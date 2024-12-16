@@ -31,11 +31,11 @@ dependencies = [
     "matplotlib",
     "kaleido",
     "pyvis",
-    # "wordcloud",
+    "wordcloud",
     "cyjupyter",
     "nltk",
-    # "webweb"
-    # "acore",
+    "webweb",
+    "acore",
     "dash-cytoscape",
 ]
 
