@@ -31,7 +31,7 @@ from scipy.stats import zscore
 from webweb import Web
 from wordcloud import STOPWORDS, WordCloud
 
-from . import utils
+from . import dendrogram, utils, wgcna
 from .linkers import get_clustergrammer_link
 from .translate import hex2rgb, mpl_to_html_image
 
@@ -2554,7 +2554,7 @@ def get_WGCNAPlots(data, identifier):
             METDiss, METDiss.index, distfun=None, linkagefun="ward", div_clusters=False
         )
         if dendro_tree is not None:
-            dendrogram = dendrogram.plot_dendrogram(
+            dendrogram_ = dendrogram.plot_dendrogram(
                 dendro_tree, hang=0.9, cutoff_line=False
             )
 
@@ -2566,8 +2566,8 @@ def get_WGCNAPlots(data, identifier):
                 xaxis=dict(
                     domain=[0, 1],
                     range=[
-                        np.min(dendrogram["layout"]["xaxis"]["tickvals"]) - 6,
-                        np.max(dendrogram["layout"]["xaxis"]["tickvals"]) + 4,
+                        np.min(dendrogram_["layout"]["xaxis"]["tickvals"]) - 6,
+                        np.max(dendrogram_["layout"]["xaxis"]["tickvals"]) + 4,
                     ],
                     showgrid=False,
                     zeroline=True,
@@ -2631,7 +2631,7 @@ def get_WGCNAPlots(data, identifier):
 
             figure = tools.make_subplots(rows=2, cols=1, print_grid=False)
 
-            for i in list(dendrogram["data"]):
+            for i in list(dendrogram_["data"]):
                 figure.append_trace(i, 1, 1)
             for j in list(heatmap["data"]):
                 figure.append_trace(j, 2, 1)
