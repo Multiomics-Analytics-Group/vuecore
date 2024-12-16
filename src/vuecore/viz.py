@@ -101,6 +101,7 @@ def get_markdown(text, args={}):
     """
     Converts a given text into a Dash Markdown component. It includes a syntax for things
     like bold text and italics, links, inline code snippets, lists, quotes, and more.
+
     For more information visit https://dash.plot.ly/dash-core-components/markdown.
 
     :param str text: markdown string (or array of strings) that adhreres to the CommonMark spec.
@@ -665,7 +666,7 @@ def get_scatterplot_matrix(data, identifier, args):
         for g in data[group].unique():
             gdata = data[data[group] == g].dropna()
             gfig = get_simple_scatterplot(gdata, identifier + "_" + str(g), args)
-            trace = gfig.figure["data"].pop()
+            trace = gfig["data"].pop()
             trace.name = g
             fig.append_trace(trace, r, c)
 
@@ -690,7 +691,7 @@ def get_scatterplot_matrix(data, identifier, args):
             dict(xref="paper", yref="paper", showarrow=False, text="")
         ]
 
-    return dcc.Graph(id=identifier, figure=fig)
+    return fig
 
 
 def get_simple_scatterplot(data, identifier, args):
@@ -781,7 +782,7 @@ def get_simple_scatterplot(data, identifier, args):
         template="plotly_white",
     )
 
-    return dcc.Graph(id=identifier, figure=figure)
+    return figure
 
 
 def get_scatterplot(data, identifier, args):
@@ -916,7 +917,7 @@ def get_scatterplot(data, identifier, args):
         template="plotly_white",
     )
 
-    return dcc.Graph(id=identifier, figure=figure)
+    return figure
 
 
 def get_density(x: np.ndarray, y: np.ndarray):
@@ -1986,7 +1987,7 @@ def get_pca_plot(data, identifier, args):
     figure = {}
     traces = []
     annotations = []
-    sct = get_scatterplot(pca_data, identifier, args).figure
+    sct = get_scatterplot(pca_data, identifier, args)
     traces.extend(sct["data"])
     figure["layout"] = sct["layout"]
     factor = 50
@@ -2035,7 +2036,7 @@ def get_pca_plot(data, identifier, args):
     figure["layout"].annotations = annotations
     figure["layout"]["template"] = "plotly_white"
 
-    return dcc.Graph(id=identifier, figure=figure)
+    return figure
 
 
 def get_sankey_plot(
