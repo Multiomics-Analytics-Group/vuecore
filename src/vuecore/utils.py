@@ -151,7 +151,7 @@ def networkx_to_neo4j_document(graph):
                 rel_type = edge["type"]
                 if "type" in graph.nodes()[r]:
                     edge["type"] = graph.nodes()[r]["type"]
-                if not (n, r, edge["type"]) in seen_rels:
+                if (n, r, edge["type"]) not in seen_rels:
                     rels[rel_type].append(edge)
                     seen_rels.update({(n, r, edge["type"]), (r, n, edge["type"])})
                     attr.update(rels)
@@ -268,9 +268,9 @@ def convert_html_to_dash(el, style=None):
             for k, v in [x.split(": ") for x in el.attrs["style"].split(";") if x != ""]
         }
 
-    if type(el) is str:
+    if isinstance(el, str):
         return convert_html_to_dash(parse_html(el))
-    if type(el) == bs.element.NavigableString:
+    if isinstance(el, bs.element.NavigableString):
         return str(el)
     else:
         name = el.name

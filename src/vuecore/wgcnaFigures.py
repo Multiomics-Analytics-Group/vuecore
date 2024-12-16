@@ -1,11 +1,10 @@
-import pandas as pd
 import numpy as np
-import scipy as scp
-from ckg.analytics_core.viz import color_list
+import pandas as pd
 import plotly.graph_objs as go
 import plotly.subplots as tools
-from ckg.analytics_core.viz import Dendrogram
+import scipy as scp
 from ckg.analytics_core.analytics import wgcnaAnalysis
+from ckg.analytics_core.viz import Dendrogram, color_list
 
 
 def get_module_color_annotation(
@@ -552,15 +551,12 @@ def plot_complex_dendrogram(
             )
 
         elif subplot == "heatmap":
-            if (
-                all(
-                    list(
-                        subplot_df.columns.map(
-                            lambda x: subplot_df[x].between(-1, 1, inclusive=True).all()
-                        )
+            if not all(
+                list(
+                    subplot_df.columns.map(
+                        lambda x: subplot_df[x].between(-1, 1, inclusive=True).all()
                     )
                 )
-                != True
             ):
                 df = wgcnaAnalysis.get_percentiles_heatmap(
                     subplot_df, dendro_tree, bydendro=True, bycols=False
@@ -575,7 +571,7 @@ def plot_complex_dendrogram(
                 df, colorscale=subplot_colorscale, color_missing=color_missingvals
             )
 
-            if row_annotation == True and col_annotation == True:
+            if row_annotation and col_annotation:
                 figure = tools.make_subplots(
                     rows=3,
                     cols=2,
@@ -649,7 +645,7 @@ def plot_complex_dendrogram(
                     }
                 )
 
-            elif row_annotation == False and col_annotation == False:
+            elif not row_annotation and not col_annotation:
                 figure = tools.make_subplots(rows=2, cols=1, print_grid=False)
 
                 for i in list(dendrogram["data"]):
@@ -671,7 +667,7 @@ def plot_complex_dendrogram(
                     }
                 )
 
-            elif row_annotation == True:
+            elif row_annotation:
                 figure = tools.make_subplots(
                     rows=2,
                     cols=2,
@@ -736,7 +732,7 @@ def plot_complex_dendrogram(
                     }
                 )
 
-            elif col_annotation == True:
+            elif col_annotation:
                 figure = tools.make_subplots(
                     rows=3, cols=1, specs=[[{}], [{}], [{}]], print_grid=False
                 )

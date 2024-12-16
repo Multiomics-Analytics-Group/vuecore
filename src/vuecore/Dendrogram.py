@@ -1,7 +1,7 @@
+from collections import OrderedDict
+
 import numpy as np
 import scipy as scp
-from collections import OrderedDict
-import plotly.graph_objs as go
 
 
 def plot_dendrogram(
@@ -58,7 +58,7 @@ def plot_dendrogram(
         color_threshold=color_threshold,
     )
 
-    if cutoff_line == True:
+    if cutoff_line:
         dendrogram.layout.update(
             {
                 "shapes": [
@@ -221,7 +221,7 @@ class Dendrogram(object):
 
         self.layout[axis_key].update(axis_defaults)
 
-        if hide_labels == True:
+        if hide_labels:
             self.layout[axis_key].update({"showticklabels": False})
         else:
             pass
@@ -280,8 +280,8 @@ class Dendrogram(object):
         icoord = scp.array(Z_dendrogram["icoord"])
         dcoord = scp.array(Z_dendrogram["dcoord"])
         ordered_labels = scp.array(Z_dendrogram["ivl"])
-        color_list = scp.array(Z_dendrogram["color_list"])
-        colors = self.get_color_dict(colorscale)
+        # color_list = scp.array(Z_dendrogram["color_list"])
+        # colors = self.get_color_dict(colorscale)
 
         trace_list = []
 
@@ -295,7 +295,7 @@ class Dendrogram(object):
                 ys = dcoord[i]
             else:
                 ys = icoord[i]
-            color_key = color_list[i]
+            # color_key = color_list[i] # not used
             hovertext_label = None
             if hovertext:
                 hovertext_label = hovertext[i]
