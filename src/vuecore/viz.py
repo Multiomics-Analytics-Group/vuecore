@@ -19,9 +19,7 @@ import plotly.graph_objs as go
 import plotly.io as pio
 import plotly.subplots as tools
 import plotly.tools as tls
-from ckg.analytics_core import utils
-from ckg.analytics_core.analytics import analytics, wgcnaAnalysis
-from ckg.analytics_core.viz import Dendrogram, wgcnaFigures
+from acore import network_analysis, wgcna_analysis
 from cyjupyter import Cytoscape
 from dash import dash_table, dcc, html
 from networkx.readwrite import json_graph
@@ -32,6 +30,8 @@ from scipy.spatial.distance import pdist, squareform
 from scipy.stats import zscore
 from webweb import Web
 from wordcloud import STOPWORDS, WordCloud
+
+from . import dendrogram, utils, wgcna
 
 # matplotlib.use("Agg")
 
@@ -1716,7 +1716,7 @@ def get_network(data, identifier, args):
                     max_node_size = max(degrees.values())
                     nx.set_node_attributes(graph, degrees, "radius")
 
-                clusters = analytics.get_network_communities(graph, args)
+                clusters = network_analysis.get_network_communities(graph, args)
                 col = utils.get_hex_colors(len(set(clusters.values())))
                 colors = {n: col[clusters[n]] for n in clusters}
                 nx.set_node_attributes(graph, colors, "color")
@@ -2510,7 +2510,7 @@ def get_WGCNAPlots(data, identifier):
         ) = data
         plots = []
         plots.append(
-            wgcnaFigures.plot_complex_dendrogram(
+            wgcna.plot_complex_dendrogram(
                 dissTOM,
                 moduleColors,
                 title="Co-expression: dendrogram and module colors",
@@ -2537,7 +2537,7 @@ def get_WGCNAPlots(data, identifier):
             )
         )
         plots.append(
-            wgcnaFigures.plot_labeled_heatmap(
+            wgcna.plot_labeled_heatmap(
                 moduleTraitCor,
                 textMatrix,
                 title="Module-Clinical variable relationships",
@@ -2551,7 +2551,7 @@ def get_WGCNAPlots(data, identifier):
             METDiss, METDiss.index, distfun=None, linkagefun="ward", div_clusters=False
         )
         if dendro_tree is not None:
-            dendrogram = Dendrogram.plot_dendrogram(
+            dendrogram = dendrogram.plot_dendrogram(
                 dendro_tree, hang=0.9, cutoff_line=False
             )
 
@@ -2620,7 +2620,7 @@ def get_WGCNAPlots(data, identifier):
                     dendro_tree,
                 )
 
-            heatmap = wgcnaFigures.get_heatmap(
+            heatmap = wgcna.get_heatmap(
                 df,
                 colorscale=[[0, "#67a9cf"], [0.5, "#f7f7f7"], [1, "#ef8a62"]],
                 color_missing=False,

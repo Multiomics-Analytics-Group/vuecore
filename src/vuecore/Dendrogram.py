@@ -17,7 +17,8 @@ def plot_dendrogram(
     color_threshold=None,
 ):
     """
-    Modified version of Plotly _dendrogram.py that returns a dendrogram Plotly figure object with cutoff line.
+    Modified version of Plotly _dendrogram.py that
+    returns a dendrogram Plotly figure object with cutoff line.
 
     :param Z_dendrogram: Matrix of observations as array of arrays
     :type Z_dendrogram: ndarray

@@ -3,8 +3,9 @@ import pandas as pd
 import plotly.graph_objs as go
 import plotly.subplots as tools
 import scipy as scp
-from ckg.analytics_core.analytics import wgcnaAnalysis
-from ckg.analytics_core.viz import Dendrogram, color_list
+from acore import wgcna_analysis
+
+from . import color_list, dendrogram
 
 
 def get_module_color_annotation(
@@ -155,7 +156,7 @@ def get_heatmap(df, colorscale=None, color_missing=True):
             )
         )
         if color_missing:
-            df_missing = wgcnaAnalysis.get_miss_values_df(df)
+            df_missing = wgcna_analysis.get_miss_values_df(df)
             figure["data"].append(
                 go.Heatmap(
                     z=df_missing.values.tolist(),
@@ -460,7 +461,7 @@ def plot_complex_dendrogram(
     :return: Plotly object figure.
     """
     figure = {}
-    dendro_tree = wgcnaAnalysis.get_dendrogram(
+    dendro_tree = wgcna_analysis.get_dendrogram(
         dendro_df,
         dendro_labels,
         distfun=distfun,
@@ -468,7 +469,7 @@ def plot_complex_dendrogram(
         div_clusters=False,
     )
     if dendro_tree is not None:
-        dendrogram = Dendrogram.plot_dendrogram(
+        dendrogram_ = dendrogram.plot_dendrogram(
             dendro_tree, hang=hang, cutoff_line=False
         )
 
@@ -480,8 +481,8 @@ def plot_complex_dendrogram(
             xaxis=dict(
                 domain=[0, 1],
                 range=[
-                    np.min(dendrogram["layout"]["xaxis"]["tickvals"]) - 6,
-                    np.max(dendrogram["layout"]["xaxis"]["tickvals"]) + 4,
+                    np.min(dendrogram_["layout"]["xaxis"]["tickvals"]) - 6,
+                    np.max(dendrogram_["layout"]["xaxis"]["tickvals"]) + 4,
                 ],
                 showgrid=False,
                 zeroline=True,
@@ -522,16 +523,16 @@ def plot_complex_dendrogram(
         if subplot == "module colors":
             figure = tools.make_subplots(rows=2, cols=1, print_grid=False)
 
-            for i in list(dendrogram["data"]):
+            for i in list(dendrogram_["data"]):
                 figure.append_trace(i, 1, 1)
 
-            shapes = plot_dendrogram_guidelines(dendro_tree, dendrogram)
+            shapes = plot_dendrogram_guidelines(dendro_tree, dendrogram_)
             moduleColors = get_module_color_annotation(
                 dendro_labels,
                 col_annotation=col_annotation,
                 bygene=True,
                 module_colors=subplot_df,
-                dendrogram=dendrogram,
+                dendrogram=dendrogram_,
             )
             figure.append_trace(moduleColors, 2, 1)
             figure["layout"] = layout
@@ -558,12 +559,12 @@ def plot_complex_dendrogram(
                     )
                 )
             ):
-                df = wgcnaAnalysis.get_percentiles_heatmap(
+                df = wgcna_analysis.get_percentiles_heatmap(
                     subplot_df, dendro_tree, bydendro=True, bycols=False
                 ).T
             else:
-                df = wgcnaAnalysis.df_sort_by_dendrogram(
-                    wgcnaAnalysis.df_sort_by_dendrogram(subplot_df, dendro_tree).T,
+                df = wgcna_analysis.df_sort_by_dendrogram(
+                    wgcna_analysis.df_sort_by_dendrogram(subplot_df, dendro_tree).T,
                     dendro_tree,
                 )
 
@@ -578,7 +579,7 @@ def plot_complex_dendrogram(
                     specs=[[{"colspan": 2}, None], [{}, {}], [{"colspan": 2}, None]],
                     print_grid=False,
                 )
-                for i in list(dendrogram["data"]):
+                for i in list(dendrogram_["data"]):
                     figure.append_trace(i, 1, 1)
                 for j in list(heatmap["data"]):
                     figure.append_trace(j, 2, 2)
@@ -648,7 +649,7 @@ def plot_complex_dendrogram(
             elif not row_annotation and not col_annotation:
                 figure = tools.make_subplots(rows=2, cols=1, print_grid=False)
 
-                for i in list(dendrogram["data"]):
+                for i in list(dendrogram_["data"]):
                     figure.append_trace(i, 1, 1)
                 for j in list(heatmap["data"]):
                     figure.append_trace(j, 2, 1)
@@ -659,9 +660,9 @@ def plot_complex_dendrogram(
                     {
                         "xaxis": dict(
                             ticktext=np.array(
-                                dendrogram["layout"]["xaxis"]["ticktext"]
+                                dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            tickvals=list(dendrogram["layout"]["xaxis"]["tickvals"]),
+                            tickvals=list(dendrogram_["layout"]["xaxis"]["tickvals"]),
                         ),
                         "yaxis2": dict(autorange="reversed"),
                     }
@@ -674,7 +675,7 @@ def plot_complex_dendrogram(
                     specs=[[{"colspan": 2}, None], [{}, {}]],
                     print_grid=False,
                 )
-                for i in list(dendrogram["data"]):
+                for i in list(dendrogram_["data"]):
                     figure.append_trace(i, 1, 1)
                 for j in list(heatmap["data"]):
                     figure.append_trace(j, 2, 2)
@@ -694,9 +695,9 @@ def plot_complex_dendrogram(
                         "xaxis": dict(
                             domain=[0.015, 1],
                             ticktext=np.array(
-                                dendrogram["layout"]["xaxis"]["ticktext"]
+                                dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            tickvals=list(dendrogram["layout"]["xaxis"]["tickvals"]),
+                            tickvals=list(dendrogram_["layout"]["xaxis"]["tickvals"]),
                             automargin=True,
                             anchor="y",
                         ),
@@ -737,7 +738,7 @@ def plot_complex_dendrogram(
                     rows=3, cols=1, specs=[[{}], [{}], [{}]], print_grid=False
                 )
 
-                for i in list(dendrogram["data"]):
+                for i in list(dendrogram_["data"]):
                     figure.append_trace(i, 1, 1)
                 for j in list(heatmap["data"]):
                     figure.append_trace(j, 3, 1)
@@ -756,9 +757,9 @@ def plot_complex_dendrogram(
                     {
                         "xaxis": dict(
                             ticktext=np.array(
-                                dendrogram["layout"]["xaxis"]["ticktext"]
+                                dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            tickvals=list(dendrogram["layout"]["xaxis"]["tickvals"]),
+                            tickvals=list(dendrogram_["layout"]["xaxis"]["tickvals"]),
                             automargin=True,
                             anchor="y",
                         ),

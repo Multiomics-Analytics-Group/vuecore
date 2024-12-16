@@ -27,12 +27,16 @@ dependencies = [
     "beautifulsoup4",
     "requests",
     "dash", # from dash import html
-    # "networkx",
+    "networkx",
     "matplotlib",
-    # "cy-jupyterlab",
-    # "nltk",
+    "kaleido",
+    "pyvis",
+    # "wordcloud",
+    "cyjupyter",
+    "nltk",
     # "webweb"
     # "acore",
+    "dash-cytoscape",
 ]
 
 [project.optional-dependencies]
