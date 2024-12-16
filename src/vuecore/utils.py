@@ -1,17 +1,19 @@
-import random
-from Bio import Entrez, Medline
-from collections import defaultdict
-import pandas as pd
-import io
 import base64
-import bs4 as bs
-import dash_html_components as html
-import requests
-import networkx as nx
-from networkx.readwrite import json_graph
+import io
+import random
+from collections import defaultdict
 from urllib import error
 
-Entrez.email = 'alberto.santos@cpr.ku.dk' # TODO: This should probably be changed to the email of the person installing ckg?
+import bs4 as bs
+import dash_html_components as html
+import networkx as nx
+import pandas as pd
+import requests
+from Bio import Entrez, Medline
+from networkx.readwrite import json_graph
+
+# TODO: This should probably be changed to the email of the person installing ckg?
+Entrez.email = "alberto.santos@cpr.ku.dk"
 
 
 def check_columns(df, cols):
@@ -53,8 +55,19 @@ def generate_html(network):
     template = network.template
 
     nodes, edges, height, width, options = network.get_network_data()
-    network.html = template.render(height=height, width=width, nodes=nodes, edges=edges, options=options, use_DOT=network.use_DOT, dot_lang=network.dot_lang,
-                                   widget=network.widget, bgcolor=network.bgcolor, conf=network.conf, tooltip_link=use_link_template)
+    network.html = template.render(
+        height=height,
+        width=width,
+        nodes=nodes,
+        edges=edges,
+        options=options,
+        use_DOT=network.use_DOT,
+        dot_lang=network.dot_lang,
+        widget=network.widget,
+        bgcolor=network.bgcolor,
+        conf=network.conf,
+        tooltip_link=use_link_template,
+    )
 
 
 def append_to_list(mylist, myappend):
@@ -64,7 +77,7 @@ def append_to_list(mylist, myappend):
         mylist.append(myappend)
 
 
-def neo4j_path_to_networkx(paths, key='path'):
+def neo4j_path_to_networkx(paths, key="path"):
     nodes = set()
     rels = set()
     for path in paths:
@@ -72,10 +85,10 @@ def neo4j_path_to_networkx(paths, key='path'):
             relationships = path[key]
             if len(relationships) == 3:
                 node1, rel, node2 = relationships
-                if 'name' in node1:
-                    source = node1['name']
-                if 'name' in node2:
-                    target = node2['name']
+                if "name" in node1:
+                    source = node1["name"]
+                if "name" in node2:
+                    target = node2["name"]
 
                 nodes.update([source, target])
                 rels.add((source, target, rel))
@@ -90,20 +103,20 @@ def neo4j_path_to_networkx(paths, key='path'):
 def neo4j_schema_to_networkx(schema):
     nodes = set()
     rels = set()
-    if 'relationships' in schema[0]:
-        relationships = schema[0]['relationships']
+    if "relationships" in schema[0]:
+        relationships = schema[0]["relationships"]
         for node1, rel, node2 in relationships:
-            if 'name' in node1:
-                source = node1['name']
-            if 'name' in node2:
-                target = node2['name']
+            if "name" in node1:
+                source = node1["name"]
+            if "name" in node2:
+                target = node2["name"]
 
             nodes.update([source, target])
             rels.add((source, target, rel))
     G = nx.Graph()
     G.add_nodes_from(nodes)
     colors = dict(zip(nodes, get_hex_colors(len(nodes))))
-    nx.set_node_attributes(G, colors, 'color')
+    nx.set_node_attributes(G, colors, "color")
     for s, t, label in rels:
         G.add_edge(s, t, label=label)
 
@@ -112,8 +125,8 @@ def neo4j_schema_to_networkx(schema):
 
 def networkx_to_cytoscape(graph):
     cy_graph = json_graph.cytoscape_data(graph)
-    cy_nodes = cy_graph['elements']['nodes']
-    cy_edges = cy_graph['elements']['edges']
+    cy_nodes = cy_graph["elements"]["nodes"]
+    cy_edges = cy_graph["elements"]["edges"]
     cy_elements = cy_nodes
     cy_elements.extend(cy_edges)
     mouseover_node = dict(graph.nodes(data=True))
@@ -130,17 +143,17 @@ def networkx_to_neo4j_document(graph):
     seen_rels = set()
     for n, attr in graph.nodes(data=True):
         rels = defaultdict(list)
-        attr.update({'id': n})
+        attr.update({"id": n})
         for r in graph[n]:
             edge = graph[n][r]
-            edge.update({'id': r})
-            if 'type' in edge:
-                rel_type = edge['type']
-                if 'type' in graph.nodes()[r]:
-                    edge['type'] = graph.nodes()[r]['type']
-                if not (n, r, edge['type']) in seen_rels:
+            edge.update({"id": r})
+            if "type" in edge:
+                rel_type = edge["type"]
+                if "type" in graph.nodes()[r]:
+                    edge["type"] = graph.nodes()[r]["type"]
+                if not (n, r, edge["type"]) in seen_rels:
                     rels[rel_type].append(edge)
-                    seen_rels.update({(n, r, edge['type']), (r, n, edge['type'])})
+                    seen_rels.update({(n, r, edge["type"]), (r, n, edge["type"])})
                     attr.update(rels)
         graph_json.append(attr)
 
@@ -149,7 +162,7 @@ def networkx_to_neo4j_document(graph):
 
 def json_network_to_gml(graph_json, path):
     graph = json_network_to_networkx(graph_json)
-    with open(path, 'wb') as out:
+    with open(path, "wb") as out:
         nx.write_gml(graph, out)
 
 
@@ -159,7 +172,7 @@ def networkx_to_graphml(graph, path):
 
 def json_network_to_graphml(graph_json, path):
     graph = json_network_to_networkx(graph_json)
-    with open(path, 'wb') as out:
+    with open(path, "wb") as out:
         nx.write_graphml(graph, out)
 
 
@@ -174,18 +187,18 @@ def get_clustergrammer_link(net, filename=None):
         from StringIO import StringIO
     except ImportError:
         from io import StringIO
-    clustergrammer_url = 'http://amp.pharm.mssm.edu/clustergrammer/matrix_upload/'
+    clustergrammer_url = "http://amp.pharm.mssm.edu/clustergrammer/matrix_upload/"
     if filename is None:
         file_string = net.write_matrix_to_tsv()
         file_obj = StringIO(file_string)
-        if 'filename' not in net.dat or net.dat['filename'] is None:
-            fake_filename = 'Network.txt'
+        if "filename" not in net.dat or net.dat["filename"] is None:
+            fake_filename = "Network.txt"
         else:
-            fake_filename = net.dat['filename']
-        r = requests.post(clustergrammer_url, files={'file': (fake_filename, file_obj)})
+            fake_filename = net.dat["filename"]
+        r = requests.post(clustergrammer_url, files={"file": (fake_filename, file_obj)})
     else:
-        file_obj = open(filename, 'r')
-        r = requests.post(clustergrammer_url, files={'file': file_obj})
+        file_obj = open(filename, "r")
+        r = requests.post(clustergrammer_url, files={"file": file_obj})
     link = r.text
     return link
 
@@ -199,21 +212,61 @@ def generator_to_dict(genvar):
 
 
 def parse_html(html_snippet):
-    html_parsed = bs.BeautifulSoup(html_snippet, 'html.parser')
+    html_parsed = bs.BeautifulSoup(html_snippet, "html.parser")
 
     return html_parsed
 
 
 def convert_html_to_dash(el, style=None):
-    ALLOWED_CST = {'div', 'span', 'a', 'hr', 'br', 'p', 'b', 'i', 'u', 's', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'ul', 'li',
-                   'em', 'strong', 'cite', 'tt', 'pre', 'small', 'big', 'center', 'blockquote', 'address', 'font', 'img',
-                   'table', 'tr', 'td', 'caption', 'th', 'textarea', 'option'}
+    ALLOWED_CST = {
+        "div",
+        "span",
+        "a",
+        "hr",
+        "br",
+        "p",
+        "b",
+        "i",
+        "u",
+        "s",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "ol",
+        "ul",
+        "li",
+        "em",
+        "strong",
+        "cite",
+        "tt",
+        "pre",
+        "small",
+        "big",
+        "center",
+        "blockquote",
+        "address",
+        "font",
+        "img",
+        "table",
+        "tr",
+        "td",
+        "caption",
+        "th",
+        "textarea",
+        "option",
+    }
 
     def __extract_style(el):
         if not el.attrs.get("style"):
             return None
 
-        return {k.strip(): v.strip() for k, v in [x.split(": ") for x in el.attrs["style"].split(";") if x != '']}
+        return {
+            k.strip(): v.strip()
+            for k, v in [x.split(": ") for x in el.attrs["style"].split(";") if x != ""]
+        }
 
     if type(el) is str:
         return convert_html_to_dash(parse_html(el))
@@ -229,8 +282,8 @@ def convert_html_to_dash(el, style=None):
 
 
 def hex2rgb(color):
-    hex = color.lstrip('#')
-    rgb = tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
+    hex = color.lstrip("#")
+    rgb = tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
     rgba = rgb + (0.6,)
     return rgba
 
@@ -264,11 +317,21 @@ def get_hex_colors(n):
 
 
 def getMedlineAbstracts(idList):
-    fields = {"TI": "title", "AU": "authors", "JT": "journal", "DP": "date", "MH": "keywords", "AB": "abstract", "PMID": "PMID"}
+    fields = {
+        "TI": "title",
+        "AU": "authors",
+        "JT": "journal",
+        "DP": "date",
+        "MH": "keywords",
+        "AB": "abstract",
+        "PMID": "PMID",
+    }
     pubmedUrl = "https://www.ncbi.nlm.nih.gov/pubmed/"
     abstracts = pd.DataFrame()
     try:
-        handle = Entrez.efetch(db="pubmed", id=idList, rettype="medline", retmode="json")
+        handle = Entrez.efetch(
+            db="pubmed", id=idList, rettype="medline", retmode="json"
+        )
         records = Medline.parse(handle)
         results = []
         for record in records:
