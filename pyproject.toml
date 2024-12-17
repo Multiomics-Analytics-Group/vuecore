@@ -6,7 +6,7 @@ dynamic = ["version"]
 description = "A Python package for plotting related to multimodal molecular data. Works with acore."
 license = { text = "GNU General Public License v3" }
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.13"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
@@ -27,12 +27,16 @@ dependencies = [
     "beautifulsoup4",
     "requests",
     "dash", # from dash import html
-    # "networkx",
+    "networkx",
     "matplotlib",
-    # "cy-jupyterlab",
-    # "nltk",
-    # "webweb"
-    # "acore",
+    "kaleido",
+    "pyvis",
+    "wordcloud",
+    "cyjupyter",
+    "nltk",
+    "webweb",
+    "acore",
+    "dash-cytoscape",
 ]
 
 [project.optional-dependencies]
@@ -64,5 +68,7 @@ Documentation = "https://analytics-core.readthedocs.io/"
 
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]

@@ -1,15 +1,13 @@
-import base64
-import io
 import random
 from collections import defaultdict
 from urllib import error
 
 import bs4 as bs
-import dash_html_components as html
 import networkx as nx
 import pandas as pd
 import requests
 from Bio import Entrez, Medline
+from dash import html
 from networkx.readwrite import json_graph
 
 # TODO: This should probably be changed to the email of the person installing ckg?
@@ -21,15 +19,6 @@ def check_columns(df, cols):
         if col not in df:
             return False
     return True
-
-
-def mpl_to_html_image(plot, width=800):
-    buf = io.BytesIO()
-    plot.savefig(buf, format="png")
-    data = base64.b64encode(buf.getbuffer()).decode("utf8")
-    figure = html.Img(src="data:image/png;base64,{}".format(data), width="800")
-
-    return figure
 
 
 def generate_html(network):
@@ -151,7 +140,7 @@ def networkx_to_neo4j_document(graph):
                 rel_type = edge["type"]
                 if "type" in graph.nodes()[r]:
                     edge["type"] = graph.nodes()[r]["type"]
-                if not (n, r, edge["type"]) in seen_rels:
+                if (n, r, edge["type"]) not in seen_rels:
                     rels[rel_type].append(edge)
                     seen_rels.update({(n, r, edge["type"]), (r, n, edge["type"])})
                     attr.update(rels)
@@ -268,9 +257,9 @@ def convert_html_to_dash(el, style=None):
             for k, v in [x.split(": ") for x in el.attrs["style"].split(";") if x != ""]
         }
 
-    if type(el) is str:
+    if isinstance(el, str):
         return convert_html_to_dash(parse_html(el))
-    if type(el) == bs.element.NavigableString:
+    if isinstance(el, bs.element.NavigableString):
         return str(el)
     else:
         name = el.name
@@ -279,13 +268,6 @@ def convert_html_to_dash(el, style=None):
         if name.title().lower() not in ALLOWED_CST:
             return contents[0] if len(contents) == 1 else html.Div(contents)
         return getattr(html, name.title())(contents, style=style)
-
-
-def hex2rgb(color):
-    hex = color.lstrip("#")
-    rgb = tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
-    rgba = rgb + (0.6,)
-    return rgba
 
 
 def get_rgb_colors(n):
