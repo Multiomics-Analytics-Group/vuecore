@@ -99,8 +99,10 @@ intersphinx_mapping = {
 # https://github.com/executablebooks/MyST-NB/blob/master/docs/conf.py
 # html_title = ""
 html_theme = "sphinx_book_theme"
-# html_logo = "_static/logo-wide.svg"
-# html_favicon = "_static/logo-square.svg"
+# static path to be changed by its link after merging into the main branch:
+# https://raw.githubusercontent.com/Multiomics-Analytics-Group/vuecore/main/docs/images/vuecore_logo.svg
+html_logo = "images/vuecore_logo.svg"
+html_favicon = "images/vuecore_logo.svg"
 html_theme_options = {
     "github_url": "https://github.com/Multiomics-Analytics-Group/vuecore",
     "repository_url": "https://github.com/Multiomics-Analytics-Group/vuecore",
