@@ -19,6 +19,8 @@ import pandas as pd
 
 from .constants import PlotType, EngineType
 
+__all__ = ["PlotType", "EngineType"]
+
 plt.rcParams["figure.figsize"] = [4.0, 3.0]
 plt.rcParams["pdf.fonttype"] = 42
 plt.rcParams["ps.fonttype"] = 42

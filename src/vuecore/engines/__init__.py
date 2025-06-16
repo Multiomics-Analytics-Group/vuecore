@@ -1,6 +1,11 @@
 from typing import Callable
 from vuecore import PlotType, EngineType
 
+# Import the engine modules to trigger their registration
+from . import plotly  # noqa: F401, E402
+
+# from . import matplotlib # This is where you'd add a new engine
+
 # Registries to hold the functions from each backend
 PLOT_BUILDERS = {}
 PLOT_SAVERS = {}
@@ -106,9 +111,3 @@ def get_saver(engine: EngineType) -> Callable:
         return PLOT_SAVERS[engine]
     except KeyError:
         raise ValueError(f"No saver found for engine '{engine}'")
-
-
-# Import the engine modules to trigger their registration
-from . import plotly
-
-# from . import matplotlib # This is where you'd add a new engine
