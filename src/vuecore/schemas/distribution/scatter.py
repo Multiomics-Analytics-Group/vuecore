@@ -1,5 +1,5 @@
 from typing import Dict, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class ScatterConfig(BaseModel):
@@ -70,8 +70,30 @@ class ScatterConfig(BaseModel):
     colors: Optional[Dict[str, str]] = Field(
         None, description="Mapping of group names to specific colors."
     )
+    marker_opacity: float = Field(
+        0.8, ge=0, le=1, description="Opacity of the markers."
+    )
+    marker_line_width: float = Field(
+        0.5, ge=0, description="Width of the line surrounding each marker."
+    )
+    marker_line_color: str = Field(
+        "DarkSlateGrey", description="Color of the line surrounding each marker."
+    )
 
     # Special features
     trendline: Optional[str] = Field(
         None, description="Adds a trendline. E.g., 'ols' for Ordinary Least Squares."
     )
+    color_by_density: bool = Field(
+        False, description="If True, color points by density instead of group."
+    )
+
+    @model_validator(mode="after")
+    def check_exclusive_coloring(self) -> "ScatterConfig":
+        """Ensure that coloring by group and by density are mutually exclusive."""
+        if self.color_by_density and self.group:
+            raise ValueError(
+                "Cannot set 'group' when 'color_by_density' is True. "
+                "Coloring is mutually exclusive."
+            )
+        return self

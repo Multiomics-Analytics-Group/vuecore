@@ -1,29 +1,25 @@
 import pandas as pd
 import plotly.graph_objects as go
 
-from ...schemas.distribution.scatter import ScatterConfig
+from vuecore.schemas.distribution.scatter import ScatterConfig
 
-# from ...utils.validation import validate_columns_exist
-from ...core.plotting.plotly.converters import create_plotly_scatter
-from ...core.plotting.plotly.utils import apply_plot_theme
-from ...core.io.saver import save_plot
+from vuecore.utils.validation import validate_columns_exist
+from vuecore.engines import get_builder, get_saver
 
 
 def create_scatter_plot(
-    data: pd.DataFrame, save_path: str = None, **kwargs
+    data: pd.DataFrame, engine: str = "plotly", file_path: str = None, **kwargs
 ) -> go.Figure:
     """
-    Creates, styles, and optionally saves a high-level scatter plot.
-
-    This is the main user-facing function that orchestrates the entire plotting
-    workflow: configuration validation, data checks, plot creation via the
-    engine-specific converter, and styling.
+    Creates, styles, and optionally saves a scatter plot using the specified engine.
 
     Parameters
     ----------
     data : pd.DataFrame
         The DataFrame containing the data to be plotted.
-    save_path : str, optional
+    engine : str, optional
+        The plotting engine to use (e.g., 'plotly'). Defaults to 'plotly'.
+    file_path : str, optional
         If provided, the path where the final plot will be saved. The file format
         is automatically inferred from the file extension (e.g., '.html', '.png').
         By default None.
@@ -67,7 +63,7 @@ def create_scatter_plot(
     ...     x_title="Log2 Fold Change",
     ...     y_title="-Log10(P-value)",
     ...     colors={'Up': '#d62728', 'Down': '#1f77b4', 'None': '#7f7f7f'},
-    ...     save_path="my_scatter_plot.html"
+    ...     file_path="my_scatter_plot.html"
     ... )
     >>>
     >>> # The returned `fig` object can be displayed in a notebook or further modified
@@ -77,28 +73,29 @@ def create_scatter_plot(
     config = ScatterConfig(**kwargs)
 
     # 2. Perform data-specific validation
-    # required_cols = [
-    #     col
-    #     for col in [
-    #         config.x,
-    #         config.y,
-    #         config.group,
-    #         config.size,
-    #         config.symbol,
-    #         config.text,
-    #     ]
-    #     if col is not None
-    # ]
-    # validate_columns_exist(data, required_cols)
+    required_cols = [
+        col
+        for col in [
+            config.x,
+            config.y,
+            config.group,
+            config.size,
+            config.symbol,
+            config.text,
+        ]
+        if col is not None
+    ]
+    validate_columns_exist(data, required_cols)
 
-    # 3. Create the base figure (engine-specific)
-    fig = create_plotly_scatter(data, config)
+    # 2. Get the correct builder function from the registry
+    builder_func = get_builder(plot_type="scatter", engine=engine)
 
-    # 4. Apply the theme and styling
-    fig = apply_plot_theme(fig, config)
+    # 3. Build the figure object (the API doesn't know or care what type it is)
+    figure = builder_func(data, config)
 
-    # 5. Optionally save the plot
-    if save_path:
-        save_plot(fig, save_path)
+    # 4. Save the plot using the correct saver
+    if file_path:
+        saver_func = get_saver(engine=engine)
+        saver_func(figure, file_path)
 
-    return fig
+    return figure

@@ -1,8 +1,8 @@
 import plotly.graph_objects as go
-from ....schemas.distribution.scatter import ScatterConfig
+from vuecore.schemas.distribution.scatter import ScatterConfig
 
 
-def apply_plot_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
+def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
     """
     Applies a consistent layout and theme to a Plotly figure.
 
@@ -23,7 +23,10 @@ def apply_plot_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
         The styled Plotly figure object.
     """
     fig.update_traces(
-        marker=dict(opacity=0.8, line=dict(width=0.5, color="DarkSlateGrey")),
+        marker=dict(
+            opacity=config.marker_opacity,
+            line=dict(width=config.marker_line_width, color=config.marker_line_color),
+        ),
         selector=dict(mode="markers"),
     )
 

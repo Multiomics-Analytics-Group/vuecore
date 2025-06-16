@@ -36,7 +36,8 @@ dependencies = [
     "nltk",
     "webweb",
     "acore",
-    "dash-cytoscape"
+    "dash-cytoscape",
+    "pydantic",
 ]
 
 [project.optional-dependencies]
@@ -59,7 +60,6 @@ dev = [
   "wheel",
   "jupytext",
   "ipykernel",
-  "pydantic",
 ]
 
 [project.urls]

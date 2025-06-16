@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 from pathlib import Path
 
 
-def save_plot(fig: go.Figure, filepath: str) -> None:
+def save(fig: go.Figure, filepath: str) -> None:
     """
     Saves a Plotly figure to a file, inferring the format from the extension.
 
@@ -33,10 +33,10 @@ def save_plot(fig: go.Figure, filepath: str) -> None:
     >>> import plotly.express as px
     >>> fig = px.scatter(x=[1, 2, 3], y=[1, 2, 3])
     >>> # Save as an interactive HTML file
-    >>> save_plot(fig, 'scatter.html')
+    >>> save(fig, 'scatter.html')
     Plot saved to scatter.html
     >>> # Save as a static PNG image
-    >>> save_plot(fig, 'scatter.png')
+    >>> save(fig, 'scatter.png')
     Plot saved to scatter.png
     """
     path = Path(filepath)
