@@ -47,7 +47,7 @@ def build(data: pd.DataFrame, config: ScatterConfig) -> go.Figure:
 
     fig = px.scatter(data, **plot_args)
 
-    # Apply theme right after building
+    # Apply theme
     fig = apply_scatter_theme(fig, config)
 
     return fig

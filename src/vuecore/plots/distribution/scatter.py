@@ -5,10 +5,14 @@ from vuecore.schemas.distribution.scatter import ScatterConfig
 
 from vuecore.utils.validation import validate_columns_exist
 from vuecore.engines import get_builder, get_saver
+from vuecore import EngineType
 
 
 def create_scatter_plot(
-    data: pd.DataFrame, engine: str = "plotly", file_path: str = None, **kwargs
+    data: pd.DataFrame,
+    engine: EngineType = EngineType.PLOTLY,
+    file_path: str = None,
+    **kwargs,
 ) -> go.Figure:
     """
     Creates, styles, and optionally saves a scatter plot using the specified engine.
@@ -17,8 +21,8 @@ def create_scatter_plot(
     ----------
     data : pd.DataFrame
         The DataFrame containing the data to be plotted.
-    engine : str, optional
-        The plotting engine to use (e.g., 'plotly'). Defaults to 'plotly'.
+    engine : EngineType, optional
+        The plotting engine to use for rendering the plot. Defaults to `EngineType.PLOTLY`.
     file_path : str, optional
         If provided, the path where the final plot will be saved. The file format
         is automatically inferred from the file extension (e.g., '.html', '.png').

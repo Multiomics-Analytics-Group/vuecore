@@ -1,3 +1,4 @@
+from vuecore import PlotType
 from typing import Dict, List, Optional
 from pydantic import BaseModel, Field, model_validator
 
@@ -11,11 +12,13 @@ class ScatterConfig(BaseModel):
     user-provided configurations are type-safe and adhere to the expected structure.
 
     Attributes
-    ----------
+    ---------
     x : str
         Column name for the x-axis.
     y : str
         Column name for the y-axis.
+    type : Optional[PlotType]
+        The type of plot. Defaults to `SCATTER`.
     group : Optional[str]
         Column for grouping data, typically used for coloring markers.
     size : Optional[str]
@@ -45,6 +48,9 @@ class ScatterConfig(BaseModel):
     # Data mapping
     x: str = Field(..., description="Column name for the x-axis.")
     y: str = Field(..., description="Column name for the y-axis.")
+    type: Optional[PlotType] = Field(
+        PlotType.SCATTER, description="Type of plot, defaults to SCATTER."
+    )
     group: Optional[str] = Field(
         None, description="Column for grouping data, often used for color."
     )
