@@ -1,8 +1,4 @@
-<!---
-static path to be changed by its link after merging into the main branch: 
-https://raw.githubusercontent.com/Multiomics-Analytics-Group/vuecore/main/docs/images/vuecore_logo.svg
--->
-## ![VueCore Logo](./docs/images/vuecore_logo.svg)
+## ![VueCore Logo](https://raw.githubusercontent.com/Multiomics-Analytics-Group/vuecore/add-logo/docs/images/logo/vuecore_logo.svg)
 
 <p align="center">
    VueCore is a Python package for creating interactive and static visualizations of multi-omics data
