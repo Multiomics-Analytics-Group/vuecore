@@ -1,8 +1,10 @@
-# Visualization Core (vuecore) library
+## ![VueCore Logo](https://raw.githubusercontent.com/Multiomics-Analytics-Group/vuecore/HEAD/docs/images/logo/vuecore_logo.svg)
 
-Visualization library for omics data.
+<p align="center">
+   VueCore is a Python package for creating interactive and static visualizations of multi-omics data
+</p>
 
-See also acore and vuegen.
+VueCore is part of a broader ecosystem of tools for multi-omics analysis, working in conjunction with [ACore][acore] and [VueGen][vuegen] to enable end-to-end data processing, visualization, and reporting.
 
 ## Installation
 
@@ -22,3 +24,6 @@ editable mode:
 # cd vuecore
 pip install -e '.[dev]'
 ```
+
+[vuegen]: https://github.com/Multiomics-Analytics-Group/vuegen
+[acore]: https://github.com/Multiomics-Analytics-Group/acore

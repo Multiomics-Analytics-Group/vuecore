@@ -38,6 +38,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_new_tab_link",
     "myst_nb",
+    "sphinx_copybutton",
 ]
 
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
@@ -99,8 +100,8 @@ intersphinx_mapping = {
 # https://github.com/executablebooks/MyST-NB/blob/master/docs/conf.py
 # html_title = ""
 html_theme = "sphinx_book_theme"
-# html_logo = "_static/logo-wide.svg"
-# html_favicon = "_static/logo-square.svg"
+html_logo = "images/logo/vuecore_logo.svg"
+html_favicon = "images/logo/vuecore_logo_small.svg"
 html_theme_options = {
     "github_url": "https://github.com/Multiomics-Analytics-Group/vuecore",
     "repository_url": "https://github.com/Multiomics-Analytics-Group/vuecore",
