@@ -1,5 +1,5 @@
 import pandas as pd
-import plotly.graph_objects as go
+from typing import Any
 
 from vuecore.schemas.distribution.scatter import ScatterConfig
 
@@ -13,7 +13,7 @@ def create_scatter_plot(
     engine: EngineType = EngineType.PLOTLY,
     file_path: str = None,
     **kwargs,
-) -> go.Figure:
+) -> Any:
     """
     Creates, styles, and optionally saves a scatter plot using the specified engine.
 
@@ -34,8 +34,10 @@ def create_scatter_plot(
 
     Returns
     -------
-    go.Figure
-        The final, styled `plotly.graph_objects.Figure` object.
+    Any
+        The final plot object returned by the selected engine.
+        For Plotly, this will be a `plotly.graph_objects.Figure`.
+        For Matplotlib, a `matplotlib.figure.Figure`, etc.
 
     Raises
     ------

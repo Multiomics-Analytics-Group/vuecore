@@ -164,3 +164,4 @@ cython_debug/
 
 # Tests
 test_results/
+docs/api_examples/outputs/

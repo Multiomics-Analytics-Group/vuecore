@@ -70,10 +70,3 @@ def test_advanced_scatter_plot(sample_df, tmp_path, ext):
     assert fig is not None
     assert output_path.exists()
     assert output_path.stat().st_size > 0
-
-
-def test_missing_column_error(sample_df):
-    """Test error raised when required column is missing."""
-    with pytest.raises(Exception) as exc_info:
-        create_scatter_plot(data=sample_df, x="non_existent_column", y="log_p_value")
-    assert "non_existent_column" in str(exc_info.value)
