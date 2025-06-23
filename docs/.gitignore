@@ -3,3 +3,6 @@ reference
 # builds
 _build
 jupyter_execute
+
+# VS Code
+.DS_Store
