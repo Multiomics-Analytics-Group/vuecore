@@ -1,5 +1,4 @@
 import plotly.graph_objects as go
-import plotly.io as pio
 import kaleido
 from pathlib import Path
 
