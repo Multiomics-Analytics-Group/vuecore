@@ -67,7 +67,7 @@ def save(fig: go.Figure, filepath: str) -> None:
         else:
             raise ValueError(
                 f"Unsupported file format: '{suffix}'. "
-                "Supported formats: .png, .svg, .pdf, .html, .json"
+                "Supported formats: .png, .jpg, .jpeg, .webp, .svg, .pdf, .html, .json"
             )
     except Exception as e:
         raise RuntimeError(f"[VueCore] Failed to save plot: {filepath}") from e
