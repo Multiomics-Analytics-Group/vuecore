@@ -1,4 +1,4 @@
-from vuecore.engines import register_builder, register_saver
+from vuecore.engines.registry import register_builder, register_saver
 from vuecore import PlotType, EngineType
 
 from .scatter import build as build_scatter

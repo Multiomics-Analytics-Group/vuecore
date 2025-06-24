@@ -3,7 +3,6 @@ from typing import Any
 
 from vuecore.schemas.distribution.scatter import ScatterConfig
 
-from vuecore.utils.validation import validate_columns_exist
 from vuecore.engines import get_builder, get_saver
 from vuecore import EngineType
 
@@ -77,21 +76,6 @@ def create_scatter_plot(
     """
     # 1. Validate configuration using Pydantic
     config = ScatterConfig(**kwargs)
-
-    # 2. Perform data-specific validation
-    required_cols = [
-        col
-        for col in [
-            config.x,
-            config.y,
-            config.group,
-            config.size,
-            config.symbol,
-            config.text,
-        ]
-        if col is not None
-    ]
-    validate_columns_exist(data, required_cols)
 
     # 2. Get the correct builder function from the registry
     builder_func = get_builder(plot_type="scatter", engine=engine)

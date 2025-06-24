@@ -1,4 +1,6 @@
 import plotly.graph_objects as go
+import plotly.io as pio
+import kaleido
 from pathlib import Path
 
 
@@ -42,15 +44,33 @@ def save(fig: go.Figure, filepath: str) -> None:
     path = Path(filepath)
     suffix = path.suffix.lower()
 
-    if suffix in [".png", ".jpg", ".jpeg", ".webp", ".svg", ".pdf"]:
-        fig.write_image(filepath)
-    elif suffix == ".html":
-        fig.write_html(filepath, include_plotlyjs="cdn")
-    elif suffix == ".json":
-        fig.write_json(filepath)
-    else:
-        raise ValueError(
-            f"Unsupported file format: '{suffix}'. Supported formats: .png, .svg, .pdf, .html, .json"
-        )
+    try:
+        if suffix in [".png", ".jpg", ".jpeg", ".webp", ".svg", ".pdf"]:
+            try:
+                fig.write_image(filepath)
+            except RuntimeError as e:
+                if "Kaleido requires Google Chrome" in str(e):
+                    print(
+                        "[VueCore] Chrome not found. Attempting automatic install using `kaleido.get_chrome_sync()`..."
+                    )
+                    try:
+                        kaleido.get_chrome_sync()
+                        fig.write_image(filepath)  # Retry after installing Chrome
+                    except Exception as install_error:
+                        raise RuntimeError(
+                            "[VueCore] Failed to install Chrome automatically. "
+                            "Please install it manually or run `plotly_get_chrome`."
+                        ) from install_error
+                else:
+                    raise
+        elif suffix == ".html":
+            fig.write_html(filepath, include_plotlyjs="cdn")
+        else:
+            raise ValueError(
+                f"Unsupported file format: '{suffix}'. "
+                "Supported formats: .png, .svg, .pdf, .html, .json"
+            )
+    except Exception as e:
+        raise RuntimeError(f"[VueCore] Failed to save plot: {filepath}") from e
 
-    print(f"Plot saved to {filepath}")
+    print(f"[VueCore] Plot saved to {filepath}")
