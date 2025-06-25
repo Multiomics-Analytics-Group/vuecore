@@ -161,3 +161,8 @@ cython_debug/
 
 # VSCode
 *DS_Store
+
+# Tests
+test_results/
+docs/api_examples/outputs/
+docs/api_examples/iframe_figures/

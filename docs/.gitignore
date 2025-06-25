@@ -4,5 +4,5 @@ reference
 _build
 jupyter_execute
 
-# VS Code
-.DS_Store
+# VsCode
+*.DS_Store

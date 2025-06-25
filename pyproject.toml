@@ -37,6 +37,8 @@ dependencies = [
     "webweb",
     "acore",
     "dash-cytoscape",
+    "pydantic",
+    "nbformat>=4.2.0",
 ]
 
 [project.optional-dependencies]
