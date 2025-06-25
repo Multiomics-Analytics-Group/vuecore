@@ -8,8 +8,15 @@
 ```
 
 ```{toctree}
+:maxdepth: 1
+:caption: API Usage Examples
+
+api_examples/scatter_plot
+```
+
+```{toctree}
 :maxdepth: 2
-:caption: Modules
+:caption: API Reference
 :hidden:
 
 reference/vuecore
@@ -17,7 +24,7 @@ reference/vuecore
 
 ```{toctree}
 :maxdepth: 1
-:caption: MISC:
+:caption: Extra Materials
 :hidden:
 
 README.md
