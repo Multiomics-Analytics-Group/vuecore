@@ -37,15 +37,14 @@ Last Updated: 2025-06-25
 # 0.1. Installing libraries and creating global variables for platform and working directory
 # To run this notebook locally, you should create a virtual environment with the required libraries.
 # pip install vuecore
+import os
 
 # Create a directory for outputs
 output_dir = "./outputs"
 os.makedirs(output_dir, exist_ok=True)
 
 # %%
-# 0.2. Importing libraries
-import os
-import pandas as pd
+# 0.2. Importing librariesimport pandas as pd
 import plotly.io as pio
 from vuecore.plots.basic.scatter import create_scatter_plot
 
