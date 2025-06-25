@@ -43,21 +43,14 @@ import os
 import pandas as pd
 import plotly.io as pio
 from vuecore.plots.basic.scatter import create_scatter_plot
-import os
-
-# 0.3. Create a directory for outputs
-output_dir = "./outputs"
-os.makedirs(output_dir, exist_ok=True)
-
-# %%
-# 0.2. Importing libraries
-import pandas as pd
-import plotly.io as pio
-from vuecore.plots.basic.scatter import create_scatter_plot
 
 # Set the Plotly renderer based on the environment, default to notebook, but you can change it
 # to "browser" if you do not want to use jupyter widgets.
 pio.renderers.default = "notebook"
+
+# 0.3. Create a directory for outputs
+output_dir = "./outputs"
+os.makedirs(output_dir, exist_ok=True)
 
 # %%
 # 1. Basic Scatter Plot
