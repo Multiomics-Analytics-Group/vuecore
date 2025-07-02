@@ -1,6 +1,8 @@
 [project]
-authors = [{ name = "Alberto Santos Delgado", email = "albsad@dtu.dk" },
-           { name = "Henry Webel", email = "heweb@dtu.dk"}]
+authors = [
+  { name = "Alberto Santos Delgado", email = "albsad@dtu.dk" },
+  { name = "Henry Webel", email = "heweb@dtu.dk" },
+]
 name = "vuecore"
 dynamic = ["version"]
 description = "A Python package for plotting related to multimodal molecular data. Works with acore."
@@ -8,37 +10,37 @@ license = { text = "GNU General Public License v3" }
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Natural Language :: English",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
 ]
 
 dependencies = [
-    "numpy",
-    "pandas",
-    # "dsp-pandas", # has only pandas related dependencies
-    "scipy",
-    "plotly",
-    # "biopython",
-    "beautifulsoup4",
-    "requests",
-    "dash", # from dash import html
-    "networkx",
-    "matplotlib",
-    "kaleido",
-    "pyvis",
-    "wordcloud",
-    "cyjupyter",
-    "nltk",
-    "webweb",
-    "acore",
-    "dash-cytoscape",
-    "pydantic",
-    "nbformat>=4.2.0",
+  "numpy",
+  "pandas",
+  # "dsp-pandas", # has only pandas related dependencies
+  "scipy",
+  "plotly",
+  # "biopython",
+  "beautifulsoup4",
+  "requests",
+  "dash",            # from dash import html
+  "networkx",
+  "matplotlib",
+  "kaleido",
+  "pyvis",
+  "wordcloud",
+  "cyjupyter",
+  "nltk",
+  "webweb",
+  "acore",
+  "dash-cytoscape",
+  "pydantic",
+  "nbformat>=4.2.0",
 ]
 
 [project.optional-dependencies]
