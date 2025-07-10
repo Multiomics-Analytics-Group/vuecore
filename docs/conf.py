@@ -12,6 +12,7 @@
 #
 import os
 from importlib import metadata
+from pathlib import Path
 
 # -- Project information -----------------------------------------------------
 
@@ -133,7 +134,11 @@ html_theme_options = {
 # https://github.com/readthedocs/readthedocs.org/issues/1139
 
 if os.environ.get("READTHEDOCS") == "True":
-    from pathlib import Path
+    # Set the Plotly renderer to notebook for ReadTheDocs (visualize plotly figures
+    # in the documentation) - needed for plotly6
+    # Plotly normally decides itself fine which renderer to use, so keep it to RTD
+    # see https://plotly.com/python/renderers/#setting-the-default-renderer
+    os.environ["PLOTLY_RENDERER"] = "notebook"
 
     PROJECT_ROOT = Path(__file__).parent.parent
     PACKAGE_ROOT = PROJECT_ROOT / "src" / "vuecore"
