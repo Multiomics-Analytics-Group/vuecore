@@ -1,10 +1,10 @@
-import pandas as pd
 from typing import Any
 
-from vuecore.schemas.distribution.scatter import ScatterConfig
+import pandas as pd
 
-from vuecore.engines import get_builder, get_saver
 from vuecore import EngineType
+from vuecore.engines import get_builder, get_saver
+from vuecore.schemas.basic.scatter import ScatterConfig
 
 
 def create_scatter_plot(

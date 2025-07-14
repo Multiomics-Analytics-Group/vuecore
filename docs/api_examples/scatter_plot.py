@@ -1,59 +1,92 @@
-"""
-Title: Scatter Plot Examples using VueCore
-Description:
-    This script demonstrates how to generate scatter plots using VueCore — a Python package for creating
-    interactive and static visualizations of multi-omics data. It is part of an ecosystem including ACore
-    for data processing and VueGen for automated reporting.
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.2
+#   kernelspec:
+#     display_name: vuecore-dev
+#     language: python
+#     name: python3
+# ---
 
-    We showcase basic and advanced plot configurations, highlighting customization options such as grouping,
-    color mapping, annotations, and export to multiple formats.
+# %% [markdown]
+# # Scatter Plot
+#
+# ![VueCore logo][vuecore_logo]
+#
+# [![Open In Colab][colab_badge]][colab_link]
+#
+# [VueCore][vuecore_repo] is a Python package for creating interactive and static visualizations of multi-omics data.
+# It is part of a broader ecosystem of tools—including [ACore][acore_repo] for data processing and [VueGen][vuegen_repo] for automated reporting—that together enable end-to-end workflows for omics analysis.
+#
+# This notebook demonstrates how to generate scatter plots using plotting functions from VueCore. We showcase basic and
+# advanced plot configurations, highlighting key customization options such as grouping, color mapping, text annotations, and export
+# to multiple file formats.
+#
+# ## Notebook structure
+#
+# First, we will set up the work environment by installing the necessary packages and importing the required libraries. Next, we will create
+# basic and advanced scatter plots.
+#
+# 0. [Work environment setup](#0-work-environment-setup)
+# 1. [Basic scatter plot](#1-basic-scatter-plot)
+# 2. [Advanced scatter plot](#2-advanced-scatter-plot)
+#
+# ## Credits and Contributors
+# - This notebook was created by Sebastián Ayala-Ruano under the supervision of Henry Webel and Alberto Santos, head of the [Multiomics Network Analytics Group (MoNA)][Mona] at the [Novo Nordisk Foundation Center for Biosustainability (DTU Biosustain)][Biosustain].
+# - You can find more details about the project in this [GitHub repository][vuecore_repo].
+#
+# [colab_badge]: https://colab.research.google.com/assets/colab-badge.svg
+# [colab_link]: https://colab.research.google.com/github/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/scatter_plot.ipynb
+# [vuecore_logo]: https://raw.githubusercontent.com/Multiomics-Analytics-Group/vuecore/main/docs/images/logo/vuecore_logo.svg
+# [Mona]: https://multiomics-analytics-group.github.io/
+# [Biosustain]: https://www.biosustain.dtu.dk/
+# [vuecore_repo]: https://github.com/Multiomics-Analytics-Group/vuecore
+# [vuegen_repo]: https://github.com/Multiomics-Analytics-Group/vuegen
+# [acore_repo]: https://github.com/Multiomics-Analytics-Group/acore
 
-Script Structure:
-    0. Work environment setup
-    1. Basic scatter plot
-    2. Advanced scatter plot
+# %% [markdown]
+# ## 0. Work environment setup
 
-Authors:
-    Sebastián Ayala-Ruano
-Supervisors:
-    Henry Webel, Alberto Santos (Multiomics Network Analytics Group, DTU Biosustain)
+# %% [markdown]
+# ### 0.1. Installing libraries and creating global variables for platform and working directory
+#
+# To run this notebook locally, you should create a virtual environment with the required libraries. If you are running this notebook on Google Colab, everything should be set.
 
-Institution:
-    Multiomics Network Analytics Group (MoNA),
-    Novo Nordisk Foundation Center for Biosustainability (DTU Biosustain)
+# %% tags=["hide-output"]
+# VueCore library
+# %pip install vuecore
 
-Project Repository:
-    https://github.com/Multiomics-Analytics-Group/vuecore
-
-License:
-    MIT License
-
-Created: 2025-06-25
-Last Updated: 2025-06-25
-"""
-
-# %%
-# 0. Work environment setup
-# 0.1. Installing libraries and creating global variables for platform and working directory
-# To run this notebook locally, you should create a virtual environment with the required libraries.
-# pip install vuecore
-
-# 0.2. Importing libraries
+# %% tags=["hide-cell"]
 import os
-import pandas as pd
-import plotly.io as pio
-from vuecore.plots.basic.scatter import create_scatter_plot
 
-# Set the Plotly renderer based on the environment, default to notebook, but you can change it
-# to "browser" if you do not want to use jupyter widgets.
-pio.renderers.default = "notebook"
+IN_COLAB = "COLAB_GPU" in os.environ
 
-# 0.3. Create a directory for outputs
+# %% tags=["hide-cell"]
+# Create a directory for outputs
 output_dir = "./outputs"
 os.makedirs(output_dir, exist_ok=True)
 
+# %% [markdown]
+# ### 0.2. Importing libraries
+
 # %%
-# 1. Basic Scatter Plot
+# Imports
+import pandas as pd
+import plotly.io as pio
+
+from vuecore.plots.basic.scatter import create_scatter_plot
+
+# Set the Plotly renderer based on the environment
+pio.renderers.default = "notebook"
+
+# %% [markdown]
+# ## 1. Basic Scatter Plot
+
+# %%
 # Created sample data
 sample_df = pd.DataFrame(
     {
@@ -75,6 +108,9 @@ sample_df = pd.DataFrame(
     }
 )
 
+sample_df
+
+# %%
 # Define output path
 file_path_png = os.path.join(output_dir, "scatter_basic.png")
 
@@ -83,13 +119,16 @@ fig = create_scatter_plot(
     data=sample_df,
     x="gene_expression",
     y="log_p_value",
+    title="Basic Gene Expression Scatter Plot",
     file_path=file_path_png,
 )
 
 fig.show()
 
+# %% [markdown]
+# ## 2. Advanced Scatter Plot
+
 # %%
-# 2. Advanced Scatter Plot
 # Define output path
 file_path_adv_html = os.path.join(output_dir, "scatter_advanced.html")
 
@@ -101,7 +140,7 @@ fig_advanced = create_scatter_plot(
     group="regulation",
     size="significance_score",
     text="gene_name",
-    title="Advanced Gene Expression Plot",
+    title="Advanced Gene Expression Scatter Plot",
     x_title="Log2 Fold Change",
     y_title="-Log10(P-value)",
     colors={"Up": "#FF5733", "Down": "#3380FF", "None": "#33FF57"},
