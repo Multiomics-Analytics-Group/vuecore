@@ -1,8 +1,10 @@
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from vuecore.schemas.distribution.scatter import ScatterConfig
+
+from vuecore.schemas.basic.scatter import ScatterConfig
 from vuecore.utils.statistics import get_density
+
 from .theming import apply_scatter_theme
 
 

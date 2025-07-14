@@ -1,5 +1,6 @@
 import plotly.graph_objects as go
-from vuecore.schemas.distribution.scatter import ScatterConfig
+
+from vuecore.schemas.basic.scatter import ScatterConfig
 
 
 def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
