@@ -31,7 +31,7 @@ from scipy.stats import zscore
 from webweb import Web
 from wordcloud import STOPWORDS, WordCloud
 
-from . import dendrogram, utils, wgcna
+from . import dendrogram, utils_old, wgcna
 from .linkers import get_clustergrammer_link
 from .translate import hex2rgb, mpl_to_html_image
 
@@ -1440,7 +1440,7 @@ def get_notebook_network_pyvis(graph, args={}):
     notebook_net.barnes_hut(overlap=0.8)
     notebook_net.from_nx(graph)
     notebook_net.show_buttons(["nodes", "edges", "physics"])
-    utils.generate_html(notebook_net)
+    utils_old.generate_html(notebook_net)
 
     return notebook_net
 
@@ -1649,7 +1649,7 @@ def get_network(data, identifier, args):
         args["title"] = identifier
 
     if not data.empty:
-        if utils.check_columns(data, cols=[args["source"], args["target"]]):
+        if utils_old.check_columns(data, cols=[args["source"], args["target"]]):
             if "values" not in args:
                 args["values"] = "width"
                 data[args["values"]] = 1
@@ -1720,7 +1720,7 @@ def get_network(data, identifier, args):
                     nx.set_node_attributes(graph, degrees, "radius")
 
                 clusters = network_analysis.get_network_communities(graph, args)
-                col = utils.get_hex_colors(len(set(clusters.values())))
+                col = utils_old.get_hex_colors(len(set(clusters.values())))
                 colors = {n: col[clusters[n]] for n in clusters}
                 nx.set_node_attributes(graph, colors, "color")
                 nx.set_node_attributes(graph, clusters, "cluster")
@@ -1795,7 +1795,7 @@ def get_network(data, identifier, args):
                 args["stylesheet"] = stylesheet
                 args["layout"] = layout
 
-                cy_elements, mouseover_node = utils.networkx_to_cytoscape(vis_graph)
+                cy_elements, mouseover_node = utils_old.networkx_to_cytoscape(vis_graph)
 
                 app_net = get_cytoscape_network(cy_elements, identifier, args)
                 # args['mouseover_node'] = mouseover_node
