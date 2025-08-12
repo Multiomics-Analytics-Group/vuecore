@@ -34,8 +34,7 @@ def build(data: pd.DataFrame, config: LineConfig) -> go.Figure:
     # Get all parameters from the config model, including extras
     all_config_params = config.model_dump()
 
-    # Manually define the list of parameters handled by the theme script
-    # These will be removed from the initial plot_args
+    # Define parameters handled by the theme script
     theming_params = [
         "markers",
         "log_x",
@@ -44,6 +43,8 @@ def build(data: pd.DataFrame, config: LineConfig) -> go.Figure:
         "range_y",
         "line_shape",
         "title",
+        "x_title",
+        "y_title",
         "subtitle",
         "template",
         "width",
@@ -57,10 +58,10 @@ def build(data: pd.DataFrame, config: LineConfig) -> go.Figure:
         if k not in theming_params and v is not None
     }
 
-    # The fig object is created using only the arguments for px.line
+    # Create the base figure using only the arguments for px.line
     fig = px.line(data, **plot_args)
 
-    # The theming script applies layout and style parameters after creation
+    # Apply theme and additional styling
     fig = apply_line_theme(fig, config)
 
     return fig

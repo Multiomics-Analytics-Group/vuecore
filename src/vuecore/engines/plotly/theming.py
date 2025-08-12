@@ -72,8 +72,12 @@ def apply_line_theme(fig: go.Figure, config: LineConfig) -> go.Figure:
     )
 
     # Use the labels dictionary to set axis titles, falling back to defaults
-    x_title = (config.labels or {}).get(config.x, config.x.title())
-    y_title = (config.labels or {}).get(config.y, config.y.title())
+    x_title = config.x_title or (
+        config.labels.get(config.x) if config.labels else None or config.x.title()
+    )
+    y_title = config.y_title or (
+        config.labels.get(config.y) if config.labels else None or config.y.title()
+    )
 
     # Apply layout updates
     fig.update_layout(

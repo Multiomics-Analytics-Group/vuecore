@@ -10,11 +10,6 @@ class LineConfig(BaseModel):
     for line plots, closely aligned with the `plotly.express.line` API
     (https://plotly.com/python-api-reference/generated/plotly.express.line.html).
 
-    The model ensures user-provided configurations are type-safe. The plotting
-    function intelligently handles parameters defined here, and also accepts
-    additional Plotly keyword arguments, forwarding them to the appropriate
-    `plotly.express.line` or `plotly.graph_objects.Figure` call.
-
     This model includes the most relevant parameters for data mapping, styling,
     and layout. It ensures that user-provided configurations are type-safe and
     adhere to the expected structure. The plotting function handles parameters
@@ -74,6 +69,10 @@ class LineConfig(BaseModel):
         Determines the line shape ('linear', 'spline', 'hv', etc.).
     title : str
         The main title of the plot.
+    x_title : Optional[str]
+        Custom title for the x-axis.
+    y_title : Optional[str]
+        Custom title for the y-axis.
     subtitle : str
         The subtitle of the plot.
     template : str
@@ -143,6 +142,8 @@ class LineConfig(BaseModel):
         "linear", description="Line shape (e.g., 'linear', 'spline')."
     )
     title: str = Field("Line Plot", description="The main title of the plot.")
+    x_title: Optional[str] = Field(None, description="Custom title for the x-axis.")
+    y_title: Optional[str] = Field(None, description="Custom title for the y-axis.")
     subtitle: Optional[str] = Field(None, description="The subtitle for the plot.")
     template: str = Field("plotly_white", description="Plotly template for styling.")
     width: int = Field(800, description="Width of the plot in pixels.")
