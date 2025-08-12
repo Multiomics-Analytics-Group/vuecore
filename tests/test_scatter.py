@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from vuecore.plots.distribution.scatter import create_scatter_plot
+from vuecore.plots.basic.scatter import create_scatter_plot
 
 
 @pytest.fixture
