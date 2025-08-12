@@ -1,105 +1,168 @@
-from vuecore import PlotType
 from typing import Dict, List, Optional
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 
 class ScatterConfig(BaseModel):
     """
     Pydantic model for validating and managing scatter plot configurations.
 
-    This model defines all the possible parameters that can be used to customize
-    a scatter plot, from data mapping to styling and layout. It ensures that
-    user-provided configurations are type-safe and adhere to the expected structure.
+    This model serves as a curated API for the most relevant parameters
+    for scatter plots, closely aligned with the `plotly.express.scatter` API
+    (https://plotly.com/python-api-reference/generated/plotly.express.scatter.html).
+
+    This model includes the most relevant parameters for data mapping, styling,
+    and layout. It ensures that user-provided configurations are type-safe and
+    adhere to the expected structure. The plotting function handles parameters
+    defined here, and also accepts additional Plotly keyword arguments,
+    forwarding them to the appropriate `plotly.express.scatter` or
+    `plotly.graph_objects.Figure` call.
 
     Attributes
     ---------
+    -----Data Mapping-----
     x : str
-        Column name for the x-axis.
+        Column name for x-axis values.
     y : str
-        Column name for the y-axis.
-    type : Optional[PlotType]
-        The type of plot. Defaults to `SCATTER`.
-    group : Optional[str]
-        Column for grouping data, typically used for coloring markers.
-    size : Optional[str]
-        Column to determine marker size, enabling a third dimension of data.
+        Column name for y-axis values.
+    color : Optional[str]
+        Column to assign color to markers.
     symbol : Optional[str]
-        Column to determine the shape of markers.
+        Column to assign marker symbols.
+    size : Optional[str]
+        Column to determine marker size.
+    hover_name : Optional[str]
+        Column for bold text in hover tooltip.
+    hover_data : List[str]
+        Additional columns for hover tooltip.
     text : Optional[str]
-        Column for adding text labels directly onto markers.
-    hover_cols : List[str]
-        Additional data columns to display in the hover tooltip.
-    title : str
-        The main title of the plot.
-    x_title : Optional[str]
-        Custom title for the x-axis. If None, defaults to the `x` column name.
-    y_title : Optional[str]
-        Custom title for the y-axis. If None, defaults to the `y` column name.
-    height : int
-        Height of the plot in pixels.
-    width : int
-        Width of the plot in pixels.
-    colors : Optional[Dict[str, str]]
-        A dictionary mapping group names from the `group` column to specific colors.
+        Column for text labels on markers.
+    facet_row : Optional[str]
+        Column for vertical facetting.
+    facet_col : Optional[str]
+        Column for horizontal facetting.
+    error_x : Optional[str]
+        Column for x-axis error bars.
+    error_y : Optional[str]
+        Column for y-axis error bars.
+    labels : Optional[Dict[str, str]]
+        Column name overrides for display.
+    color_discrete_map : Optional[Dict[str, str]]
+        Specific color mappings for color column values.
+    symbol_map : Optional[Dict[str, str]]
+        Specific symbol mappings for symbol column values.
+    -----Styling and Layout-----
+    opacity : float
+        Marker opacity (0-1).
+    size_max : int
+        Maximum marker size.
     trendline : Optional[str]
-        If specified, adds a trendline to the plot (e.g., 'ols', 'lowess').
+        Trendline type (ols/lowess/rolling/expanding/ewm).
+    trendline_options : Optional[Dict]
+        Advanced options for trendlines.
+    log_x : bool
+        Enable logarithmic x-axis.
+    log_y : bool
+        Enable logarithmic y-axis.
+    range_x : Optional[List[float]]
+        Manual x-axis range [min, max].
+    range_y : Optional[List[float]]
+        Manual y-axis range [min, max].
+    title : str
+        Main plot title.
+    subtitle : Optional[str]
+        Plot subtitle.
+    template : str
+        Plotly visual theme/template.
+    width : int
+        Plot width in pixels.
+    height : int
+        Plot height in pixels.
+    color_by_density : bool
+        Color points by density instead of category.
+    marker_line_width : float
+        Width of marker border lines.
+    marker_line_color : str
+        Color of marker border lines.
     """
 
+    # General Configuration
+    # Allow extra parameters to pass through to Plotly
+    model_config = ConfigDict(extra="allow")
+
     # Data mapping
-    x: str = Field(..., description="Column name for the x-axis.")
-    y: str = Field(..., description="Column name for the y-axis.")
-    type: Optional[PlotType] = Field(
-        PlotType.SCATTER, description="Type of plot, defaults to SCATTER."
+    x: str = Field(..., description="Column for x-axis values.")
+    y: str = Field(..., description="Column for y-axis values.")
+    color: Optional[str] = Field(
+        None, description="Column for color assignment (replaces 'group')."
     )
-    group: Optional[str] = Field(
-        None, description="Column for grouping data, often used for color."
+    symbol: Optional[str] = Field(
+        None, description="Column for marker symbol assignment."
     )
     size: Optional[str] = Field(None, description="Column to determine marker size.")
-    symbol: Optional[str] = Field(
-        None, description="Column to determine marker symbol."
+    hover_name: Optional[str] = Field(
+        None, description="Column for bold text in hover tooltip."
+    )
+    hover_data: List[str] = Field(
+        [], description="Additional columns for hover tooltip."
     )
     text: Optional[str] = Field(None, description="Column for text labels on markers.")
-    hover_cols: List[str] = Field(
-        [], description="Additional columns to show on hover."
+    facet_row: Optional[str] = Field(None, description="Column for vertical facetting.")
+    facet_col: Optional[str] = Field(
+        None, description="Column for horizontal facetting."
+    )
+    error_x: Optional[str] = Field(None, description="Column for x-axis error bars.")
+    error_y: Optional[str] = Field(None, description="Column for y-axis error bars.")
+    labels: Optional[Dict[str, str]] = Field(
+        None, description="Column name overrides for display purposes."
+    )
+    color_discrete_map: Optional[Dict[str, str]] = Field(
+        None, description="Specific color mappings for color column values."
+    )
+    symbol_map: Optional[Dict[str, str]] = Field(
+        None, description="Specific symbol mappings for symbol column values."
     )
 
     # Styling and Layout
-    title: str = Field("Scatter Plot", description="The main title of the plot.")
-    x_title: Optional[str] = Field(
-        None, description="Title for the x-axis. Defaults to x column name."
+    opacity: float = Field(0.8, ge=0, le=1, description="Overall opacity of markers.")
+    size_max: int = Field(20, description="Maximum size for markers.")
+    trendline: Optional[str] = Field(
+        None, description="Trendline type (ols/lowess/rolling/expanding/ewm)."
     )
-    y_title: Optional[str] = Field(
-        None, description="Title for the y-axis. Defaults to y column name."
+    trendline_options: Optional[Dict] = Field(
+        None, description="Advanced options for trendline configuration."
     )
-    height: int = Field(600, description="Height of the plot in pixels.")
-    width: int = Field(800, description="Width of the plot in pixels.")
-    colors: Optional[Dict[str, str]] = Field(
-        None, description="Mapping of group names to specific colors."
+    log_x: bool = Field(False, description="Enable logarithmic x-axis scale.")
+    log_y: bool = Field(False, description="Enable logarithmic y-axis scale.")
+    range_x: Optional[List[float]] = Field(
+        None, description="Manual x-axis range [min, max]."
     )
-    marker_opacity: float = Field(
-        0.8, ge=0, le=1, description="Opacity of the markers."
+    range_y: Optional[List[float]] = Field(
+        None, description="Manual y-axis range [min, max]."
     )
+    title: str = Field("Scatter Plot", description="Main title of the plot.")
+    subtitle: Optional[str] = Field(
+        None, description="Subtitle displayed below main title."
+    )
+    template: str = Field("plotly_white", description="Plotly visual theme/template.")
+    width: int = Field(800, description="Plot width in pixels.")
+    height: int = Field(600, description="Plot height in pixels.")
     marker_line_width: float = Field(
-        0.5, ge=0, description="Width of the line surrounding each marker."
+        0.5, ge=0, description="Width of marker border lines."
     )
     marker_line_color: str = Field(
-        "DarkSlateGrey", description="Color of the line surrounding each marker."
+        "DarkSlateGrey", description="Color of marker border lines."
     )
 
     # Special features
-    trendline: Optional[str] = Field(
-        None, description="Adds a trendline. E.g., 'ols' for Ordinary Least Squares."
-    )
     color_by_density: bool = Field(
-        False, description="If True, color points by density instead of group."
+        False, description="Color points by density instead of category."
     )
 
     @model_validator(mode="after")
-    def check_exclusive_coloring(self) -> "ScatterConfig":
-        """Ensure that coloring by group and by density are mutually exclusive."""
-        if self.color_by_density and self.group:
+    def validate_exclusive_color_options(self) -> "ScatterConfig":
+        if self.color_by_density and self.color:
             raise ValueError(
-                "Cannot set 'group' when 'color_by_density' is True. "
-                "Coloring is mutually exclusive."
+                "Cannot use both 'color' and 'color_by_density'. "
+                "These options are mutually exclusive."
             )
         return self
