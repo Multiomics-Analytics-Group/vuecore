@@ -1,17 +1,26 @@
 from typing import Dict, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class LineConfig(BaseModel):
     """
-    Pydantic model for validating and managing line plot configurations,
-    closely aligned with the `plotly.express.line` API
+    Pydantic model for validating and managing line plot configurations.
+
+    This model serves as a curated API for the most relevant parameters
+    for line plots, closely aligned with the `plotly.express.line` API
     (https://plotly.com/python-api-reference/generated/plotly.express.line.html).
+
+    The model ensures user-provided configurations are type-safe. The plotting
+    function intelligently handles parameters defined here, and also accepts
+    additional Plotly keyword arguments, forwarding them to the appropriate
+    `plotly.express.line` or `plotly.graph_objects.Figure` call.
 
     This model includes the most relevant parameters for data mapping, styling,
     and layout. It ensures that user-provided configurations are type-safe and
-    adhere to the expected structure. Other keyword arguments from
-    `plotly.express.line` can be passed to the plotting function if needed.
+    adhere to the expected structure. The plotting function handles parameters
+    defined here, and also accepts additional Plotly keyword arguments,
+    forwarding them to the appropriate `plotly.express.line` or
+    `plotly.graph_objects.Figure` call.
 
     Attributes
     ----------
@@ -65,6 +74,8 @@ class LineConfig(BaseModel):
         Determines the line shape ('linear', 'spline', 'hv', etc.).
     title : str
         The main title of the plot.
+    subtitle : str
+        The subtitle of the plot.
     template : str
         Plotly template for styling (e.g., 'plotly_white').
     width : int
@@ -72,6 +83,10 @@ class LineConfig(BaseModel):
     height : int
         Height of the plot in pixels.
     """
+
+    # General Configuration
+    # Allow extra parameters to pass through to Plotly
+    model_config = ConfigDict(extra="allow")
 
     # Data Mapping
     x: str = Field(..., description="Column for x-axis values.")
@@ -128,6 +143,7 @@ class LineConfig(BaseModel):
         "linear", description="Line shape (e.g., 'linear', 'spline')."
     )
     title: str = Field("Line Plot", description="The main title of the plot.")
+    subtitle: Optional[str] = Field(None, description="The subtitle for the plot.")
     template: str = Field("plotly_white", description="Plotly template for styling.")
     width: int = Field(800, description="Width of the plot in pixels.")
     height: int = Field(600, description="Height of the plot in pixels.")

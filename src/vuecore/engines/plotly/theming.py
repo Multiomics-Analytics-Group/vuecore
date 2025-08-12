@@ -78,6 +78,7 @@ def apply_line_theme(fig: go.Figure, config: LineConfig) -> go.Figure:
     # Apply layout updates
     fig.update_layout(
         title_text=config.title,
+        title_subtitle_text=config.subtitle,
         xaxis_title=x_title,
         yaxis_title=y_title,
         height=config.height,

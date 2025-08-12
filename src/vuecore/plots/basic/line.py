@@ -28,7 +28,7 @@ def create_line_plot(
         By default None.
     **kwargs
         Keyword arguments for plot configuration. These are validated against
-        the `LineConfig` model. See `schemas.basic.line.LineConfig`
+        the `LineConfig` model. See `vuecore.schemas.basic.line.LineConfig`
         for all available options.
 
     Returns
@@ -41,49 +41,19 @@ def create_line_plot(
     Raises
     ------
     pydantic.ValidationError
-        If the provided kwargs do not match the `LineConfig` schema.
+        If the provided keyword arguments do not conform to the `LineConfig` schema,
+        e.g., a required parameter is missing or a value has an incorrect type.
     ValueError
-        If columns specified in the configuration do not exist in the DataFrame.
+        Raised by the plotting engine if a column specified in the
+        configuration is not found in the provided DataFrame.
 
     Examples
     --------
-    >>> import pandas as pd
-    >>> data = {
-    ...     "day": [1, 2, 3, 4, 5, 1, 2, 3, 4, 5],
-    ...     "value": [10, 12, 15, 11, 13, 20, 22, 19, 24, 25],
-    ...     "value_error": [1, 1.2, 0.9, 1.5, 1.1, 2, 1.8, 2.2, 1.5, 2.5],
-    ...     "experiment": ["A", "A", "A", "A", "A", "B", "B", "B", "B", "B"],
-    ...     "condition": ["Control", "Control", "Treatment", "Treatment", "Treatment",
-    ...                   "Control", "Control", "Treatment", "Treatment", "Treatment"],
-    ...     "point_id": [f"A-{i}" for i in range(5)] + [f"B-{i}" for i in range(5)],
-    ... }
-    >>> sample_line_df = pd.DataFrame(data)
-    >>>
-    >>> # Create a basic line plot
-    >>> fig_basic = create_line_plot(
-    ...     data=sample_line_df,
-    ...     x="day",
-    ...     y="value",
-    ...     color="experiment",
-    ... )
-    >>>
-    >>> # Create an advanced line plot and save it to HTML
-    >>> fig_advanced = create_line_plot(
-    ...     data=sample_line_df,
-    ...     x="day",
-    ...     y="value",
-    ...     color="experiment",
-    ...     line_dash="condition",
-    ...     error_y="value_error",
-    ...     hover_name="point_id",
-    ...     title="Experiment Value Over Time",
-    ...     labels={"day": "Day of Trial", "value": "Measured Metric"},
-    ...     color_discrete_map={"A": "#636EFA", "B": "#EF553B"},
-    ...     line_dash_map={"Control": "solid", "Treatment": "dot"},
-    ...     markers=True,
-    ...     line_shape="spline",
-    ...     file_path="my_advanced_line_plot.html"
-    ... )
+    For detailed examples and usage, please refer to the documentation:
+
+    * **Jupyter Notebook:** `docs/api_examples/line_plot.ipynb` -
+    https://vuecore.readthedocs.io/en/latest/api_examples/scatter_plot.html
+    * **Python Script:** `docs/api_examples/line_plot.py`
     """
     # 1. Validate configuration using Pydantic
     config = LineConfig(**kwargs)

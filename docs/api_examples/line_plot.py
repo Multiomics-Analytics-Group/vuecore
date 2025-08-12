@@ -177,6 +177,7 @@ fig_advanced = create_line_plot(
     line_dash="condition",
     error_y="value_error",
     title="Experiment & Condition Trends",
+    subtitle="Measurements over 5 days for two experiments (A, B) under Control and Treatment conditions.",
     labels={"day": "Day", "value": "Response", "condition": "Condition"},
     color_discrete_map={"A": "#508AA8", "B": "#A8505E"},
     line_dash_map={"Control": "solid", "Treatment": "dot"},
