@@ -138,7 +138,7 @@ sample_df = pd.DataFrame(
     }
 )
 
-sample_df
+sample_df.head()
 
 # %% [markdown]
 # ## 1. Basic Line Plot
@@ -178,7 +178,12 @@ fig_advanced = create_line_plot(
     error_y="value_error",
     title="Experiment & Condition Trends",
     subtitle="Measurements over 5 days for two experiments (A, B) under Control and Treatment conditions.",
-    labels={"day": "Day", "value": "Response", "condition": "Condition"},
+    labels={
+        "day": "Day",
+        "value": "Response",
+        "condition": "Condition",
+        "experiment": "Experiment",
+    },
     color_discrete_map={"A": "#508AA8", "B": "#A8505E"},
     line_dash_map={"Control": "solid", "Treatment": "dot"},
     markers=True,
