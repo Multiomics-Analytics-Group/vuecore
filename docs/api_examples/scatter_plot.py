@@ -84,10 +84,10 @@ from vuecore.plots.basic.scatter import create_scatter_plot
 pio.renderers.default = "notebook"
 
 # %% [markdown]
-# ## 1. Basic Scatter Plot
+# ### 0.3. Create sample data
+# We create a synthetic dataset that contains simulated gene expression values, p-values, regulation status, and significance scores for 8 genes across two cell types.
 
 # %%
-# Created sample data
 sample_df = pd.DataFrame(
     {
         "gene_expression": [1.2, 2.5, 3.1, 4.5, 5.2, 6.8, 3.9, 2.1],
@@ -110,6 +110,10 @@ sample_df = pd.DataFrame(
 
 sample_df
 
+# %% [markdown]
+# ## 1. Basic Scatter Plot
+# A basic scatter plot can be created by providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
+
 # %%
 # Define output path
 file_path_png = os.path.join(output_dir, "scatter_basic.png")
@@ -127,6 +131,7 @@ fig.show()
 
 # %% [markdown]
 # ## 2. Advanced Scatter Plot
+# An example of an advanced scatter plot that includes grouping by a categorical variable, color mapping, text annotations, and adding several styling options.
 
 # %%
 # Define output path
@@ -142,8 +147,13 @@ fig_advanced = create_scatter_plot(
     text="gene_name",
     title="Advanced Gene Expression Scatter Plot",
     subtitle="Visualizing Gene Expression with Regulation and Significance",
-    x_title="Log2 Fold Change",
-    y_title="-Log10(P-value)",
+    labels={
+        "gene_expression": "Log2 Fold Change",
+        "log_p_value": "Log P-value",
+        "regulation": "Regulation Status",
+        "significance_score": "Significance Score",
+        "gene_name": "Gene Name",
+    },
     color_discrete_map={"Up": "#508AA8", "Down": "#A8505E", "None": "#838383"},
     opacity=0.8,
     marker_line_width=1,
