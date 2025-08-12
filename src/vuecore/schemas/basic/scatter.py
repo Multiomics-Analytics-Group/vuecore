@@ -50,11 +50,11 @@ class ScatterConfig(BaseModel):
         Specific color mappings for color column values.
     symbol_map : Optional[Dict[str, str]]
         Specific symbol mappings for symbol column values.
+    size_max : int
+        Maximum marker size.
     -----Styling and Layout-----
     opacity : float
         Marker opacity (0-1).
-    size_max : int
-        Maximum marker size.
     trendline : Optional[str]
         Trendline type (ols/lowess/rolling/expanding/ewm).
     trendline_options : Optional[Dict]
@@ -69,6 +69,10 @@ class ScatterConfig(BaseModel):
         Manual y-axis range [min, max].
     title : str
         Main plot title.
+    x_title : Optional[str]
+        Custom title for the x-axis.
+    y_title : Optional[str]
+        Custom title for the y-axis.
     subtitle : Optional[str]
         Plot subtitle.
     template : str
@@ -121,10 +125,10 @@ class ScatterConfig(BaseModel):
     symbol_map: Optional[Dict[str, str]] = Field(
         None, description="Specific symbol mappings for symbol column values."
     )
+    size_max: int = Field(20, description="Maximum size for markers.")
 
     # Styling and Layout
     opacity: float = Field(0.8, ge=0, le=1, description="Overall opacity of markers.")
-    size_max: int = Field(20, description="Maximum size for markers.")
     trendline: Optional[str] = Field(
         None, description="Trendline type (ols/lowess/rolling/expanding/ewm)."
     )
@@ -143,6 +147,8 @@ class ScatterConfig(BaseModel):
     subtitle: Optional[str] = Field(
         None, description="Subtitle displayed below main title."
     )
+    x_title: Optional[str] = Field(None, description="Custom title for the x-axis.")
+    y_title: Optional[str] = Field(None, description="Custom title for the y-axis.")
     template: str = Field("plotly_white", description="Plotly visual theme/template.")
     width: int = Field(800, description="Plot width in pixels.")
     height: int = Field(600, description="Plot height in pixels.")

@@ -37,13 +37,14 @@ def build(data: pd.DataFrame, config: ScatterConfig) -> go.Figure:
     # Define parameters handled by the theme script
     theming_params = [
         "opacity",
-        "size_max",
         "log_x",
         "log_y",
         "range_x",
         "range_y",
         "title",
         "subtitle",
+        "x_title",
+        "y_title",
         "template",
         "width",
         "height",

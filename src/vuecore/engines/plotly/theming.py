@@ -28,21 +28,16 @@ def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
         marker=dict(
             opacity=config.opacity,
             line=dict(width=config.marker_line_width, color=config.marker_line_color),
-            size_max=config.size_max,
         ),
         selector=dict(mode="markers"),
     )
 
-    # Use the labels dictionary to set axis titles, falling back to column names
-    x_title = (
-        config.labels.get(config.x, config.x.title())
-        if config.labels
-        else config.x.title()
+    # Use the labels dictionary to set axis titles, falling back to defaults
+    x_title = config.x_title or (
+        config.labels.get(config.x) if config.labels else None or config.x.title()
     )
-    y_title = (
-        config.labels.get(config.y, config.y.title())
-        if config.labels
-        else config.y.title()
+    y_title = config.y_title or (
+        config.labels.get(config.y) if config.labels else None or config.y.title()
     )
 
     # Apply layout updates
@@ -59,17 +54,6 @@ def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
         xaxis_range=config.range_x,
         yaxis_range=config.range_y,
         # legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        hovermode="closest",
-    )
-
-    fig.update_layout(
-        title_text=config.title,
-        xaxis_title=config.x_title or config.x.title(),
-        yaxis_title=config.y_title or config.y.title(),
-        height=config.height,
-        width=config.width,
-        template="plotly_white",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         hovermode="closest",
     )
     return fig
