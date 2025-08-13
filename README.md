@@ -28,20 +28,20 @@ VueCore is part of a broader ecosystem of tools for multi-omics analysis, workin
 ## Installation
 
 > [!TIP]
-> It is recommended to install VueGen inside a virtual environment to manage depenendencies and avoid conflicts with existing packages. You can use the virtual environment manager of your choice, such as `poetry`, `conda`, or `pipenv`.
+> It is recommended to install VueCore inside a virtual environment to manage depenendencies and avoid conflicts with existing packages. You can use the virtual environment manager of your choice, such as `poetry`, `conda`, or `pipenv`.
 
 ### Pip
 
-VueGen is available on [PyPI][vuecore-pypi] and can be installed using pip:
+VueCore is available on [PyPI][vuecore-pypi] and can be installed using pip:
 
 ```bash
-pip install vuegen
+pip install vuecore
 ```
 
 You can also install the package for development by cloning this repository and running the following command:
 
 > [!WARNING]
-> We assume you are in the root directory of the cloned repository when running this command. Otherwise, you need to specify the path to the `vuegen` directory.
+> We assume you are in the root directory of the cloned repository when running this command. Otherwise, you need to specify the path to the `vuecore` directory.
 
 ```bash
 pip install -e .
