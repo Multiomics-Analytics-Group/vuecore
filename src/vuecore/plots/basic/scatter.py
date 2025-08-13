@@ -42,7 +42,7 @@ def create_scatter_plot(
     ------
     pydantic.ValidationError
         If the provided keyword arguments do not conform to the `ScatterConfig` schema,
-        e.g., a required parameter is missing or a value has an incorrect type.
+        e.g. a required parameter is missing or a value has an incorrect type.
     ValueError
         Raised by the plotting engine if a column specified in the configuration is not
         found in the provided DataFrame.
