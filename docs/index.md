@@ -12,6 +12,7 @@
 :caption: API Usage Examples
 
 api_examples/scatter_plot
+api_examples/line_plot
 ```
 
 ```{toctree}
