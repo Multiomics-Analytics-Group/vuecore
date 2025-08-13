@@ -53,7 +53,8 @@ def create_scatter_plot(
 
     * **Jupyter Notebook:** `docs/api_examples/scatter_plot.ipynb` -
     https://vuecore.readthedocs.io/en/latest/api_examples/scatter_plot.html
-    * **Python Script:** `docs/api_examples/scatter_plot.py`
+    * **Python Script:** `docs/api_examples/scatter_plot.py` -
+    https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/scatter_plot.py
     """
     # 1. Validate configuration using Pydantic
     config = ScatterConfig(**kwargs)
