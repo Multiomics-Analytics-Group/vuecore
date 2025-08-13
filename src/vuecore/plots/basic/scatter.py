@@ -41,38 +41,20 @@ def create_scatter_plot(
     Raises
     ------
     pydantic.ValidationError
-        If the provided kwargs do not match the `ScatterConfig` schema.
+        If the provided keyword arguments do not conform to the `ScatterConfig` schema,
+        e.g. a required parameter is missing or a value has an incorrect type.
     ValueError
-        If columns specified in the configuration do not exist in the DataFrame.
+        Raised by the plotting engine if a column specified in the configuration is not
+        found in the provided DataFrame.
 
     Examples
     --------
-    >>> import pandas as pd
-    >>> sample_df = pd.DataFrame({
-    ...     'gene_expression': [1.2, 2.5, 3.1, 4.5, 5.2, 6.8],
-    ...     'log_p_value': [0.5, 1.5, 2.0, 3.5, 4.0, 5.5],
-    ...     'regulation': ['Up', 'Up', 'None', 'Down', 'Down', 'Down'],
-    ...     'significance_score': [10, 20, 5, 40, 55, 80],
-    ...     'gene_name': ['GENE_A', 'GENE_B', 'GENE_C', 'GENE_D', 'GENE_E', 'GENE_F']
-    ... })
-    >>>
-    >>> # Create a simple scatter plot and save it to HTML
-    >>> fig = create_scatter_plot(
-    ...     data=sample_df,
-    ...     x='gene_expression',
-    ...     y='log_p_value',
-    ...     group='regulation',
-    ...     size='significance_score',
-    ...     text='gene_name',
-    ...     title="Gene Expression vs. Significance",
-    ...     x_title="Log2 Fold Change",
-    ...     y_title="-Log10(P-value)",
-    ...     colors={'Up': '#d62728', 'Down': '#1f77b4', 'None': '#7f7f7f'},
-    ...     file_path="my_scatter_plot.html"
-    ... )
-    >>>
-    >>> # The returned `fig` object can be displayed in a notebook or further modified
-    >>> # fig.show()
+    For detailed examples and usage, please refer to the documentation:
+
+    * **Jupyter Notebook:** `docs/api_examples/scatter_plot.ipynb` -
+    https://vuecore.readthedocs.io/en/latest/api_examples/scatter_plot.html
+    * **Python Script:** `docs/api_examples/scatter_plot.py` -
+    https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/scatter_plot.py
     """
     # 1. Validate configuration using Pydantic
     config = ScatterConfig(**kwargs)
