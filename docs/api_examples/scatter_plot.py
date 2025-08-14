@@ -76,12 +76,8 @@ os.makedirs(output_dir, exist_ok=True)
 # %%
 # Imports
 import pandas as pd
-import plotly.io as pio
 
 from vuecore.plots.basic.scatter import create_scatter_plot
-
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
 
 # %% [markdown]
 # ### 0.3. Create sample data
