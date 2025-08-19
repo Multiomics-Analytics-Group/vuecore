@@ -35,11 +35,8 @@ def build(data: pd.DataFrame, config: BarConfig) -> go.Figure:
     all_config_params = config.model_dump()
 
     # Define parameters handled by the theme script
-    # These parameters often control layout and styling aspects
-    # that are better managed centrally by a theming function.
     theming_params = [
         "opacity",
-        "orientation",
         "barmode",
         "log_x",
         "log_y",
