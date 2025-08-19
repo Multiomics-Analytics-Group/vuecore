@@ -1,7 +1,7 @@
-### Description
-Adds new [PlotName] Plotly visualization
+## Description
+Adds new [PlotName] plot to VueCore.
 
-### Tasks Checklist
+## Tasks Checklist
 - [ ] Create **Pydantic schema** in the `vuecore/schemas` folder. It should be aligned with the [plotly API](https://plotly.com/python-api-reference/index.html)
 - [ ]  Create a script with a **build function** in the `vuecore/engines/plotly` folder
 - [ ] Update `theming.py` script in the `vuecore/engines/plotly` folder
