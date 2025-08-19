@@ -1,7 +1,12 @@
-## Description
+<!--
+Please complete the following sections when you submit your pull request. Note that text within html comment tags will not be rendered.
+-->
+### Description
+
 Adds new [PlotName] plot to VueCore.
 
-## Tasks Checklist
+### Tasks Checklist
+
 - [ ] Create **Pydantic schema** in the `vuecore/schemas` folder. It should be aligned with the [plotly API](https://plotly.com/python-api-reference/index.html)
 - [ ]  Create a script with a **build function** in the `vuecore/engines/plotly` folder
 - [ ] Update `theming.py` script in the `vuecore/engines/plotly` folder
