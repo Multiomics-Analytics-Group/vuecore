@@ -1,11 +1,16 @@
 import pandas as pd
 import pytest
+from pathlib import Path
+
 from vuecore.plots.basic.line import create_line_plot
 
 
 @pytest.fixture
-def sample_line_df():
-    """Fixture for generating sample data for a line plot."""
+def sample_line_df() -> pd.DataFrame:
+    """
+    Fixture for generating synthetic data for line plots, replicating
+    the code used in the docs/api_examples/line_plot.ipynb example.
+    """
     data = pd.DataFrame(
         {
             "day": list(range(1, 6)) * 4,  # 5 days
@@ -61,10 +66,15 @@ def sample_line_df():
 
 
 @pytest.mark.parametrize("ext", ["png", "svg", "html", "json"])
-def test_basic_line_plot(sample_line_df, tmp_path, ext):
-    """Test basic line plot creation with direct color mapping."""
+def test_basic_line_plot(sample_line_df: pd.DataFrame, tmp_path: Path, ext: str):
+    """
+    Test basic line plot creation, ensuring the figure is returned,
+    and output files are generated correctly for various formats.
+    """
+    # Define the output path using tmp_path fixture for temporary files
     output_path = tmp_path / f"line_test.{ext}"
 
+    # Create the basic line plot using the VueCore function
     fig = create_line_plot(
         data=sample_line_df,
         x="day",
@@ -74,16 +84,24 @@ def test_basic_line_plot(sample_line_df, tmp_path, ext):
         file_path=str(output_path),
     )
 
-    assert fig is not None
-    assert output_path.exists()
-    assert output_path.stat().st_size > 0
+    # Assertions to verify plot creation and file output
+    assert fig is not None, "Figure object should not be None."
+    assert output_path.exists(), f"Output file should exist: {output_path}"
+    assert (
+        output_path.stat().st_size > 0
+    ), f"Output file should not be empty: {output_path}"
 
 
 @pytest.mark.parametrize("ext", ["png", "svg", "html", "json"])
-def test_advanced_line_plot_refactored(sample_line_df, tmp_path, ext):
-    """Test advanced line plot with new, more descriptive parameters."""
+def test_advanced_line_plot(sample_line_df: pd.DataFrame, tmp_path: Path, ext: str):
+    """
+    Test advanced line plot creation with multiple parameters,
+    ensuring the figure is returned and output files are generated.
+    """
+    # Define the output path for the advanced plot
     output_path = tmp_path / f"line_test_advanced.{ext}"
 
+    # Create the advanced line plot using the VueCore function
     fig = create_line_plot(
         data=sample_line_df,
         x="day",
@@ -100,6 +118,9 @@ def test_advanced_line_plot_refactored(sample_line_df, tmp_path, ext):
         file_path=str(output_path),
     )
 
-    assert fig is not None
-    assert output_path.exists()
-    assert output_path.stat().st_size > 0
+    # Assertions to verify plot creation and file output
+    assert fig is not None, "Figure object should not be None."
+    assert output_path.exists(), f"Output file should exist: {output_path}"
+    assert (
+        output_path.stat().st_size > 0
+    ), f"Output file should not be empty: {output_path}"

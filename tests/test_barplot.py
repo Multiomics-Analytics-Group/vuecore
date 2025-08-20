@@ -7,10 +7,10 @@ from vuecore.plots.basic.bar import create_bar_plot
 
 
 @pytest.fixture
-def sample_bar_data():
+def sample_bar_data() -> pd.DataFrame:
     """
-    Fixture for generating synthetic data for bar plots, mimicking
-    the structure used in the bar_plot.ipynb example.
+    Fixture for generating synthetic data for bar plots, replicating
+    the code used in the docs/api_examples/bar_plot.ipynb example.
     Returns both the detailed abundance DataFrame and the aggregated
     DataFrame for the basic plot.
     """
@@ -81,7 +81,7 @@ def sample_bar_data():
 
 
 @pytest.mark.parametrize("ext", ["png", "svg", "html", "json"])
-def test_basic_bar_plot(sample_bar_data, tmp_path: Path, ext: str):
+def test_basic_bar_plot(sample_bar_data: pd.DataFrame, tmp_path: Path, ext: str):
     """
     Test basic bar plot creation, ensuring the figure is returned,
     and output files are generated correctly for various formats.
@@ -110,7 +110,7 @@ def test_basic_bar_plot(sample_bar_data, tmp_path: Path, ext: str):
 
 
 @pytest.mark.parametrize("ext", ["png", "svg", "html", "json"])
-def test_advanced_bar_plot(sample_bar_data, tmp_path: Path, ext: str):
+def test_advanced_bar_plot(sample_bar_data: pd.DataFrame, tmp_path: Path, ext: str):
     """
     Test advanced stacked bar plot creation with multiple parameters,
     ensuring the figure is returned and output files are generated.
