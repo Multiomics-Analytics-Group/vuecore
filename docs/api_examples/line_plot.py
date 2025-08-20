@@ -83,19 +83,57 @@ from vuecore.plots.basic.line import create_line_plot
 # We create a synthetic dataset showing measurements over five days for two experiments (A, B), each tested under Control and Treatment conditions, with associated measurement errors.
 
 # %%
-sample_df = pd.DataFrame({
-    "day": list(range(1, 6)) * 4,          # 5 days
-    "experiment": ["A"] * 10 + ["B"] * 10, # 2 experiments
-    "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2, # 2 conditions
-    "value": [
-        11, 13, 15, 17, 18,   # A - Control
-        10, 12, 14, 15, 16,   # A - Treatment
-        19, 20, 21, 22, 23,    # B - Control
-        20, 22, 21, 23, 22,   # B - Treatment
-    ],
-    "value_error": [1, 1.2, 0.9, 1.1, 1.0, 1.3, 1.0, 1.2, 1.4, 1.1,
-                    2.0, 1.8, 2.1, 1.5, 2.3, 1.7, 2.0, 1.8, 2.1, 2.2],
-})
+sample_df = pd.DataFrame(
+    {
+        "day": list(range(1, 6)) * 4,  # 5 days
+        "experiment": ["A"] * 10 + ["B"] * 10,  # 2 experiments
+        "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2,  # 2 conditions
+        "value": [
+            11,
+            13,
+            15,
+            17,
+            18,  # A - Control
+            10,
+            12,
+            14,
+            15,
+            16,  # A - Treatment
+            19,
+            20,
+            21,
+            22,
+            23,  # B - Control
+            20,
+            22,
+            21,
+            23,
+            22,  # B - Treatment
+        ],
+        "value_error": [
+            1,
+            1.2,
+            0.9,
+            1.1,
+            1.0,
+            1.3,
+            1.0,
+            1.2,
+            1.4,
+            1.1,
+            2.0,
+            1.8,
+            2.1,
+            1.5,
+            2.3,
+            1.7,
+            2.0,
+            1.8,
+            2.1,
+            2.2,
+        ],
+    }
+)
 
 sample_df.head()
 
@@ -132,12 +170,17 @@ line_plot_adv = create_line_plot(
     data=sample_df,
     x="day",
     y="value",
-    color="experiment",                  
-    line_dash="condition",               
-    error_y="value_error",                 
+    color="experiment",
+    line_dash="condition",
+    error_y="value_error",
     title="Experiment & Condition Trends",
-    subtitle = "Measurements over 5 days for two experiments (A, B) under Control and Treatment conditions.",
-    labels={"day": "Day", "value": "Response", "condition": "Condition", "experiment": "Experiment"},
+    subtitle="Measurements over 5 days for two experiments (A, B) under Control and Treatment conditions.",
+    labels={
+        "day": "Day",
+        "value": "Response",
+        "condition": "Condition",
+        "experiment": "Experiment",
+    },
     color_discrete_map={"A": "#508AA8", "B": "#A8505E"},
     line_dash_map={"Control": "solid", "Treatment": "dot"},
     markers=True,

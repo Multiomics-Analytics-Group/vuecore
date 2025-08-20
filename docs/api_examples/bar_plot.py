@@ -89,10 +89,21 @@ np.random.seed(42)
 # Sample types and bacterial genera
 sample_types = ["Soil", "Freshwater", "Ocean", "Sediment", "Wastewater"]
 genera = [
-    "Pseudomonas", "Bacillus", "Escherichia", "Streptococcus",
-    "Lactobacillus", "Bacteroides", "Clostridium", "Staphylococcus",
-    "Enterobacter", "Klebsiella", "Salmonella", "Shigella", "Vibrio"
+    "Pseudomonas",
+    "Bacillus",
+    "Escherichia",
+    "Streptococcus",
+    "Lactobacillus",
+    "Bacteroides",
+    "Clostridium",
+    "Staphylococcus",
+    "Enterobacter",
+    "Klebsiella",
+    "Salmonella",
+    "Shigella",
+    "Vibrio",
 ]
+
 
 def make_sample(sample: str, genera: list[str]) -> list[dict]:
     """
@@ -112,25 +123,30 @@ def make_sample(sample: str, genera: list[str]) -> list[dict]:
         Relative abundance, and Genera count.
     """
     # Randomly pick a subset of genera present in this sample
-    selected = np.random.choice(genera, np.random.randint(5, len(genera) + 1), replace=False)
-    
+    selected = np.random.choice(
+        genera, np.random.randint(5, len(genera) + 1), replace=False
+    )
+
     # Generate random raw abundances (shifted by +0.1 to avoid zeros)
     raw = np.random.rand(len(selected)) + 0.1
-    
+
     # Normalize abundances so they sum to exactly 100%
     abundances = (raw / raw.sum()) * 100
-    
+
     # Count how many genera are present
     genera_count = len(selected)
-    
+
     # Store results into list of dicts
     return [
-        {"Sample": sample,
-         "Genus": genus,
-         "Relative_Abundance": abund,
-         "Genera_Count": genera_count}
+        {
+            "Sample": sample,
+            "Genus": genus,
+            "Relative_Abundance": abund,
+            "Genera_Count": genera_count,
+        }
         for genus, abund in zip(selected, abundances)
     ]
+
 
 # Generate full dataset by combining all samples
 abund_df = pd.DataFrame(
@@ -144,7 +160,9 @@ abund_df.head()
 
 # %%
 # Create a df with unique samples and their genera counts
-bar_plot_basic_df = abund_df.drop_duplicates(subset="Sample")[["Sample", "Genera_Count"]]
+bar_plot_basic_df = abund_df.drop_duplicates(subset="Sample")[
+    ["Sample", "Genera_Count"]
+]
 
 # Define output path for the basic png plot
 file_path_basic_png = Path(output_dir) / "bar_plot_basic.png"
@@ -155,7 +173,7 @@ bar_plot_basic = create_bar_plot(
     x="Sample",
     y="Genera_Count",
     title="Genera Count by Sample Type",
-    file_path=file_path_basic_png,  
+    file_path=file_path_basic_png,
 )
 
 bar_plot_basic.show()
@@ -170,21 +188,21 @@ file_path_adv_html = Path(output_dir) / "bar_plot_advanced.html"
 
 # Generate the advanced stacked bar plot
 bar_plot_adv = create_bar_plot(
-    data=abund_df,                
-    x="Sample",                   
-    y="Relative_Abundance",            
-    color="Genus",             
-    barmode="stack",                   
+    data=abund_df,
+    x="Sample",
+    y="Relative_Abundance",
+    color="Genus",
+    barmode="stack",
     title="Taxonomic Profile of Environmental Samples",
     subtitle="Relative Abundance of Bacterial Genera",
-    labels={                           
+    labels={
         "Sample": "Environmental Sample Type",
         "Relative_Abundance": "Relative Abundance (%)",
-        "Genus": "Genus"
+        "Genus": "Genus",
     },
-    hover_name="Genus",        
-    hover_data=["Relative_Abundance"], 
-    opacity=0.9,                       
+    hover_name="Genus",
+    hover_data=["Relative_Abundance"],
+    opacity=0.9,
     file_path=file_path_adv_html,
 )
 
