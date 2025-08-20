@@ -76,6 +76,7 @@ os.makedirs(output_dir, exist_ok=True)
 # %%
 # Imports
 import pandas as pd
+from pathlib import Path
 
 from vuecore.plots.basic.scatter import create_scatter_plot
 
@@ -111,30 +112,30 @@ sample_df
 # A basic scatter plot can be created by providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
 
 # %%
-# Define output path
-file_path_png = os.path.join(output_dir, "scatter_basic.png")
+# Define output path for the basic png plot
+file_path_basic_png = Path(output_dir) / "scatter_basic.png"
 
-# Generate basic plot
-fig = create_scatter_plot(
+# Generate the basic scatter plot
+scatter_plot_basic = create_scatter_plot(
     data=sample_df,
     x="gene_expression",
     y="log_p_value",
     title="Basic Gene Expression Scatter Plot",
-    file_path=file_path_png,
+    file_path=file_path_basic_png,
 )
 
-fig.show()
+scatter_plot_basic.show()
 
 # %% [markdown]
 # ## 2. Advanced Scatter Plot
 # An example of an advanced scatter plot that includes grouping by a categorical variable, color mapping, text annotations, and adding several styling options.
 
 # %%
-# Define output path
-file_path_adv_html = os.path.join(output_dir, "scatter_advanced.html")
+# Define output file path for the HTML plot
+file_path_adv_html = Path(output_dir) / "scatter_advanced.html"
 
-# Generate advanced plot
-fig_advanced = create_scatter_plot(
+# Generate advanced line plot
+scatter_plot_adv = create_scatter_plot(
     data=sample_df,
     x="gene_expression",
     y="log_p_value",
@@ -159,4 +160,4 @@ fig_advanced = create_scatter_plot(
     file_path=file_path_adv_html,
 )
 
-fig_advanced.show()
+scatter_plot_adv.show()

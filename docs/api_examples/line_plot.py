@@ -74,12 +74,9 @@ os.makedirs(output_dir, exist_ok=True)
 # %%
 # Imports
 import pandas as pd
-import plotly.io as pio
+from pathlib import Path
 
 from vuecore.plots.basic.line import create_line_plot
-
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
 
 # %% [markdown]
 # ### 0.3. Create sample data
@@ -145,11 +142,11 @@ sample_df.head()
 # A basic line plot can be created by simply providing the `x`, `y`, and `color` columns from the DataFrame.
 
 # %%
-# Define output path
-file_path_basic_png = os.path.join(output_dir, "line_plot_basic.png")
+# Define output path for the basic png plot
+file_path_basic_png = Path(output_dir) / "line_plot_basic.png"
 
-# Generate basic plot
-fig = create_line_plot(
+# Generate the basic bar plot
+line_plot_basic = create_line_plot(
     data=sample_df,
     x="day",
     y="value",
@@ -158,18 +155,18 @@ fig = create_line_plot(
     file_path=file_path_basic_png,
 )
 
-fig.show()
+line_plot_basic.show()
 
 # %% [markdown]
 # ## 2. Advanced Line Plot
-# Here is an example of an advanced line plot with more descriptive parameters, including error bars, line styles, markers, and custom colors.
+# Here is an example of an advanced line plot with more descriptive parameters, including `error bars`, `line styles`, `markers`, and `custom colors`.
 
 # %%
-# Define output path
-file_path_adv_html = os.path.join(output_dir, "line_plot_advanced.html")
+# Define output file path for the HTML plot
+file_path_adv_html = Path(output_dir) / "line_plot_advanced.html"
 
-# Generate advanced plot
-fig_advanced = create_line_plot(
+# Generate advanced line plot
+line_plot_adv = create_line_plot(
     data=sample_df,
     x="day",
     y="value",
@@ -191,4 +188,4 @@ fig_advanced = create_line_plot(
     file_path=file_path_adv_html,
 )
 
-fig_advanced.show()
+line_plot_adv.show()

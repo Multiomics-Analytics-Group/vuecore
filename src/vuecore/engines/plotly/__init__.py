@@ -3,6 +3,7 @@ from vuecore import PlotType, EngineType
 
 from .scatter import build as build_scatter
 from .line import build as build_line
+from .bar import build as build_bar
 from .saver import save
 
 # Register the functions with the central dispatcher
@@ -10,5 +11,6 @@ register_builder(
     plot_type=PlotType.SCATTER, engine=EngineType.PLOTLY, func=build_scatter
 )
 register_builder(plot_type=PlotType.LINE, engine=EngineType.PLOTLY, func=build_line)
+register_builder(plot_type=PlotType.BAR, engine=EngineType.PLOTLY, func=build_bar)
 
 register_saver(engine=EngineType.PLOTLY, func=save)

@@ -28,17 +28,6 @@ def save(fig: go.Figure, filepath: str) -> None:
         If the file extension is not one of the supported formats.
     ImportError
         If required libraries for image export (e.g., kaleido) are not installed.
-
-    Examples
-    --------
-    >>> import plotly.express as px
-    >>> fig = px.scatter(x=[1, 2, 3], y=[1, 2, 3])
-    >>> # Save as an interactive HTML file
-    >>> save(fig, 'scatter.html')
-    Plot saved to scatter.html
-    >>> # Save as a static PNG image
-    >>> save(fig, 'scatter.png')
-    Plot saved to scatter.png
     """
     path = Path(filepath)
     suffix = path.suffix.lower()
@@ -64,6 +53,8 @@ def save(fig: go.Figure, filepath: str) -> None:
                     raise
         elif suffix == ".html":
             fig.write_html(filepath, include_plotlyjs="cdn")
+        elif suffix == ".json":
+            fig.write_json(filepath, pretty=True)
         else:
             raise ValueError(
                 f"Unsupported file format: '{suffix}'. "

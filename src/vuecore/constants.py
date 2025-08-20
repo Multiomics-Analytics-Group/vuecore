@@ -9,7 +9,7 @@ except ImportError:
 class PlotType(StrEnum):
     SCATTER = auto()
     LINE = auto()
-    # Add other plot types as needed
+    BAR = auto()
 
 
 class EngineType(StrEnum):
