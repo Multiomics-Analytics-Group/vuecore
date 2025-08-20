@@ -74,6 +74,7 @@ os.makedirs(output_dir, exist_ok=True)
 # %%
 # Imports
 import pandas as pd
+from pathlib import Path
 import plotly.io as pio
 
 from vuecore.plots.basic.line import create_line_plot
@@ -86,57 +87,19 @@ pio.renderers.default = "notebook"
 # We create a synthetic dataset showing measurements over five days for two experiments (A, B), each tested under Control and Treatment conditions, with associated measurement errors.
 
 # %%
-sample_df = pd.DataFrame(
-    {
-        "day": list(range(1, 6)) * 4,  # 5 days
-        "experiment": ["A"] * 10 + ["B"] * 10,  # 2 experiments
-        "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2,  # 2 conditions
-        "value": [
-            11,
-            13,
-            15,
-            17,
-            18,  # A - Control
-            10,
-            12,
-            14,
-            15,
-            16,  # A - Treatment
-            19,
-            20,
-            21,
-            22,
-            23,  # B - Control
-            20,
-            22,
-            21,
-            23,
-            22,  # B - Treatment
-        ],
-        "value_error": [
-            1,
-            1.2,
-            0.9,
-            1.1,
-            1.0,
-            1.3,
-            1.0,
-            1.2,
-            1.4,
-            1.1,
-            2.0,
-            1.8,
-            2.1,
-            1.5,
-            2.3,
-            1.7,
-            2.0,
-            1.8,
-            2.1,
-            2.2,
-        ],
-    }
-)
+sample_df = pd.DataFrame({
+    "day": list(range(1, 6)) * 4,          # 5 days
+    "experiment": ["A"] * 10 + ["B"] * 10, # 2 experiments
+    "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2, # 2 conditions
+    "value": [
+        11, 13, 15, 17, 18,   # A - Control
+        10, 12, 14, 15, 16,   # A - Treatment
+        19, 20, 21, 22, 23,    # B - Control
+        20, 22, 21, 23, 22,   # B - Treatment
+    ],
+    "value_error": [1, 1.2, 0.9, 1.1, 1.0, 1.3, 1.0, 1.2, 1.4, 1.1,
+                    2.0, 1.8, 2.1, 1.5, 2.3, 1.7, 2.0, 1.8, 2.1, 2.2],
+})
 
 sample_df.head()
 
@@ -145,11 +108,11 @@ sample_df.head()
 # A basic line plot can be created by simply providing the `x`, `y`, and `color` columns from the DataFrame.
 
 # %%
-# Define output path
-file_path_basic_png = os.path.join(output_dir, "line_plot_basic.png")
+# Define output path for the basic png plot
+file_path_basic_png = Path(output_dir) / "line_plot_basic.png"
 
-# Generate basic plot
-fig = create_line_plot(
+# Generate the basic bar plot
+line_plot_basic = create_line_plot(
     data=sample_df,
     x="day",
     y="value",
@@ -158,32 +121,27 @@ fig = create_line_plot(
     file_path=file_path_basic_png,
 )
 
-fig.show()
+line_plot_basic.show()
 
 # %% [markdown]
 # ## 2. Advanced Line Plot
-# Here is an example of an advanced line plot with more descriptive parameters, including error bars, line styles, markers, and custom colors.
+# Here is an example of an advanced line plot with more descriptive parameters, including `error bars`, `line styles`, `markers`, and `custom colors`.
 
 # %%
-# Define output path
-file_path_adv_html = os.path.join(output_dir, "line_plot_advanced.html")
+# Define output file path for the HTML plot
+file_path_adv_html = Path(output_dir) / "line_plot_advanced.html"
 
-# Generate advanced plot
-fig_advanced = create_line_plot(
+# Generate advanced line plot
+line_plot_adv = create_line_plot(
     data=sample_df,
     x="day",
     y="value",
-    color="experiment",
-    line_dash="condition",
-    error_y="value_error",
+    color="experiment",                  
+    line_dash="condition",               
+    error_y="value_error",                 
     title="Experiment & Condition Trends",
-    subtitle="Measurements over 5 days for two experiments (A, B) under Control and Treatment conditions.",
-    labels={
-        "day": "Day",
-        "value": "Response",
-        "condition": "Condition",
-        "experiment": "Experiment",
-    },
+    subtitle = "Measurements over 5 days for two experiments (A, B) under Control and Treatment conditions.",
+    labels={"day": "Day", "value": "Response", "condition": "Condition", "experiment": "Experiment"},
     color_discrete_map={"A": "#508AA8", "B": "#A8505E"},
     line_dash_map={"Control": "solid", "Treatment": "dot"},
     markers=True,
@@ -191,4 +149,4 @@ fig_advanced = create_line_plot(
     file_path=file_path_adv_html,
 )
 
-fig_advanced.show()
+line_plot_adv.show()
