@@ -51,11 +51,10 @@ def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
         height=config.height,
         width=config.width,
         template=config.template,
-        xaxis_type="log" if config.log_x else "linear",
-        yaxis_type="log" if config.log_y else "linear",
+        xaxis_type="log" if config.log_x else None,
+        yaxis_type="log" if config.log_y else None,
         xaxis_range=config.range_x,
         yaxis_range=config.range_y,
-        hovermode="closest",
     )
     return fig
 
@@ -103,11 +102,10 @@ def apply_line_theme(fig: go.Figure, config: LineConfig) -> go.Figure:
         height=config.height,
         width=config.width,
         template=config.template,
-        xaxis_type="log" if config.log_x else "linear",
-        yaxis_type="log" if config.log_y else "linear",
+        xaxis_type="log" if config.log_x else None,
+        yaxis_type="log" if config.log_y else None,
         xaxis_range=config.range_x,
         yaxis_range=config.range_y,
-        hovermode="x unified",
     )
     return fig
 
@@ -152,13 +150,10 @@ def apply_bar_theme(fig: go.Figure, config: BarConfig) -> go.Figure:
         height=config.height,
         width=config.width,
         template=config.template,
-        xaxis_type="log" if config.log_x else "linear",
-        yaxis_type="log" if config.log_y else "linear",
+        xaxis_type="log" if config.log_x else None,
+        yaxis_type="log" if config.log_y else None,
         xaxis_range=config.range_x,
         yaxis_range=config.range_y,
         barmode=config.barmode,
-        hovermode=(
-            "x unified" if config.orientation == "v" else "y unified"
-        ),  # Adjust hovermode based on orientation
     )
     return fig

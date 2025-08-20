@@ -116,7 +116,7 @@ class BarConfig(BaseModel):
     )
 
     # Styling and Layout
-    opacity: float = Field(0.8, ge=0, le=1, description="Overall opacity of markers.")
+    opacity: float = Field(0.8, description="Overall opacity of markers.")
     orientation: str = Field(
         "v",
         description="Orientation of the bars ('v' for vertical, 'h' for horizontal).",
