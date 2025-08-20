@@ -76,13 +76,9 @@ os.makedirs(output_dir, exist_ok=True)
 # %%
 # Imports
 import pandas as pd
-import plotly.io as pio
 from pathlib import Path
 
 from vuecore.plots.basic.scatter import create_scatter_plot
-
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
 
 # %% [markdown]
 # ### 0.3. Create sample data
@@ -132,13 +128,13 @@ scatter_plot_basic.show()
 
 # %% [markdown]
 # ## 2. Advanced Scatter Plot
-# An example of an advanced scatter plot that includes `grouping` by a categorical variable, `color mapping`, `text annotations`, and adding several styling options.
+# An example of an advanced scatter plot that includes grouping by a categorical variable, color mapping, text annotations, and adding several styling options.
 
 # %%
-# Define the output file path for the HTML plot
+# Define output file path for the HTML plot
 file_path_adv_html = Path(output_dir) / "scatter_advanced.html"
 
-# Generate the advanced scatter plot
+# Generate advanced line plot
 scatter_plot_adv = create_scatter_plot(
     data=sample_df,
     x="gene_expression",

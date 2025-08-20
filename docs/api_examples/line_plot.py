@@ -75,12 +75,8 @@ os.makedirs(output_dir, exist_ok=True)
 # Imports
 import pandas as pd
 from pathlib import Path
-import plotly.io as pio
 
 from vuecore.plots.basic.line import create_line_plot
-
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
 
 # %% [markdown]
 # ### 0.3. Create sample data
