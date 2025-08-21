@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 from vuecore.schemas.basic.scatter import ScatterConfig
 from vuecore.schemas.basic.line import LineConfig
 from vuecore.schemas.basic.bar import BarConfig
+from vuecore.schemas.basic.box import BoxConfig
 
 
 def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
@@ -155,5 +156,60 @@ def apply_bar_theme(fig: go.Figure, config: BarConfig) -> go.Figure:
         xaxis_range=config.range_x,
         yaxis_range=config.range_y,
         barmode=config.barmode,
+    )
+    return fig
+
+
+def apply_box_theme(fig: go.Figure, config: BoxConfig) -> go.Figure:
+    """
+    Applies a consistent layout and theme to a Plotly box plot.
+
+    This function handles all styling and layout adjustments, such as titles,
+    dimensions, templates, and trace properties, separating these concerns
+    from the initial data mapping.
+
+    Parameters
+    ----------
+    fig : go.Figure
+        The Plotly figure object to be styled.
+    config : BoxConfig
+        The configuration object containing all styling and layout info.
+
+    Returns
+    -------
+    go.Figure
+        The styled Plotly figure object.
+    """
+    # Apply trace-specific updates for box plots
+    fig.update_traces(
+        boxpoints=config.points, notched=config.notched, selector=dict(type="box")
+    )
+
+    # Use the labels dictionary to set axis titles, falling back to defaults
+    x_title = config.x_title or (
+        config.labels.get(config.x)
+        if config.x and config.labels
+        else None or (config.x.title() if config.x else None)
+    )
+    y_title = config.y_title or (
+        config.labels.get(config.y)
+        if config.y and config.labels
+        else None or (config.y.title() if config.y else None)
+    )
+
+    # Apply layout updates for box plot
+    fig.update_layout(
+        title_text=config.title,
+        title_subtitle_text=config.subtitle,
+        xaxis_title=x_title,
+        yaxis_title=y_title,
+        height=config.height,
+        width=config.width,
+        template=config.template,
+        xaxis_type="log" if config.log_x else None,
+        yaxis_type="log" if config.log_y else None,
+        xaxis_range=config.range_x,
+        yaxis_range=config.range_y,
+        boxmode=config.boxmode,
     )
     return fig

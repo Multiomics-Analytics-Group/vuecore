@@ -13,6 +13,7 @@ class PlotType(StrEnum):
     SCATTER = auto()
     LINE = auto()
     BAR = auto()
+    BOX = auto()
 
 
 class EngineType(StrEnum):
