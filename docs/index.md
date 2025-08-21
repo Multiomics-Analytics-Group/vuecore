@@ -14,6 +14,7 @@
 api_examples/scatter_plot
 api_examples/line_plot
 api_examples/bar_plot
+api_examples/box_plot
 ```
 
 ```{toctree}
