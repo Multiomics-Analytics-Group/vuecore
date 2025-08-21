@@ -86,26 +86,39 @@ from vuecore.plots.basic.box import create_box_plot
 # Set a random seed for reproducibility of the synthetic data
 np.random.seed(42)
 
-# Define number of samples, sample groups, and treatments
+# Parameters
 num_samples = 200
 sample_groups = ["Patient A", "Patient B", "Patient C", "Patient D"]
 treatments = ["Control", "Treated"]
 
-# Generate synthetic gene expression data
-records = []
-for sample_group in np.random.choice(sample_groups, num_samples):
-    for treatment in np.random.choice(treatments, num_samples // (len(sample_groups) * len(treatments))):
-        base_expression = np.random.normal(loc=100, scale=10)
-        expression = base_expression + (np.random.normal(loc=20, scale=5) if treatment == "Treated" else 0)
-        records.append({
-            "Sample_ID": sample_group,
-            "Treatment": treatment,
-            "Gene_ID": f"Gene_{np.random.randint(1, 1000)}",
-            "Expression": expression
-        })
+# Sample metadata
+sample_ids = np.random.choice(sample_groups, size=num_samples)
+treatment_assignments = np.random.choice(treatments, size=num_samples)
+gene_ids = [f"Gene_{g}" for g in np.random.randint(1, 1500, size=num_samples)]
 
-gene_exp_df = pd.DataFrame(records)
-gene_exp_df.head()
+# Base expression values
+base_expr = np.random.normal(loc=100, scale=35, size=num_samples)
+
+# Treatment effect simulation
+treatment_effect = np.where(
+    treatment_assignments == "Treated",
+    np.random.normal(loc=50, scale=30, size=num_samples),
+    0
+)
+
+# Small random per-gene offset for extra variability
+gene_offset = np.random.normal(loc=0, scale=20, size=num_samples)
+
+# Final expression
+expr = base_expr + treatment_effect + gene_offset
+
+# Construct DataFrame
+gene_exp_df = pd.DataFrame({
+    "Sample_ID": sample_ids,
+    "Treatment": treatment_assignments,
+    "Gene_ID": gene_ids,
+    "Expression": expr
+})
 
 # %% [markdown]
 # ## 1. Basic Box Plot
