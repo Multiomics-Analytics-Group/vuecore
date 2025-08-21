@@ -103,7 +103,7 @@ base_expr = np.random.normal(loc=100, scale=35, size=num_samples)
 treatment_effect = np.where(
     treatment_assignments == "Treated",
     np.random.normal(loc=50, scale=30, size=num_samples),
-    0
+    0,
 )
 
 # Small random per-gene offset for extra variability
@@ -113,12 +113,14 @@ gene_offset = np.random.normal(loc=0, scale=20, size=num_samples)
 expr = base_expr + treatment_effect + gene_offset
 
 # Construct DataFrame
-gene_exp_df = pd.DataFrame({
-    "Sample_ID": sample_ids,
-    "Treatment": treatment_assignments,
-    "Gene_ID": gene_ids,
-    "Expression": expr
-})
+gene_exp_df = pd.DataFrame(
+    {
+        "Sample_ID": sample_ids,
+        "Treatment": treatment_assignments,
+        "Gene_ID": gene_ids,
+        "Expression": expr,
+    }
+)
 
 # %% [markdown]
 # ## 1. Basic Box Plot
