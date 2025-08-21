@@ -2,7 +2,6 @@
 #include-a-file-from-outside-the-docs-folder-like-readme-md -->
 
 ```{include} ./sections_readme/home_page.md
-:caption: VueCore
 :relative-docs: docs
 :relative-images:
 ```
