@@ -12,6 +12,7 @@
 #
 import os
 from importlib import metadata
+from pathlib import Path
 
 # -- Project information -----------------------------------------------------
 
@@ -44,12 +45,12 @@ extensions = [
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
 nb_execution_mode = "auto"
 
-myst_enable_extensions = ["dollarmath", "amsmath"]
+myst_enable_extensions = ["dollarmath", "amsmath", "colon_fence"]
 
 # Plolty support through require javascript library
 # https://myst-nb.readthedocs.io/en/latest/render/interactive.html#plotly
 html_js_files = [
-    "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"
+    # "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.7/require.min.js"
 ]
 
 # https://myst-nb.readthedocs.io/en/latest/configuration.html
@@ -133,10 +134,22 @@ html_theme_options = {
 # https://github.com/readthedocs/readthedocs.org/issues/1139
 
 if os.environ.get("READTHEDOCS") == "True":
-    from pathlib import Path
+    # Set the Plotly renderer to notebook for ReadTheDocs (visualize plotly figures
+    # in the documentation) - needed for plotly6
+    # Plotly normally decides itself fine which renderer to use, so keep it to RTD
+    # see https://plotly.com/python/renderers/#setting-the-default-renderer
+    os.environ["PLOTLY_RENDERER"] = "notebook"
 
     PROJECT_ROOT = Path(__file__).parent.parent
     PACKAGE_ROOT = PROJECT_ROOT / "src" / "vuecore"
+
+    def run_split_readme(_):
+        print("[conf.py] Splitting README.md into sections...")
+        from split_readme import process_readme
+
+        readme_path = PROJECT_ROOT / "README.md"
+        output_dir = PROJECT_ROOT / "docs" / "sections_readme"
+        process_readme(readme_path, output_dir)
 
     def run_apidoc(_):
         from sphinx.ext import apidoc
@@ -156,4 +169,5 @@ if os.environ.get("READTHEDOCS") == "True":
         )
 
     def setup(app):
+        app.connect("builder-inited", run_split_readme)
         app.connect("builder-inited", run_apidoc)

@@ -76,18 +76,15 @@ os.makedirs(output_dir, exist_ok=True)
 # %%
 # Imports
 import pandas as pd
-import plotly.io as pio
+from pathlib import Path
 
 from vuecore.plots.basic.scatter import create_scatter_plot
 
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
-
 # %% [markdown]
-# ## 1. Basic Scatter Plot
+# ### 0.3. Create sample data
+# We create a synthetic dataset that contains simulated gene expression values, p-values, regulation status, and significance scores for 8 genes across two cell types.
 
 # %%
-# Created sample data
 sample_df = pd.DataFrame(
     {
         "gene_expression": [1.2, 2.5, 3.1, 4.5, 5.2, 6.8, 3.9, 2.1],
@@ -110,41 +107,52 @@ sample_df = pd.DataFrame(
 
 sample_df
 
-# %%
-# Define output path
-file_path_png = os.path.join(output_dir, "scatter_basic.png")
+# %% [markdown]
+# ## 1. Basic Scatter Plot
+# A basic scatter plot can be created by providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
 
-# Generate basic plot
-fig = create_scatter_plot(
+# %%
+# Define output path for the basic png plot
+file_path_basic_png = Path(output_dir) / "scatter_basic.png"
+
+# Generate the basic scatter plot
+scatter_plot_basic = create_scatter_plot(
     data=sample_df,
     x="gene_expression",
     y="log_p_value",
     title="Basic Gene Expression Scatter Plot",
-    file_path=file_path_png,
+    file_path=file_path_basic_png,
 )
 
-fig.show()
+scatter_plot_basic.show()
 
 # %% [markdown]
 # ## 2. Advanced Scatter Plot
+# An example of an advanced scatter plot that includes grouping by a categorical variable, color mapping, text annotations, and adding several styling options.
 
 # %%
-# Define output path
-file_path_adv_html = os.path.join(output_dir, "scatter_advanced.html")
+# Define output file path for the HTML plot
+file_path_adv_html = Path(output_dir) / "scatter_advanced.html"
 
-# Generate advanced plot
-fig_advanced = create_scatter_plot(
+# Generate advanced line plot
+scatter_plot_adv = create_scatter_plot(
     data=sample_df,
     x="gene_expression",
     y="log_p_value",
-    group="regulation",
+    color="regulation",
     size="significance_score",
     text="gene_name",
     title="Advanced Gene Expression Scatter Plot",
-    x_title="Log2 Fold Change",
-    y_title="-Log10(P-value)",
-    colors={"Up": "#FF5733", "Down": "#3380FF", "None": "#33FF57"},
-    marker_opacity=0.8,
+    subtitle="Visualizing Gene Expression with Regulation and Significance",
+    labels={
+        "gene_expression": "Log2 Fold Change",
+        "log_p_value": "Log P-value",
+        "regulation": "Regulation Status",
+        "significance_score": "Significance Score",
+        "gene_name": "Gene Name",
+    },
+    color_discrete_map={"Up": "#508AA8", "Down": "#A8505E", "None": "#838383"},
+    opacity=0.8,
     marker_line_width=1,
     marker_line_color="darkgray",
     width=900,
@@ -152,4 +160,4 @@ fig_advanced = create_scatter_plot(
     file_path=file_path_adv_html,
 )
 
-fig_advanced.show()
+scatter_plot_adv.show()
