@@ -6,7 +6,7 @@ from vuecore.schemas.plotly_base import PlotlyBaseConfig
 class BarConfig(PlotlyBaseConfig):
     """
     Pydantic model for validating and managing bar plot configurations,
-    which extends the common PlotlyBaseConfig.
+    which extends PlotlyBaseConfig.
 
     This model serves as a curated API for the most relevant parameters
     for bar plots, closely aligned with the `plotly.express.bar` API
