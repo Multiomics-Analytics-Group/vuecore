@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, Optional
 from pydantic import Field, ConfigDict, model_validator
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
 
