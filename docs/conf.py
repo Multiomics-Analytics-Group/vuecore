@@ -92,17 +92,6 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
-# Prevents autodoc from automatically adding a fields table for Pydantic models
-autodoc_default_options = {
-    "members": True,
-    "undoc-members": True,
-    "private-members": False,
-    "special-members": False,
-    "inherited-members": False,
-    "show-inheritance": False,
-    "exclude-members": "__weakref__",
-}
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -178,6 +167,16 @@ if os.environ.get("READTHEDOCS") == "True":
             ]
         )
 
+    # Skip documenting Pydantic fields to avoid duplicate aattributes in the docs
+    def autodoc_skip_member(app, what, name, obj, skip, options):
+        # We only care about Pydantic models
+        if what == "class" and hasattr(obj, "model_fields"):
+            # Check if the member name is a Pydantic field
+            if name in obj.model_fields:
+                return True
+        return skip
+
     def setup(app):
         app.connect("builder-inited", run_split_readme)
         app.connect("builder-inited", run_apidoc)
+        app.connect("autodoc-skip-member", autodoc_skip_member)
