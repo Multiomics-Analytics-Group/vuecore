@@ -104,7 +104,9 @@ autodoc_default_options = {
     "exclude-members": "__weakref__, __dict__, __annotations__, model_config",
 }
 
-autodoc_typehints = "description"
+autodoc_typehints = "none"
+napoleon_use_param = False
+napoleon_use_rtype = False
 
 # -- Options for HTML output -------------------------------------------------
 
