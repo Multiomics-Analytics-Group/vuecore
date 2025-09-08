@@ -92,6 +92,17 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
+# Prevents autodoc from automatically adding a fields table for Pydantic models
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "private-members": False,
+    "special-members": False,
+    "inherited-members": False,
+    "show-inheritance": False,
+    "exclude-members": "__weakref__",
+}
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
