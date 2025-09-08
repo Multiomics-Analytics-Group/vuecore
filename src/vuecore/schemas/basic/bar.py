@@ -1,8 +1,10 @@
 from typing import Dict, Optional
 from pydantic import Field, ConfigDict
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
+from vuecore.utils import combine_docstrings
 
 
+@combine_docstrings
 class BarConfig(PlotlyBaseConfig):
     """
     Pydantic model for validating and managing bar plot configurations,

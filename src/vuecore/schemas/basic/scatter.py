@@ -1,8 +1,10 @@
 from typing import Dict, Optional
 from pydantic import Field, ConfigDict, model_validator
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
+from vuecore.utils import combine_docstrings
 
 
+@combine_docstrings
 class ScatterConfig(PlotlyBaseConfig):
     """
     Pydantic model for validating and managing scatter plot configurations.
