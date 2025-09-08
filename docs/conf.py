@@ -102,6 +102,8 @@ autodoc_default_options = {
     "inherited-members": False,
     "show-inheritance": False,
     "exclude-members": "__weakref__, __dict__, __annotations__, model_config",
+    "no-members": True,
+    "no-inherited-members": True,
 }
 
 autodoc_typehints = "none"
