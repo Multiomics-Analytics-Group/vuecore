@@ -40,6 +40,7 @@ extensions = [
     "sphinx_new_tab_link",
     "myst_nb",
     "sphinx_copybutton",
+    "sphinxcontrib.autodoc_pydantic",
 ]
 
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
@@ -93,22 +94,10 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
-# --- Autodoc configuration to avoid duplicate Pydantic fields ---
-autoclass_content = "class"
-
-autodoc_default_options = {
-    "members": True,
-    "undoc-members": True,
-    "inherited-members": False,
-    "show-inheritance": False,
-    "exclude-members": "__weakref__, __dict__, __annotations__, model_config",
-    "no-members": True,
-    "no-inherited-members": True,
-}
-
-autodoc_typehints = "none"
-napoleon_use_param = False
-napoleon_use_rtype = False
+# Set options for the autodoc_pydantic extension
+autodoc_pydantic_model_show_json = True  # Show collapsible JSON schema
+autodoc_pydantic_model_show_field_summary = False  # Hide default field summary
+autodoc_pydantic_field_show_constraints = True  # Show constraints for fields
 
 # -- Options for HTML output -------------------------------------------------
 
