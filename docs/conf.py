@@ -4,14 +4,6 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-import nltk
-
-# Make sure stopwords are available for autodoc
-try:
-    nltk.data.find("corpora/stopwords")
-except LookupError:
-    nltk.download("stopwords")
-
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -48,7 +40,6 @@ extensions = [
     "sphinx_new_tab_link",
     "myst_nb",
     "sphinx_copybutton",
-    "sphinxcontrib.autodoc_pydantic",
 ]
 
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
@@ -90,7 +81,6 @@ exclude_patterns = [
     "conf.py",
 ]
 
-
 # Intersphinx options
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
@@ -101,11 +91,6 @@ intersphinx_mapping = {
     "matplotlib": ("https://matplotlib.org/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
-
-# Set options for the autodoc_pydantic extension
-autodoc_pydantic_model_show_config_summary = False
-autodoc_pydantic_model_show_config = False
-autodoc_pydantic_model_show_field_summary = False
 
 # -- Options for HTML output -------------------------------------------------
 

@@ -52,7 +52,6 @@ docs = [
   "sphinx-new-tab-link!=0.2.2",
   "jupytext",
   "sphinx-copybutton",
-  "autodoc_pydantic",
 ]
 dev = [
   "black",
