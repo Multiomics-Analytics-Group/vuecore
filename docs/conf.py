@@ -103,9 +103,9 @@ intersphinx_mapping = {
 }
 
 # Set options for the autodoc_pydantic extension
-autodoc_pydantic_model_show_json = True  # Show collapsible JSON schema
-autodoc_pydantic_model_show_field_summary = False  # Hide default field summary
-autodoc_pydantic_field_show_constraints = True  # Show constraints for fields
+autodoc_pydantic_model_show_config_summary = False
+autodoc_pydantic_model_show_config = False
+autodoc_pydantic_model_show_field_summary = False
 
 # -- Options for HTML output -------------------------------------------------
 
