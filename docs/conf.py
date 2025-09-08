@@ -93,6 +93,19 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
+# --- Autodoc configuration to avoid duplicate Pydantic fields ---
+autoclass_content = "class"
+
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "inherited-members": False,
+    "show-inheritance": False,
+    "exclude-members": "__weakref__, __dict__, __annotations__, model_config",
+}
+
+autodoc_typehints = "description"
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
