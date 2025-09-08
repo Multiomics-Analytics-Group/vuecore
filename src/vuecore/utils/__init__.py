@@ -3,6 +3,7 @@ This module contains utility functions for the vuecore library.
 """
 
 import re
+import textwrap
 from typing import Type
 
 
@@ -44,7 +45,7 @@ def combine_docstrings(cls: Type) -> Type:
         return cls
 
     # Extract the parent attributes section and formt it
-    parent_attributes = parent_parts[2].strip()
+    parent_attributes = textwrap.dedent(parent_parts[2]).strip()
     parent_block = (
         f"\nInherited parameters from {cls.__base__.__name__}\n"
         f"-----------------------------\n"
@@ -58,7 +59,7 @@ def combine_docstrings(cls: Type) -> Type:
     if len(child_parts) > 1:
         # If the child has Attributes, inject parent block before child’s attributes
         child_header = child_parts[0].strip()
-        child_attributes = child_parts[2].strip()
+        child_attributes = textwrap.dedent(child_parts[2]).strip()
         child_block = (
             f"Parameters from {cls.__name__}\n"
             f"-----------------------------\n"
