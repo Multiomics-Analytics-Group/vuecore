@@ -1,10 +1,8 @@
 from typing import Optional
 from pydantic import Field, ConfigDict
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
-from vuecore.utils import combine_docstrings
 
 
-@combine_docstrings
 class BoxConfig(PlotlyBaseConfig):
     """
     Pydantic model for validating and managing box plot configurations,
