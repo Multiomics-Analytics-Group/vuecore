@@ -32,8 +32,8 @@ release = PACKAGE_VERSION
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autodoc.typehints",
+    # "sphinx.ext.autodoc",
+    # "sphinx.ext.autodoc.typehints",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
@@ -167,16 +167,6 @@ if os.environ.get("READTHEDOCS") == "True":
             ]
         )
 
-    # Skip documenting Pydantic fields to avoid duplicate aattributes in the docs
-    def autodoc_skip_member(app, what, name, obj, skip, options):
-        # We only care about Pydantic models
-        if what == "class" and hasattr(obj, "model_fields"):
-            # Check if the member name is a Pydantic field
-            if name in obj.model_fields:
-                return True
-        return skip
-
     def setup(app):
         app.connect("builder-inited", run_split_readme)
         app.connect("builder-inited", run_apidoc)
-        app.connect("autodoc-skip-member", autodoc_skip_member)
