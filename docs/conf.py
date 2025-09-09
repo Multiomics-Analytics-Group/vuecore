@@ -32,8 +32,8 @@ release = PACKAGE_VERSION
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # "sphinx.ext.autodoc",
-    # "sphinx.ext.autodoc.typehints",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autodoc.typehints",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",

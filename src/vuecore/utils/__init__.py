@@ -28,8 +28,8 @@ def combine_docstrings(cls: Type) -> Type:
         The decorated class with the combined docstring.
     """
     # Retrieve the docstrings of the class and its parent
-    child_doc = getattr(cls, "__doc__", "")
-    parent_doc = getattr(cls.__base__, "__doc__", "")
+    child_doc = textwrap.dedent(getattr(cls, "__doc__", ""))
+    parent_doc = textwrap.dedent(getattr(cls.__base__, "__doc__", ""))
 
     if not parent_doc or not child_doc:
         return cls
@@ -45,11 +45,10 @@ def combine_docstrings(cls: Type) -> Type:
         return cls
 
     # Extract the parent attributes section and formt it
-    parent_attributes = textwrap.dedent(parent_parts[2]).strip()
+    parent_attributes = parent_parts[2].strip()
     parent_block = (
         f"\nInherited parameters from {cls.__base__.__name__}\n"
-        f"-----------------------------\n"
-        f"{parent_attributes}\n"
+        f"\n{parent_attributes}\n"
     )
 
     # Define the section header for attributes
@@ -59,12 +58,8 @@ def combine_docstrings(cls: Type) -> Type:
     if len(child_parts) > 1:
         # If the child has Attributes, inject parent block before child’s attributes
         child_header = child_parts[0].strip()
-        child_attributes = textwrap.dedent(child_parts[2]).strip()
-        child_block = (
-            f"Parameters from {cls.__name__}\n"
-            f"-----------------------------\n"
-            f"{child_attributes}\n"
-        )
+        child_attributes = child_parts[2].strip()
+        child_block = f"Parameters from {cls.__name__}\n" f"\n{child_attributes}\n"
         cls.__doc__ = (
             f"{child_header}\n\n{section_header}\n" f"{parent_block}\n{child_block}"
         )
