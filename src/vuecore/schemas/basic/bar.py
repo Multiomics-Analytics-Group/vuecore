@@ -18,28 +18,6 @@ class BarConfig(PlotlyBaseConfig):
     defined here, and also accepts additional Plotly keyword arguments,
     forwarding them to the appropriate `plotly.express.bar` or
     `plotly.graph_objects.Figure` call.
-
-    Attributes
-    ----------
-    -----Data Mapping-----
-    pattern_shape : Optional[str]
-        Column to assign pattern shapes to bars.
-    text : Optional[str]
-        Column for adding text labels to bars.
-    error_x : Optional[str]
-        Column for sizing x-axis error bars.
-    error_y : Optional[str]
-        Column for sizing y-axis error bars.
-    pattern_shape_map : Optional[Dict[str, str]]
-        Specific pattern shape mappings for values in the `pattern_shape` column.
-
-    -----Styling and Layout-----
-    opacity : float
-        Overall opacity of markers (0-1).
-    orientation: str
-        Orientation of the bars ('v' for vertical, 'h' for horizontal).
-    barmode : str
-        Mode for grouping bars ('group', 'overlay', 'relative').
     """
 
     # General Configuration

@@ -17,18 +17,6 @@ class BoxConfig(PlotlyBaseConfig):
     structure. The plotting function handles parameters defined here, and also
     accepts additional Plotly keyword arguments, forwarding them to the
     appropriate `plotly.express.box` or `plotly.graph_objects.Figure` call.
-
-    Attributes
-    ----------
-    -----Styling and Layout-----
-    orientation: Optional[str]
-        Orientation of the box plots ('v' for vertical, 'h' for horizontal).
-    boxmode : str
-        Mode for grouping boxes ('group' or 'overlay').
-    notched : bool
-        If True, boxes are drawn with notches.
-    points : str
-        Method to display sample points ('outliers', 'all', 'suspectedoutliers', False).
     """
 
     # General Configuration

@@ -17,40 +17,6 @@ class ScatterConfig(PlotlyBaseConfig):
     defined here, and also accepts additional Plotly keyword arguments,
     forwarding them to the appropriate `plotly.express.scatter` or
     `plotly.graph_objects.Figure` call.
-
-    Attributes
-    ----------
-    -----Data Mapping-----
-    symbol : Optional[str]
-        Column to assign marker symbols.
-    size : Optional[str]
-        Column to determine marker size.
-    text : Optional[str]
-        Column for text labels on markers.
-    error_x : Optional[str]
-        Column for x-axis error bars.
-    error_y : Optional[str]
-        Column for y-axis error bars.
-    symbol_map : Optional[Dict[str, str]]
-        Specific symbol mappings for symbol column values.
-    size_max : int
-        Maximum marker size.
-
-    -----Styling and Layout-----
-    opacity : float
-        Overall opacity of markers (0-1).
-    trendline : Optional[str]
-        Trendline type (ols/lowess/rolling/expanding/ewm).
-    trendline_options : Optional[Dict]
-        Advanced options for trendlines.
-    marker_line_width: float
-        Width of marker border lines.
-    marker_line_color: str
-        Color of marker border lines.
-
-    -----Special features-----
-    color_by_density: bool
-        Color points by density instead of category.
     """
 
     # General Configuration

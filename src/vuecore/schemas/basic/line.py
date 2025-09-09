@@ -18,32 +18,6 @@ class LineConfig(PlotlyBaseConfig):
     defined here, and also accepts additional Plotly keyword arguments,
     forwarding them to the appropriate `plotly.express.line` or
     `plotly.graph_objects.Figure` call.
-
-    Attributes
-    ----------
-    -----Data Mapping-----
-    line_group : Optional[str]
-        Column to group data into separate lines.
-    line_dash : Optional[str]
-        Column to assign dash styles to lines.
-    symbol : Optional[str]
-        Column to assign symbols to markers.
-    text : Optional[str]
-        Column for adding text labels to markers.
-    error_x : Optional[str]
-        Column for sizing x-axis error bars.
-    error_y : Optional[str]
-        Column for sizing y-axis error bars.
-    line_dash_map : Optional[Dict[str, str]]
-        Specific dash style mappings for values in the `line_dash` column.
-    symbol_map : Optional[Dict[str, str]]
-        Specific symbol mappings for values in the `symbol` column.
-
-    -----Styling and Layout-----
-    markers: bool
-        If True, displays markers on the lines.
-    line_shape: Optional[str]
-        Line shape (e.g., 'linear', 'spline').
     """
 
     # General Configuration

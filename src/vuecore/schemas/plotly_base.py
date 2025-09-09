@@ -14,54 +14,6 @@ class PlotlyBaseConfig(BaseModel):
     to ensure consistency and reduce code repetition. It uses a validator to
     enforce that at least one of the x or y axes is provided. Plot-specific
     schemas should inherit from this model.
-
-    Attributes
-    ----------
-    -----Data Mapping-----
-    x : Optional[str]
-        Column for the x-axis values.
-    y : Optional[str]
-        Column for the y-axis values.
-    color : Optional[str]
-        Column to assign color to plot elements.
-    hover_name : Optional[str]
-        Column to appear in bold in the hover tooltip.
-    hover_data : Optional[List[str]]
-        Additional columns to display in the hover tooltip.
-    facet_row : Optional[str]
-        Column to create vertical subplots (facets).
-    facet_col : Optional[str]
-        Column to create horizontal subplots (facets).
-    labels : Optional[Dict[str, str]]
-        Dictionary to override column names for titles, legends, etc.
-    color_discrete_map : Optional[Dict[str, str]]
-        Specific color mappings for values in the `color` column.
-    category_orders: Optional[Dict[str, List[str]]]
-        Dictionary to specify the order of categorical values.
-
-    -----Styling and Layout-----
-    log_x : bool
-        If True, the x-axis is log-scaled.
-    log_y : bool
-        If True, the y-axis is log-scaled.
-    range_x : Optional[List[float]]
-        Range for the x-axis, e.g., [0, 100].
-    range_y : Optional[List[float]]
-        Range for the y-axis, e.g., [0, 100].
-    title : str
-        The main title of the plot.
-    x_title : Optional[str]
-        Custom title for the x-axis.
-    y_title : Optional[str]
-        Custom title for the y-axis.
-    subtitle : Optional[str]
-        The subtitle of the plot.
-    template : str
-        Plotly template for styling (e.g., 'plotly_white').
-    width : Optional[int]
-        Width of the plot in pixels.
-    height : Optional[int]
-        Height of the plot in pixels.
     """
 
     model_config = ConfigDict(extra="allow")
