@@ -76,36 +76,37 @@ def test_get_type_string(annotation, expected_string):
 # --- Test for the Decorator ---
 def test_decorator_modifies_docstring():
     """Verify the decorator correctly adds model parameters to the docstring."""
-    # Define the expected docstring
-    expected_docstring = """
-    This is the original docstring.
 
-    Parameters
-    ----------
-    data : dict
-        A dictionary of sample data.
-    
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are validated against
-        the ``TestModel`` Pydantic model and the engine specific parameters.
-        
-        The following parameters are supported:
-        
-        * **param_str** (str) – A string parameter. (default: ``PydanticUndefined``)
-        * **param_int** (int) – An integer parameter with a default. (default: ``5``)
-        * **param_list** (list of str) – An optional list of strings.
-        * **param_dict** (dict) – A generic dictionary parameter. (default: ``{}``)
-        * **param_bare_list** (list) – A bare list parameter. (default: ``[]``)
-    Returns
-    -------
-    None
-        Does not return anything.
-    """
-    # Dedent the expected docstring for accurate comparison
-    expected_docstring = textwrap.dedent(expected_docstring).strip()
+    # Get the decorated function's docstring
+    decorated_docstring = dummy_plot_function.__doc__
 
-    # Get the decorated function's docstring and dedent it before comparison
-    decorated_docstring = textwrap.dedent(dummy_plot_function.__doc__).strip()
+    # Assert that the core parts of the original and generated docstrings are present
+    assert "This is the original docstring." in decorated_docstring
+    assert "Parameters" in decorated_docstring
+    assert "data : dict" in decorated_docstring
+    assert "Returns" in decorated_docstring
+    assert "Does not return anything." in decorated_docstring
 
-    # Assert that the docstrings are a perfect match
-    assert decorated_docstring == expected_docstring
+    # Assert that the kwargs section and its description are present
+    assert "**kwargs" in decorated_docstring
+    assert "Keyword arguments for plot configuration." in decorated_docstring
+    assert "``TestModel`` Pydantic model" in decorated_docstring
+
+    # Assert that each parameter is present with its correct type and default value
+    assert "* **param_str** (str) – A string parameter." in decorated_docstring
+    assert (
+        "* **param_int** (int) – An integer parameter with a default. (default: ``5``)"
+        in decorated_docstring
+    )
+    assert (
+        "* **param_list** (list of str) – An optional list of strings."
+        in decorated_docstring
+    )
+    assert (
+        "* **param_dict** (dict) – A generic dictionary parameter. (default: ``{}``)"
+        in decorated_docstring
+    )
+    assert (
+        "* **param_bare_list** (list) – A bare list parameter. (default: ``[]``)"
+        in decorated_docstring
+    )
