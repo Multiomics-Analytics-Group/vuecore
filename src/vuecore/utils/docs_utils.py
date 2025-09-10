@@ -128,7 +128,7 @@ def document_pydant_params(model: Type[BaseModel]):
         # Create the kwargs documentation as a list of lines
         new_kwargs_lines = [
             "    **kwargs",
-            f"        Keyword arguments for plot configuration. These arguments are validated against",
+            "        Keyword arguments for plot configuration. These arguments are validated against",
             f"        the ``{model.__name__}`` Pydantic model and the engine specific parameters.\n",
             f"        The following parameters are supported:\n",
         ]
