@@ -2,9 +2,9 @@ from typing import Any
 
 import pandas as pd
 
-from vuecore import EngineType
-from vuecore.engines import get_builder, get_saver
+from vuecore import EngineType, PlotType
 from vuecore.schemas.basic.bar import BarConfig
+from vuecore.plots.plot_factory import create_plot
 
 
 def create_bar_plot(
@@ -17,7 +17,7 @@ def create_bar_plot(
     Creates, styles, and optionally saves a bar plot using the specified engine.
 
     This function serves as the main entry point for users to generate bar plots.
-    It validates the provided configuration against the BarConfig schema,
+    It validates the provided configuration against the `BarConfig` schema,
     retrieves the appropriate plotting builder and saver functions based on the
     selected engine, builds the plot, and optionally saves it to a file.
 
@@ -34,11 +34,6 @@ def create_bar_plot(
         The file format is automatically inferred from the file extension
         (e.g., '.html', '.png', '.jpeg', '.svg'). Defaults to None, meaning
         the plot will not be saved.
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are
-        validated against the `BarConfig` Pydantic model. Refer to
-        `vuecore.schemas.basic.bar.BarConfig` for all available
-        options and their descriptions.
 
     Returns
     -------
@@ -66,18 +61,11 @@ def create_bar_plot(
     * **Python Script:** `docs/api_examples/bar_plot.py` -
     https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/bar_plot.py
     """
-    # 1. Validate configuration using Pydantic.
-    config = BarConfig(**kwargs)
-
-    # 2. Get the correct builder function from the registry.
-    builder_func = get_builder(plot_type="bar", engine=engine)
-
-    # 3. Build the figure object.
-    figure = builder_func(data, config)
-
-    # 4. Save the plot using the correct saver function, if a file_path is provided.
-    if file_path:
-        saver_func = get_saver(engine=engine)
-        saver_func(figure, file_path)
-
-    return figure
+    return create_plot(
+        data=data,
+        config=BarConfig,
+        plot_type=PlotType.BAR,
+        engine=engine,
+        file_path=file_path,
+        **kwargs,
+    )

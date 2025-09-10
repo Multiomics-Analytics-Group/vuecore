@@ -2,9 +2,9 @@ from typing import Any
 
 import pandas as pd
 
-from vuecore import EngineType
-from vuecore.engines import get_builder, get_saver
+from vuecore import EngineType, PlotType
 from vuecore.schemas.basic.scatter import ScatterConfig
+from vuecore.plots.plot_factory import create_plot
 
 
 def create_scatter_plot(
@@ -17,7 +17,7 @@ def create_scatter_plot(
     Creates, styles, and optionally saves a scatter plot using the specified engine.
 
     This function serves as the main entry point for users to generate scatter plots.
-    It validates the provided configuration against the ScatterConfig schema,
+    It validates the provided configuration against the `ScatterConfig` schema,
     retrieves the appropriate plotting builder and saver functions based on the
     selected engine, builds the plot, and optionally saves it to a file.
 
@@ -34,10 +34,6 @@ def create_scatter_plot(
         The file format is automatically inferred from the file extension
         (e.g., '.html', '.png', '.jpeg', '.svg'). Defaults to None, meaning
         the plot will not be saved.
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are validated
-        against the `ScatterConfig` Pydantic model. See
-        `schemas.basic.scatter.ScatterConfig` for all available options.
 
     Returns
     -------
@@ -65,18 +61,11 @@ def create_scatter_plot(
     * **Python Script:** `docs/api_examples/scatter_plot.py` -
     https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/scatter_plot.py
     """
-    # 1. Validate configuration using Pydantic
-    config = ScatterConfig(**kwargs)
-
-    # 2. Get the correct builder function from the registry
-    builder_func = get_builder(plot_type="scatter", engine=engine)
-
-    # 3. Build the figure object (the API doesn't know or care what type it is)
-    figure = builder_func(data, config)
-
-    # 4. Save the plot using the correct saver
-    if file_path:
-        saver_func = get_saver(engine=engine)
-        saver_func(figure, file_path)
-
-    return figure
+    return create_plot(
+        data=data,
+        config=ScatterConfig,
+        plot_type=PlotType.SCATTER,
+        engine=engine,
+        file_path=file_path,
+        **kwargs,
+    )

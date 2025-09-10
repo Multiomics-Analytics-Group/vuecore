@@ -2,9 +2,10 @@ from typing import Any
 
 import pandas as pd
 
-from vuecore import EngineType
+from vuecore import EngineType, PlotType
 from vuecore.engines import get_builder, get_saver
 from vuecore.schemas.basic.box import BoxConfig
+from vuecore.plots.plot_factory import create_plot
 
 
 def create_box_plot(
@@ -17,7 +18,7 @@ def create_box_plot(
     Creates, styles, and optionally saves a box plot using the specified engine.
 
     This function serves as the main entry point for users to generate box plots.
-    It validates the provided configuration against the BoxConfig schema,
+    It validates the provided configuration against the `BoxConfig` schema,
     retrieves the appropriate plotting builder and saver functions based on the
     selected engine, builds the plot, and optionally saves it to a file.
 
@@ -34,11 +35,6 @@ def create_box_plot(
         The file format is automatically inferred from the file extension
         (e.g., '.html', '.png', '.jpeg', '.svg'). Defaults to None, meaning
         the plot will not be saved.
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are
-        validated against the `BoxConfig` Pydantic model. Refer to
-        `vuecore.schemas.basic.box.BoxConfig` for all available
-        options and their descriptions.
 
     Returns
     -------
@@ -66,18 +62,11 @@ def create_box_plot(
     * **Python Script:** `docs/api_examples/box_plot.py` -
     https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/box_plot.py
     """
-    # 1. Validate configuration using Pydantic.
-    config = BoxConfig(**kwargs)
-
-    # 2. Get the correct builder function from the registry.
-    builder_func = get_builder(plot_type="box", engine=engine)
-
-    # 3. Build the figure object.
-    figure = builder_func(data, config)
-
-    # 4. Save the plot using the correct saver function, if a file_path is provided.
-    if file_path:
-        saver_func = get_saver(engine=engine)
-        saver_func(figure, file_path)
-
-    return figure
+    return create_plot(
+        data=data,
+        config=BoxConfig,
+        plot_type=PlotType.BOX,
+        engine=engine,
+        file_path=file_path,
+        **kwargs,
+    )
