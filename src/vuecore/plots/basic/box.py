@@ -5,8 +5,10 @@ import pandas as pd
 from vuecore import EngineType
 from vuecore.engines import get_builder, get_saver
 from vuecore.schemas.basic.box import BoxConfig
+from vuecore.utils.docs_utils import document_pydant_params
 
 
+@document_pydant_params(BoxConfig)
 def create_box_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
@@ -34,11 +36,6 @@ def create_box_plot(
         The file format is automatically inferred from the file extension
         (e.g., '.html', '.png', '.jpeg', '.svg'). Defaults to None, meaning
         the plot will not be saved.
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are
-        validated against the `BoxConfig` Pydantic model. Refer to
-        `vuecore.schemas.basic.box.BoxConfig` for all available
-        options and their descriptions.
 
     Returns
     -------
