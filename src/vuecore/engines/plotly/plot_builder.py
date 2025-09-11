@@ -1,8 +1,7 @@
 # vuecore/engines/plotly/plot_builder.py
-from typing import Dict, Any, List, Callable
+from typing import Any, List, Callable
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 
 
 def build_plot(

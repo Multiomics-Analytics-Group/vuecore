@@ -149,14 +149,6 @@ def apply_line_theme(fig: go.Figure, config: LineConfig) -> go.Figure:
         line_shape=config.line_shape,
     )
 
-    # Use the labels dictionary to set axis titles, falling back to defaults
-    x_title = config.x_title or (
-        config.labels.get(config.x) if config.labels else None or config.x.title()
-    )
-    y_title = config.y_title or (
-        config.labels.get(config.y) if config.labels else None or config.y.title()
-    )
-
     # Apply common layout
     fig = _apply_common_layout(fig, config)
 
