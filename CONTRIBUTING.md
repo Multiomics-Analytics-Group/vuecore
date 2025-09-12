@@ -163,6 +163,49 @@ def calculate_average(values: List[float]) -> float:
     return sum(values) / len(values)
 ```
 
+## Test Guidelines 
+
+We encourage comprehensive testing to maintain code quality, so all contributions should include 
+appropriate tests that verify functionality. We use `pytest` as our testing framework. Here are some considerations:
+
+* **Structure:** Place tests in the tests/ directory, mirroring the source structure.
+* **Coverage:** Aim for high test coverage, especially for new features or bug fixes. Try to cover typical use cases as well as edge cases.
+* **Naming:** Use descriptive test function names that indicate what is being tested.
+* **Docstrings:** Include docstrings in your test functions to explain their purpose, following the previous docstring guidelines.
+* **Isolation:** Each test should be independent and not rely on other tests.
+* **Local Execution:** Ensure that tests can be run locally using `pytest` before submitting a PR.
+
+Here is an example of a test script for the `calculate_average` function: 
+
+```python
+import pytest
+from vuecore.utils import calculate_average
+
+def test_calculate_average_basic():
+    """Test basic average calculation with positive numbers."""
+    result = calculate_average([1.0, 2.0, 3.0, 4.0])
+    assert result == 2.5
+
+def test_calculate_average_single_value():
+    """Test average calculation with a single value."""
+    result = calculate_average([5.0])
+    assert result == 5.0
+
+def test_calculate_average_empty_list():
+    """Test average calculation with empty list raises appropriate error."""
+    with pytest.raises(ZeroDivisionError):
+        calculate_average([])
+```
+
+Run the following command in the root directory to execute the tests locally:
+
+```bash
+pytest .
+```
+
+It's possible to run specific test files or functions by providing their paths. 
+See the [pytest documentation][pytest-docs] for more details.
+
 ## Deployment
 
 We created a [CI/CD worflow][cicd-workflow] using **GitHub Actions** to automatically deploy the Python package to 
@@ -195,6 +238,7 @@ the [Software Carpentry guides][soft-cp-guides] and the [acore][acore-repo] proj
 [new-plot-pr-template]: https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/.github/PULL_REQUEST_TEMPLATE/new_plot.md
 [new-plot-pr-query-param]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/main...my-branch?quick_pull=1&template=new_plot.md
 [numpy-docstring-guide]: https://numpydoc.readthedocs.io/en/latest/format.html
+[pytest-docs]: https://docs.pytest.org/en/stable
 [cicd-workflow]: https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/.github/workflows/cdci.yml
 [vuecore-pypi]: https://pypi.org/project/vuecore/
 [releases-vuecore]: https://github.com/Multiomics-Analytics-Group/vuecore/releases
