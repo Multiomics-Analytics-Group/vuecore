@@ -5,8 +5,10 @@ import pandas as pd
 from vuecore import EngineType, PlotType
 from vuecore.schemas.basic.scatter import ScatterConfig
 from vuecore.plots.plot_factory import create_plot
+from vuecore.utils.docs_utils import document_pydant_params
 
 
+@document_pydant_params(ScatterConfig)
 def create_scatter_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
