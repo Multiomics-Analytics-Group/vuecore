@@ -1,7 +1,7 @@
 # Contributing to VueCore
 
-[VueCore][vuecore-repo] is an open source project, and we welcome contributions of all kinds via GitHub issues and 
-pull requests: correct or improve our [documentation][vuecore-docs], report or fix bugs, propose changes, and 
+[VueCore][vuecore-repo] is an **open source project**, and we welcome contributions of all kinds via **GitHub issues** and 
+**pull requests**: correct or improve our [documentation][vuecore-docs], report or fix bugs, propose changes, and 
 implement new features. Please follow these guidelines to make sure that your contribution is easily integrated 
 into the project.
 
@@ -176,7 +176,7 @@ every push to a branch or when a PR is merged into `main`.
 ## Credits
 
 This contribution guide was modified under the [Creative Commons Attribution 4.0 International License][ccby] from 
-the [Software Carpentry guides][soft-cp-guides] and the [acore][acore] project.
+the [Software Carpentry guides][soft-cp-guides] and the [acore][acore-repo] project.
 
 [vuecore-repo]: https://github.com/Multiomics-Analytics-Group/vuecore
 [vuecore-docs]: https://vuecore.readthedocs.io/
@@ -200,4 +200,4 @@ the [Software Carpentry guides][soft-cp-guides] and the [acore][acore] project.
 [releases-vuecore]: https://github.com/Multiomics-Analytics-Group/vuecore/releases
 [ccby]: https://creativecommons.org/licenses/by/4.0/
 [soft-cp-guides]: https://software-carpentry.org/lessons/
-[acore]: https://github.com/Multiomics-Analytics-Group/acore
+[acore-repo]: https://github.com/Multiomics-Analytics-Group/acore
