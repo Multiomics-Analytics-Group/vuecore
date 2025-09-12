@@ -1,5 +1,5 @@
 # vuecore/engines/plotly/plot_builder.py
-from typing import Any, List, Callable
+from typing import Any, Optional, List, Callable
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -53,7 +53,7 @@ def build_plot(
     }
 
     # Apply preprocessing if provided
-    if preprocess:
+    if preprocess and callable(preprocess):
         data, plot_args = preprocess(data, plot_args, config)
 
     # Create the base figure
