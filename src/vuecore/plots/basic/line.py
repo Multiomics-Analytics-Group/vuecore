@@ -5,8 +5,10 @@ import pandas as pd
 from vuecore import EngineType
 from vuecore.engines import get_builder, get_saver
 from vuecore.schemas.basic.line import LineConfig
+from vuecore.utils.docs_utils import document_pydant_params
 
 
+@document_pydant_params(LineConfig)
 def create_line_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
@@ -34,10 +36,6 @@ def create_line_plot(
         The file format is automatically inferred from the file extension
         (e.g., '.html', '.png', '.jpeg', '.svg'). Defaults to None, meaning
         the plot will not be saved.
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are validated
-        against the `LineConfig` Pydantic model. See
-        `vuecore.schemas.basic.line.LineConfig` for all available options.
 
     Returns
     -------

@@ -5,8 +5,10 @@ import pandas as pd
 from vuecore import EngineType
 from vuecore.engines import get_builder, get_saver
 from vuecore.schemas.basic.bar import BarConfig
+from vuecore.utils.docs_utils import document_pydant_params
 
 
+@document_pydant_params(BarConfig)
 def create_bar_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
@@ -34,11 +36,6 @@ def create_bar_plot(
         The file format is automatically inferred from the file extension
         (e.g., '.html', '.png', '.jpeg', '.svg'). Defaults to None, meaning
         the plot will not be saved.
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are
-        validated against the `BarConfig` Pydantic model. Refer to
-        `vuecore.schemas.basic.bar.BarConfig` for all available
-        options and their descriptions.
 
     Returns
     -------
