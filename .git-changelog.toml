@@ -1,0 +1,11 @@
+repository = "."
+output = "CHANGELOG.md"
+convention = "basic"
+provider = "github"
+template = "keepachangelog"
+parse_trailers = true
+parse_refs = true
+sections = []
+versioning = "pep440"
+bump = "auto"
+in_place = true
