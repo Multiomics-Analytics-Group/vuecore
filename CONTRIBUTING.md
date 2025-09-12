@@ -120,7 +120,7 @@ In brief, we use [GitHub flow][github-flow] to manage changes:
 
 We have a general [PR template][general-pr-template] that is loaded autmatically when you open a new PR. 
 Also, if you are adding a new plot, we created a [new plot PR template][new-plot-pr-template]
-with a checklist of all the steps to follow, which you can start by clickiing [here][new-plot-pr-query-param].
+with a checklist of all the steps to follow, which you can use with a query paramter by clicking [here][new-plot-pr-query-param].
 
 Before you submit a PR, check that it meets these guidelines:
 
