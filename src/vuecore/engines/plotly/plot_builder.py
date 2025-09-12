@@ -10,7 +10,7 @@ def build_plot(
     px_function: Callable,
     theming_function: Callable,
     theming_params: List[str],
-    preprocess: Callable = None,
+    preprocess: Optional[Callable] = None,
 ) -> go.Figure:
     """
     Base function to build Plotly figures with common patterns.
