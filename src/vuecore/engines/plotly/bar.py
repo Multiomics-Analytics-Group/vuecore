@@ -6,6 +6,24 @@ import plotly.graph_objects as go
 
 from vuecore.schemas.basic.bar import BarConfig
 from .theming import apply_bar_theme
+from .plot_builder import build_plot
+
+# Define parameters handled by the theme script
+THEMING_PARAMS = [
+    "opacity",
+    "barmode",
+    "log_x",
+    "log_y",
+    "range_x",
+    "range_y",
+    "title",
+    "x_title",
+    "y_title",
+    "subtitle",
+    "template",
+    "width",
+    "height",
+]
 
 
 def build(data: pd.DataFrame, config: BarConfig) -> go.Figure:
@@ -31,37 +49,10 @@ def build(data: pd.DataFrame, config: BarConfig) -> go.Figure:
     go.Figure
         A `plotly.graph_objects.Figure` object representing the bar plot.
     """
-    # Get all parameters from the config model, including extras
-    all_config_params = config.model_dump()
-
-    # Define parameters handled by the theme script
-    theming_params = [
-        "opacity",
-        "barmode",
-        "log_x",
-        "log_y",
-        "range_x",
-        "range_y",
-        "title",
-        "x_title",
-        "y_title",
-        "subtitle",
-        "template",
-        "width",
-        "height",
-    ]
-
-    # Create the dictionary of arguments for px.bar
-    plot_args = {
-        k: v
-        for k, v in all_config_params.items()
-        if k not in theming_params and v is not None
-    }
-
-    # Create the base figure using only the arguments relevant to px.bar
-    fig = px.bar(data, **plot_args)
-
-    # Apply theme and additional styling to the generated figure.
-    fig = apply_bar_theme(fig, config)
-
-    return fig
+    return build_plot(
+        data=data,
+        config=config,
+        px_function=px.bar,
+        theming_function=apply_bar_theme,
+        theming_params=THEMING_PARAMS,
+    )

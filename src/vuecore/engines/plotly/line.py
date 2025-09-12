@@ -6,6 +6,24 @@ import plotly.graph_objects as go
 
 from vuecore.schemas.basic.line import LineConfig
 from .theming import apply_line_theme
+from .plot_builder import build_plot
+
+# Define parameters handled by the theme script
+THEMING_PARAMS = [
+    "markers",
+    "log_x",
+    "log_y",
+    "range_x",
+    "range_y",
+    "line_shape",
+    "title",
+    "x_title",
+    "y_title",
+    "subtitle",
+    "template",
+    "width",
+    "height",
+]
 
 
 def build(data: pd.DataFrame, config: LineConfig) -> go.Figure:
@@ -31,37 +49,10 @@ def build(data: pd.DataFrame, config: LineConfig) -> go.Figure:
     go.Figure
         A `plotly.graph_objects.Figure` object representing the line plot.
     """
-    # Get all parameters from the config model, including extras
-    all_config_params = config.model_dump()
-
-    # Define parameters handled by the theme script
-    theming_params = [
-        "markers",
-        "log_x",
-        "log_y",
-        "range_x",
-        "range_y",
-        "line_shape",
-        "title",
-        "x_title",
-        "y_title",
-        "subtitle",
-        "template",
-        "width",
-        "height",
-    ]
-
-    # Create the dictionary of arguments for px.line
-    plot_args = {
-        k: v
-        for k, v in all_config_params.items()
-        if k not in theming_params and v is not None
-    }
-
-    # Create the base figure using only the arguments for px.line
-    fig = px.line(data, **plot_args)
-
-    # Apply theme and additional styling
-    fig = apply_line_theme(fig, config)
-
-    return fig
+    return build_plot(
+        data=data,
+        config=config,
+        px_function=px.line,
+        theming_function=apply_line_theme,
+        theming_params=THEMING_PARAMS,
+    )

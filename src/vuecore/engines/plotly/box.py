@@ -6,6 +6,25 @@ import plotly.graph_objects as go
 
 from vuecore.schemas.basic.box import BoxConfig
 from .theming import apply_box_theme
+from .plot_builder import build_plot
+
+# Define parameters handled by the theme script
+THEMING_PARAMS = [
+    "boxmode",
+    "log_x",
+    "log_y",
+    "range_x",
+    "range_y",
+    "notched",
+    "points",
+    "title",
+    "x_title",
+    "y_title",
+    "subtitle",
+    "template",
+    "width",
+    "height",
+]
 
 
 def build(data: pd.DataFrame, config: BoxConfig) -> go.Figure:
@@ -31,38 +50,10 @@ def build(data: pd.DataFrame, config: BoxConfig) -> go.Figure:
     go.Figure
         A `plotly.graph_objects.Figure` object representing the box plot.
     """
-    # Get all parameters from the config model, including extras
-    all_config_params = config.model_dump()
-
-    # Define parameters handled by the theme script
-    theming_params = [
-        "boxmode",
-        "log_x",
-        "log_y",
-        "range_x",
-        "range_y",
-        "notched",
-        "points",
-        "title",
-        "x_title",
-        "y_title",
-        "subtitle",
-        "template",
-        "width",
-        "height",
-    ]
-
-    # Create the dictionary of arguments for px.box
-    plot_args = {
-        k: v
-        for k, v in all_config_params.items()
-        if k not in theming_params and v is not None
-    }
-
-    # Create the base figure using only the arguments relevant to px.box
-    fig = px.box(data, **plot_args)
-
-    # Apply theme and additional styling to the generated figure.
-    fig = apply_box_theme(fig, config)
-
-    return fig
+    return build_plot(
+        data=data,
+        config=config,
+        px_function=px.box,
+        theming_function=apply_box_theme,
+        theming_params=THEMING_PARAMS,
+    )

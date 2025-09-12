@@ -7,6 +7,9 @@ from .bar import build as build_bar
 from .box import build as build_box
 from .saver import save
 
+# Import build_utils to ensure it's available
+from . import plot_builder  # noqa: F401
+
 # Register the functions with the central dispatcher
 register_builder(
     plot_type=PlotType.SCATTER, engine=EngineType.PLOTLY, func=build_scatter
