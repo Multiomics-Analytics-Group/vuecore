@@ -4,6 +4,7 @@ from vuecore.schemas.basic.scatter import ScatterConfig
 from vuecore.schemas.basic.line import LineConfig
 from vuecore.schemas.basic.bar import BarConfig
 from vuecore.schemas.basic.box import BoxConfig
+from vuecore.schemas.basic.violin import ViolinConfig
 
 
 def _get_axis_title(config, axis: str) -> str:
@@ -207,6 +208,37 @@ def apply_box_theme(fig: go.Figure, config: BoxConfig) -> go.Figure:
     # Apply trace-specific updates for box plots
     fig.update_traces(
         boxpoints=config.points, notched=config.notched, selector=dict(type="box")
+    )
+
+    # Apply common layout
+    fig = _apply_common_layout(fig, config)
+
+    return fig
+
+
+def apply_violin_theme(fig: go.Figure, config: ViolinConfig) -> go.Figure:
+    """
+    Applies a consistent layout and theme to a Plotly violin plot.
+
+    This function handles all styling and layout adjustments, such as titles,
+    dimensions, templates, and trace properties, separating these concerns
+    from the initial data mapping.
+
+    Parameters
+    ----------
+    fig : go.Figure
+        The Plotly figure object to be styled.
+    config : ViolinConfig
+        The configuration object containing all styling and layout info.
+
+    Returns
+    -------
+    go.Figure
+        The styled Plotly figure object.
+    """
+    # Apply trace-specific updates for violin plots
+    fig.update_traces(
+        points=config.points, box=config.box, selector=dict(type="violin")
     )
 
     # Apply common layout
