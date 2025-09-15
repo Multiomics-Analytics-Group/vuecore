@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fix imports (#3) ([60c725a](https://github.com/Multiomics-Analytics-Group/vuecore/commit/60c725a51e0bbdaa7b490bdd2180a0516109a936) by Henry Webel). * :bug: add missing build dependency (for dynamic versioning based on tags)
+- Fix imports (#3) ([60c725a](https://github.com/Multiomics-Analytics-Group/vuecore/commit/60c725a51e0bbdaa7b490bdd2180a0516109a936) by Henry Webel).
 
 ## [v0.0.1](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.0.1) - 2024-11-28
 
