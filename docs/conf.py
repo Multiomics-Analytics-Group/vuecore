@@ -57,9 +57,8 @@ myst_enable_extensions = ["dollarmath", "amsmath", "colon_fence"]
 
 # Plolty support through require javascript library
 # https://myst-nb.readthedocs.io/en/latest/render/interactive.html#plotly
-html_js_files = [
-    # "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.7/require.min.js"
-]
+# html_js_files = [
+# ]
 
 # https://myst-nb.readthedocs.io/en/latest/configuration.html
 # Execution
