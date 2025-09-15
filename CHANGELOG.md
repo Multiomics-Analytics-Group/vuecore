@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- Remove python restriction, update api examples (#15) ([b5e1678](https://github.com/Multiomics-Analytics-Group/vuecore/commit/b5e1678d8ec68b00bccb62bcb8ca227bc4ced06e) by Henry Webel). * :zap::wrench: only check src folder and add Python 3.13
+- Remove python restriction, update api examples (#15) ([b5e1678](https://github.com/Multiomics-Analytics-Group/vuecore/commit/b5e1678d8ec68b00bccb62bcb8ca227bc4ced06e) by Henry Webel).
 
 ## [v0.0.5](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.0.5) - 2025-01-31
 
