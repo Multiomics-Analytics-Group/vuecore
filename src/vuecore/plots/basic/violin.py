@@ -3,23 +3,23 @@ from typing import Any
 import pandas as pd
 
 from vuecore import EngineType, PlotType
-from vuecore.schemas.basic.box import BoxConfig
+from vuecore.schemas.basic.violin import ViolinConfig
 from vuecore.plots.plot_factory import create_plot
 from vuecore.utils.docs_utils import document_pydant_params
 
 
-@document_pydant_params(BoxConfig)
-def create_box_plot(
+@document_pydant_params(ViolinConfig)
+def create_violin_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
     file_path: str = None,
     **kwargs,
 ) -> Any:
     """
-    Creates, styles, and optionally saves a box plot using the specified engine.
+    Creates, styles, and optionally saves a violin plot using the specified engine.
 
-    This function serves as the main entry point for users to generate box plots.
-    It validates the provided configuration against the `BoxConfig` schema,
+    This function serves as the main entry point for users to generate violin plots.
+    It validates the provided configuration against the `ViolinConfig` schema,
     retrieves the appropriate plotting builder and saver functions based on the
     selected engine, builds the plot, and optionally saves it to a file.
 
@@ -47,7 +47,7 @@ def create_box_plot(
     Raises
     ------
     pydantic.ValidationError
-        If the provided keyword arguments do not conform to the `BoxConfig` schema.
+        If the provided keyword arguments do not conform to the `ViolinConfig` schema.
         e.g., a required parameter is missing or a value has an incorrect type.
     ValueError
         Raised by the plotting engine (e.g., Plotly Express) if a
@@ -65,8 +65,8 @@ def create_box_plot(
     """
     return create_plot(
         data=data,
-        config=BoxConfig,
-        plot_type=PlotType.BOX,
+        config=ViolinConfig,
+        plot_type=PlotType.VIOLIN,
         engine=engine,
         file_path=file_path,
         **kwargs,
