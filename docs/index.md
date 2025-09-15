@@ -39,6 +39,7 @@ reference/vuecore
 :caption: Project Support
 
 sections_readme/contributing
+sections_readme/changelog
 sections_readme/credits
 sections_readme/contact
 ```
