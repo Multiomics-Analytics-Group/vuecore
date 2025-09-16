@@ -52,7 +52,9 @@
 # %% [markdown]
 # ### 0.1. Installing libraries and creating global variables for platform and working directory
 #
-# To run this notebook locally, you should create a virtual environment with the required libraries. If you are running this notebook on Google Colab, everything should be set.
+# To run this notebook locally, you should create a virtual environment
+# with the required libraries. If you are running this notebook on Google
+# Colab, everything should be set.
 
 # %% tags=["hide-output"]
 # VueCore library
@@ -60,10 +62,8 @@
 
 # %% tags=["hide-cell"]
 import os
-
 IN_COLAB = "COLAB_GPU" in os.environ
 
-# %% tags=["hide-cell"]
 # Create a directory for outputs
 output_dir = "./outputs"
 os.makedirs(output_dir, exist_ok=True)
@@ -72,74 +72,39 @@ os.makedirs(output_dir, exist_ok=True)
 # ### 0.2. Importing libraries
 
 # %%
-# Imports
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 from vuecore.plots.basic.line import create_line_plot
 
 # %% [markdown]
 # ### 0.3. Create sample data
-# We create a synthetic dataset showing measurements over five days for two experiments (A, B), each tested under Control and Treatment conditions, with associated measurement errors.
+# We create a synthetic dataset showing measurements over five days for
+# two experiments (A, B), each tested under Control and Treatment
+# conditions, with associated measurement errors.
 
-# %%
-sample_df = pd.DataFrame(
-    {
-        "day": list(range(1, 6)) * 4,  # 5 days
-        "experiment": ["A"] * 10 + ["B"] * 10,  # 2 experiments
-        "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2,  # 2 conditions
-        "value": [
-            11,
-            13,
-            15,
-            17,
-            18,  # A - Control
-            10,
-            12,
-            14,
-            15,
-            16,  # A - Treatment
-            19,
-            20,
-            21,
-            22,
-            23,  # B - Control
-            20,
-            22,
-            21,
-            23,
-            22,  # B - Treatment
-        ],
-        "value_error": [
-            1,
-            1.2,
-            0.9,
-            1.1,
-            1.0,
-            1.3,
-            1.0,
-            1.2,
-            1.4,
-            1.1,
-            2.0,
-            1.8,
-            2.1,
-            1.5,
-            2.3,
-            1.7,
-            2.0,
-            1.8,
-            2.1,
-            2.2,
-        ],
-    }
-)
+# %% tags=["hide-input"]
+sample_df = pd.DataFrame({
+    "day": list(range(1, 6)) * 4,          # 5 days
+    "experiment": ["A"] * 10 + ["B"] * 10,  # 2 experiments
+    "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2,  # 2 conditions
+    "value": [
+        11, 13, 15, 17, 18,   # A - Control
+        10, 12, 14, 15, 16,   # A - Treatment
+        19, 20, 21, 22, 23,   # B - Control
+        20, 22, 21, 23, 22,   # B - Treatment
+    ],
+    "value_error": [1, 1.2, 0.9, 1.1, 1.0, 1.3, 1.0, 1.2, 1.4, 1.1,
+                    2.0, 1.8, 2.1, 1.5, 2.3, 1.7, 2.0, 1.8, 2.1, 2.2],
+})
 
 sample_df.head()
 
 # %% [markdown]
 # ## 1. Basic Line Plot
-# A basic line plot can be created by simply providing the `x`, `y`, and `color` columns from the DataFrame.
+# A basic line plot can be created by simply providing the `x`, `y`, and
+# `color` columns from the DataFrame.
 
 # %%
 # Define output path for the basic png plot
@@ -159,7 +124,9 @@ line_plot_basic.show()
 
 # %% [markdown]
 # ## 2. Advanced Line Plot
-# Here is an example of an advanced line plot with more descriptive parameters, including `error bars`, `line styles`, `markers`, and `custom colors`.
+# Here is an example of an advanced line plot with more descriptive
+# parameters, including `error bars`, `line styles`, `markers`, and
+# `custom colors`.
 
 # %%
 # Define output file path for the HTML plot
@@ -181,8 +148,12 @@ line_plot_adv = create_line_plot(
         "condition": "Condition",
         "experiment": "Experiment",
     },
-    color_discrete_map={"A": "#508AA8", "B": "#A8505E"},
-    line_dash_map={"Control": "solid", "Treatment": "dot"},
+    color_discrete_map={
+        "A": "#508AA8",
+        "B": "#A8505E"},
+    line_dash_map={
+        "Control": "solid",
+        "Treatment": "dot"},
     markers=True,
     line_shape="spline",
     file_path=file_path_adv_html,
