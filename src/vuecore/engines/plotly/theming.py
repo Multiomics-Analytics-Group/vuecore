@@ -236,10 +236,11 @@ def apply_violin_theme(fig: go.Figure, config: ViolinConfig) -> go.Figure:
     go.Figure
         The styled Plotly figure object.
     """
+    # Convert the box boolean parameter from the config to the go.Figure expected format
+    box_dict = {"visible": config.box}
+
     # Apply trace-specific updates for violin plots
-    fig.update_traces(
-        points=config.points, box=config.box, selector=dict(type="violin")
-    )
+    fig.update_traces(points=config.points, box=box_dict, selector=dict(type="violin"))
 
     # Apply common layout
     fig = _apply_common_layout(fig, config)
