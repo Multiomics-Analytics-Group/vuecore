@@ -15,6 +15,7 @@ class PlotType(StrEnum):
     BAR = auto()
     BOX = auto()
     VIOLIN = auto()
+    HISTOGRAM = auto()
 
 
 class EngineType(StrEnum):
