@@ -273,7 +273,6 @@ def apply_histogram_theme(fig: go.Figure, config: HistogramConfig) -> go.Figure:
     fig.update_traces(
         opacity=config.opacity,
         orientation=config.orientation,
-        text_auto=config.text_auto,
         selector=dict(type="histogram"),
     )
 

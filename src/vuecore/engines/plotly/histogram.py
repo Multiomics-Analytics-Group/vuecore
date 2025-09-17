@@ -16,7 +16,6 @@ THEMING_PARAMS = [
     "log_y",
     "range_x",
     "range_y",
-    "text_auto",
     "title",
     "x_title",
     "y_title",
