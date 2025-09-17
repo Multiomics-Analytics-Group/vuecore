@@ -5,7 +5,7 @@ from vuecore.schemas.basic.line import LineConfig
 from vuecore.schemas.basic.bar import BarConfig
 from vuecore.schemas.basic.box import BoxConfig
 from vuecore.schemas.basic.violin import ViolinConfig
-from vuecore.schemas.basic.violin import HistogramConfig
+from vuecore.schemas.basic.histogram import HistogramConfig
 
 
 def _get_axis_title(config, axis: str) -> str:
