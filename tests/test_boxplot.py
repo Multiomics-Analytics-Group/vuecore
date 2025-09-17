@@ -10,7 +10,7 @@ from vuecore.plots.basic.box import create_box_plot
 def sample_box_data() -> pd.DataFrame:
     """
     Fixture for generating synthetic data for box plots, replicating
-    the code used in the docs/api_examples/box_plot.ipynb example.
+    the code used in the docs/api_examples/box_violin_plot.ipynb example.
     """
     # Set a random seed for reproducibility of the synthetic data
     np.random.seed(42)

@@ -58,10 +58,10 @@ def create_box_plot(
     --------
     For detailed examples and usage, please refer to the documentation:
 
-    * **Jupyter Notebook:** `docs/api_examples/box_plot.ipynb` -
-    https://vuecore.readthedocs.io/en/latest/api_examples/box_plot.html
-    * **Python Script:** `docs/api_examples/box_plot.py` -
-    https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/box_plot.py
+    * **Jupyter Notebook:** `docs/api_examples/box_violin_plot.ipynb` -
+    https://vuecore.readthedocs.io/en/latest/api_examples/box_violin_plot.html
+    * **Python Script:** `docs/api_examples/box_violin_plot.py` -
+    https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/box_violin_plot.py
     """
     return create_plot(
         data=data,
