@@ -82,7 +82,8 @@ from vuecore.plots.basic.histogram import create_histogram_plot
 
 # %% [markdown]
 # ### 0.3. Create sample data
-# We create a synthetic dataset simulating gene expression data across two experimental conditions to demonstrate how histograms can visualize data distribution.
+# We create a synthetic dataset simulating gene expression data across two experimental
+# conditions to demonstrate how histograms can visualize data distribution.
 
 # %% tags=["hide-input"]
 # Set a random seed for reproducibility of the synthetic data
@@ -117,7 +118,9 @@ gene_exp_df.head()
 
 # %% [markdown]
 # ## 1. Basic Histogram Plot
-# A basic histogram plot can be created by simply providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
+# A basic histogram plot can be created by simply providing the `x` and `y` columns from the DataFrame,
+# along with style options like `title`
+# using [`create_histogram_plot`](vuecore.plots.basic.histogram.create_histogram_plot) .
 
 # %%
 # Define output file path for the PNG basic histogram

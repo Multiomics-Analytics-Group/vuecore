@@ -149,7 +149,9 @@ box_plot_basic.show()
 
 # %% [markdown]
 # ## 2. Basic Violin Plot
-# A basic violin plot can be created by simply providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
+# A basic violin plot can be created by simply providing the `x` and `y` columns from the DataFrame,
+# along with style options like `title`
+# using [`create_violin_plot`](vuecore.plots.basic.violin.create_violin_plot) .
 
 # %%
 # Define output file path for the PNG basic violin plot
