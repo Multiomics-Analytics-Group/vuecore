@@ -108,8 +108,8 @@ sample_df
 
 # %% [markdown]
 # ## 1. Basic Scatter Plot
-# A basic scatter plot can be created by providing the `x` and `y` columns 
-# from the DataFrame, along with style options like `title` 
+# A basic scatter plot can be created by providing the `x` and `y` columns
+# from the DataFrame, along with style options like `title`
 # using [`create_scatter_plot`](vuecore.plots.basic.scatter.create_scatter_plot).
 
 # %%

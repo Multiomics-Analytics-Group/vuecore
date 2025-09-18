@@ -155,8 +155,8 @@ abund_df.head()
 
 # %% [markdown]
 # ## 1. Basic Bar Plot
-# A basic bar plot can be created by simply providing the `x` and `y` columns from the DataFrame, 
-# along with style options like `title` 
+# A basic bar plot can be created by simply providing the `x` and `y` columns from the DataFrame,
+# along with style options like `title`
 # using [`create_bar_plot`](vuecore.plots.basic.bar.create_bar_plot).
 
 # %%

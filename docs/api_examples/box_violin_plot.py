@@ -72,10 +72,10 @@ os.makedirs(output_dir, exist_ok=True)
 # ### 0.2. Importing libraries
 # %%
 from pathlib import Path
-import plotly.io as pio
 
 import numpy as np
 import pandas as pd
+import plotly.io as pio
 
 from vuecore.plots.basic.box import create_box_plot
 from vuecore.plots.basic.violin import create_violin_plot
@@ -85,7 +85,9 @@ pio.renderers.default = "notebook"
 
 # %% [markdown]
 # ### 0.3. Create sample data
-# We create a synthetic dataset simulating gene expression levels across different patient samples and treatment conditions, with each data point representing a unique gene's expression level under a specific treatment for a particular patient.
+# We create a synthetic dataset simulating gene expression levels across different 
+# patient samples and treatment conditions, with each data point representing a 
+# unique gene's expression level under a specific treatment for a particular patient.
 
 # %% tags=["hide-input"]
 # Set a random seed for reproducibility of the synthetic data
@@ -131,7 +133,7 @@ gene_exp_df
 # %% [markdown]
 # ## 1. Basic Box Plot
 # A basic box plot can be created by simply providing the `x` and `y` columns from the DataFrame,
-# along with style options like `title` 
+# along with style options like `title`
 # using [`create_box_plot`](vuecore.plots.basic.box.create_box_plot).
 
 # %%
