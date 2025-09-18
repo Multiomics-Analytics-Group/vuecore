@@ -2,11 +2,13 @@ from typing import Any
 
 import pandas as pd
 
-from vuecore import EngineType
-from vuecore.engines import get_builder, get_saver
+from vuecore import EngineType, PlotType
 from vuecore.schemas.basic.box import BoxConfig
+from vuecore.plots.plot_factory import create_plot
+from vuecore.utils.docs_utils import document_pydant_params
 
 
+@document_pydant_params(BoxConfig)
 def create_box_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
@@ -17,7 +19,7 @@ def create_box_plot(
     Creates, styles, and optionally saves a box plot using the specified engine.
 
     This function serves as the main entry point for users to generate box plots.
-    It validates the provided configuration against the BoxConfig schema,
+    It validates the provided configuration against the `BoxConfig` schema,
     retrieves the appropriate plotting builder and saver functions based on the
     selected engine, builds the plot, and optionally saves it to a file.
 
@@ -34,11 +36,6 @@ def create_box_plot(
         The file format is automatically inferred from the file extension
         (e.g., '.html', '.png', '.jpeg', '.svg'). Defaults to None, meaning
         the plot will not be saved.
-    **kwargs
-        Keyword arguments for plot configuration. These arguments are
-        validated against the `BoxConfig` Pydantic model. Refer to
-        `vuecore.schemas.basic.box.BoxConfig` for all available
-        options and their descriptions.
 
     Returns
     -------
@@ -61,23 +58,16 @@ def create_box_plot(
     --------
     For detailed examples and usage, please refer to the documentation:
 
-    * **Jupyter Notebook:** `docs/api_examples/box_plot.ipynb` -
-    https://vuecore.readthedocs.io/en/latest/api_examples/box_plot.html
-    * **Python Script:** `docs/api_examples/box_plot.py` -
-    https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/box_plot.py
+    * **Jupyter Notebook:** `docs/api_examples/box_violin_plot.ipynb` -
+    https://vuecore.readthedocs.io/en/latest/api_examples/box_violin_plot.html
+    * **Python Script:** `docs/api_examples/box_violin_plot.py` -
+    https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/docs/api_examples/box_violin_plot.py
     """
-    # 1. Validate configuration using Pydantic.
-    config = BoxConfig(**kwargs)
-
-    # 2. Get the correct builder function from the registry.
-    builder_func = get_builder(plot_type="box", engine=engine)
-
-    # 3. Build the figure object.
-    figure = builder_func(data, config)
-
-    # 4. Save the plot using the correct saver function, if a file_path is provided.
-    if file_path:
-        saver_func = get_saver(engine=engine)
-        saver_func(figure, file_path)
-
-    return figure
+    return create_plot(
+        data=data,
+        config=BoxConfig,
+        plot_type=PlotType.BOX,
+        engine=engine,
+        file_path=file_path,
+        **kwargs,
+    )

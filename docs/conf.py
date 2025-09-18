@@ -4,6 +4,14 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import nltk
+
+# Make sure stopwords are available for autodoc
+try:
+    nltk.data.find("corpora/stopwords")
+except LookupError:
+    nltk.download("stopwords")
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -27,7 +35,6 @@ release = PACKAGE_VERSION
 
 
 # -- General configuration ---------------------------------------------------
-
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
@@ -40,6 +47,7 @@ extensions = [
     "sphinx_new_tab_link",
     "myst_nb",
     "sphinx_copybutton",
+    "sphinxcontrib.autodoc_pydantic",
 ]
 
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
@@ -81,7 +89,6 @@ exclude_patterns = [
     "conf.py",
 ]
 
-
 # Intersphinx options
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
@@ -91,6 +98,30 @@ intersphinx_mapping = {
     # "scikit-learn": ("https://scikit-learn.org/stable/", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
+}
+
+# Options for the autodoc_pydantic extension
+autodoc_pydantic_field_show_default = True
+autodoc_pydantic_field_show_constraints = True
+autodoc_pydantic_field_list_validators = True
+autodoc_pydantic_model_signature_prefix = "class"
+autodoc_pydantic_field_signature_prefix = "attribute"
+autodoc_pydantic_field_show_required = True
+autodoc_pydantic_field_show_optional = True
+autodoc_pydantic_field_show_default = True
+autodoc_pydantic_field_doc_policy = "description"
+autodoc_pydantic_model_member_order = "bysource"
+autodoc_pydantic_model_show_json = False
+autodoc_pydantic_model_show_field_summary = False
+autodoc_pydantic_model_show_config_summary = False
+autodoc_pydantic_model_show_validator_summary = False
+autodoc_pydantic_model_hide_paramlist = False
+autodoc_pydantic_field_list_validators = False
+
+# Options for the autodoc extension
+autodoc_default_options = {
+    "inherited-members": "BaseModel",
+    "show-inheritance": True,
 }
 
 # -- Options for HTML output -------------------------------------------------
