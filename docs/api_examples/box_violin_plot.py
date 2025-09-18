@@ -81,8 +81,8 @@ from vuecore.plots.basic.violin import create_violin_plot
 
 # %% [markdown]
 # ### 0.3. Create sample data
-# We create a synthetic dataset simulating gene expression levels across different 
-# patient samples and treatment conditions, with each data point representing a 
+# We create a synthetic dataset simulating gene expression levels across different
+# patient samples and treatment conditions, with each data point representing a
 # unique gene's expression level under a specific treatment for a particular patient.
 
 # %% tags=["hide-input"]
