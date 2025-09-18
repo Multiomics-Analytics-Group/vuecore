@@ -79,3 +79,10 @@ requires = ["setuptools", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
+
+[tool.ruff.lint]
+# https://docs.astral.sh/ruff/tutorial/#rule-selection
+# 1. Enable flake8-bugbear (`B`) rules
+# 2. Enable pycodestyle (`E`) errors and (`W`) warnings
+# 3. Pyflakes (`F`) errors
+extend-select = ["E", "W", 'F', 'B']
