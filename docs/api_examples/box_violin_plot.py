@@ -75,13 +75,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import plotly.io as pio
 
 from vuecore.plots.basic.box import create_box_plot
 from vuecore.plots.basic.violin import create_violin_plot
-
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
 
 # %% [markdown]
 # ### 0.3. Create sample data

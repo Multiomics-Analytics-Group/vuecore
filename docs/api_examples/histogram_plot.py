@@ -73,15 +73,12 @@ os.makedirs(output_dir, exist_ok=True)
 
 # %%
 # Imports
-import pandas as pd
-import numpy as np
 from pathlib import Path
-import plotly.io as pio
+
+import numpy as np
+import pandas as pd
 
 from vuecore.plots.basic.histogram import create_histogram_plot
-
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
 
 # %% [markdown]
 # ### 0.3. Create sample data
