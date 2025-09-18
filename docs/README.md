@@ -30,7 +30,14 @@ make clean
 make build
 ```
 
-Alternatevely, you can run these commands manually each at a time.
+Alternatevely, you can run these commands manually each at a time, as follows:
+
+```bash
+# pwd: docs
+sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/vuecore
+python split_readme.py
+sphinx-build -n -W --keep-going -b html ./ ./_build/
+```
 
 ## Include repo README.md into docs
 
