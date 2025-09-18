@@ -44,6 +44,18 @@ def get_type_string(annotation: Any) -> str:
         A simplified string representation of the type.
     """
     origin = get_origin(annotation)
+
+    # Handle annotation with more than one type (e.g., str | bool)
+    if origin is None and hasattr(annotation, "__args__"):
+        args = get_args(annotation)
+        if args:
+            arg_strings = [get_type_string(arg) for arg in args]
+            # Exclude NoneType from the list if it's an Optional
+            if type(None) in args:
+                return f"Optional[{' | '.join(s for s in arg_strings if s != 'None')}]"
+            return " | ".join(arg_strings)
+
+    # Handle Optional and Union types with single non-None type
     if origin is Union or origin is Optional:
         args = get_args(annotation)
         non_none_arg = next((arg for arg in args if arg is not type(None)), None)
@@ -63,7 +75,12 @@ def get_type_string(annotation: Any) -> str:
         key_type_str = get_type_string(args[0])
         value_type_str = get_type_string(args[1])
         return f"Dict[{key_type_str}, {value_type_str}]"
-    return annotation.__name__
+
+    # Fallback for primitives and other types
+    if hasattr(annotation, "__name__"):
+        return annotation.__name__
+
+    return str(annotation)
 
 
 def document_pydant_params(model: Type[BaseModel]):
