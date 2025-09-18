@@ -1,6 +1,6 @@
 repository = "."
 output = "CHANGELOG.md"
-convention = "basic"
+convention = "angular"
 provider = "github"
 template = "keepachangelog"
 parse_trailers = true
