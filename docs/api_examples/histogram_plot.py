@@ -84,7 +84,7 @@ from vuecore.plots.basic.histogram import create_histogram_plot
 # ### 0.3. Create sample data
 # We create a synthetic dataset simulating gene expression data across two experimental conditions to demonstrate how histograms can visualize data distribution.
 
-# %%
+# %% tags=["hide-input"]
 # Set a random seed for reproducibility of the synthetic data
 np.random.seed(42)
 
