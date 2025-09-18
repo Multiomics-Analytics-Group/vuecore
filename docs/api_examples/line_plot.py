@@ -62,6 +62,7 @@
 
 # %% tags=["hide-cell"]
 import os
+
 IN_COLAB = "COLAB_GPU" in os.environ
 
 # Create a directory for outputs
@@ -85,26 +86,65 @@ from vuecore.plots.basic.line import create_line_plot
 # conditions, with associated measurement errors.
 
 # %% tags=["hide-input"]
-sample_df = pd.DataFrame({
-    "day": list(range(1, 6)) * 4,          # 5 days
-    "experiment": ["A"] * 10 + ["B"] * 10,  # 2 experiments
-    "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2,  # 2 conditions
-    "value": [
-        11, 13, 15, 17, 18,   # A - Control
-        10, 12, 14, 15, 16,   # A - Treatment
-        19, 20, 21, 22, 23,   # B - Control
-        20, 22, 21, 23, 22,   # B - Treatment
-    ],
-    "value_error": [1, 1.2, 0.9, 1.1, 1.0, 1.3, 1.0, 1.2, 1.4, 1.1,
-                    2.0, 1.8, 2.1, 1.5, 2.3, 1.7, 2.0, 1.8, 2.1, 2.2],
-})
+sample_df = pd.DataFrame(
+    {
+        "day": list(range(1, 6)) * 4,  # 5 days
+        "experiment": ["A"] * 10 + ["B"] * 10,  # 2 experiments
+        "condition": (["Control"] * 5 + ["Treatment"] * 5) * 2,  # 2 conditions
+        "value": [
+            11,  # A - Control
+            13,  # A - Control
+            15,  # A - Control
+            17,  # A - Control
+            18,  # A - Control
+            10,  # A - Treatment
+            12,  # A - Treatment
+            14,  # A - Treatment
+            15,  # A - Treatment
+            16,  # A - Treatment
+            19,  # B - Control
+            20,  # B - Control
+            21,  # B - Control
+            22,  # B - Control
+            23,  # B - Control
+            20,  # B - Treatment
+            22,  # B - Treatment
+            21,  # B - Treatment
+            23,  # B - Treatment
+            22,  # B - Treatment
+        ],
+        "value_error": [
+            1.0,
+            1.2,
+            0.9,
+            1.1,
+            1.0,
+            1.3,
+            1.0,
+            1.2,
+            1.4,
+            1.1,
+            2.0,
+            1.8,
+            2.1,
+            1.5,
+            2.3,
+            1.7,
+            2.0,
+            1.8,
+            2.1,
+            2.2,
+        ],
+    }
+)
 
 sample_df.head()
 
 # %% [markdown]
 # ## 1. Basic Line Plot
 # A basic line plot can be created by simply providing the `x`, `y`, and
-# `color` columns from the DataFrame.
+# `color` columns from the DataFrame
+# using [`create_line_plot`](vuecore.plots.basic.line.create_line_plot).
 
 # %%
 # Define output path for the basic png plot
@@ -148,12 +188,8 @@ line_plot_adv = create_line_plot(
         "condition": "Condition",
         "experiment": "Experiment",
     },
-    color_discrete_map={
-        "A": "#508AA8",
-        "B": "#A8505E"},
-    line_dash_map={
-        "Control": "solid",
-        "Treatment": "dot"},
+    color_discrete_map={"A": "#508AA8", "B": "#A8505E"},
+    line_dash_map={"Control": "solid", "Treatment": "dot"},
     markers=True,
     line_shape="spline",
     file_path=file_path_adv_html,
