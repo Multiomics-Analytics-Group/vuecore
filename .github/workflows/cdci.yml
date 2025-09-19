@@ -2,11 +2,17 @@ name: Python package
 
 on:
   push:
-    branches: [main]
+    branches: [main, add-changelog]
   pull_request:
     branches: [main]
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run on'
+        required: true
+        default: 'main'
     
 jobs:
   format:
@@ -50,6 +56,32 @@ jobs:
           pip install -e .
       - name: Run tests
         run: python -m pytest tests
+
+  changelog:
+    name: Update changelog
+    if: github.event_name == 'release' && github.event.action == 'published' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch for manual run
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Checkout main branch for release
+        if: github.event_name == 'release'
+        uses: actions/checkout@v4
+        with:
+          ref: main 
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update CHANGELOG.md
+        uses: rhysd/changelog-from-release/action@v3
+        with:
+          file: CHANGELOG.md
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          args: -l 6
 
   publish:
     name: Publish package
