@@ -1,7 +1,7 @@
 # Release Notes
 
-All notable changes to this project are documented in this file. It was
-automatically generated with the [changelog-from-release](https://github.com/rhysd/changelog-from-release) tool.
+All notable changes to this project are documented in this file. It was automatically generated with 
+the [changelog-from-release](https://github.com/rhysd/changelog-from-release) tool.
 
 <a id="v0.1.0"></a>
 # [v0.1.0](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.1.0) - 2025-09-18
