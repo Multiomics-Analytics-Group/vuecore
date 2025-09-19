@@ -1,3 +1,4 @@
+## VueCore Documentation
 <!-- https://myst-parser.readthedocs.io/en/latest/faq/index.html
 #include-a-file-from-outside-the-docs-folder-like-readme-md -->
 
@@ -42,6 +43,7 @@ reference/vuecore
 sections_readme/contributing
 sections_readme/credits
 sections_readme/contact
+sections_readme/changelog
 ```
 
 ```{toctree}
