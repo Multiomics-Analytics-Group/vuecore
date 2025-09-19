@@ -20,3 +20,10 @@ jobs:
           file: CHANGELOG.md
           github_token: ${{ secrets.GITHUB_TOKEN }}
           args: "-l 6"
+          commit: false
+          push: false
+
+      - name: Show the generated changelog
+        run: |
+          echo "### Generated CHANGELOG.md"
+          cat CHANGELOG.md
