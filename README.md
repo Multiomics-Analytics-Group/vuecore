@@ -63,7 +63,7 @@ Full details for both licenses can be found in the [LICENSE][vuecore-license] fi
 
 VueCore is an open-source project, and we welcome contributions of all kinds via GitHub issues and pull requests. You can report bugs, suggest improvements, propose new features, or implement changes. 
 
-We follow the [Conventional Commits][conventional-commits] specification for commit messages and use [gitchangelog][gitchangelog-docs] to automatically generate the [CHANGELOG](CHANGELOG.md).
+We follow the [Conventional Commits][conventional-commits] specification for commit messages and use the [changelog-from-release][changelog-from-release-repo] tool to automatically generate the [CHANGELOG](CHANGELOG.md).
 
 Please follow the guidelines in the [CONTRIBUTING](CONTRIBUTING.md) file to ensure that your contribution is easily integrated into the project.
 
@@ -87,7 +87,7 @@ We appreciate your feedback! If you have any comments, suggestions, or run into 
 [vuegen]: https://github.com/Multiomics-Analytics-Group/vuegen
 [acore]: https://github.com/Multiomics-Analytics-Group/acore
 [conventional-commits]: https://www.conventionalcommits.org/
-[gitchangelog-docs]: https://pawamoy.github.io/git-changelog/
+[changelog-from-release-repo]: https://github.com/rhysd/changelog-from-release
 [Mona]: https://multiomics-analytics-group.github.io/
 [Biosustain]: https://www.biosustain.dtu.dk/
 [new-issue]:https://github.com/Multiomics-Analytics-Group/vuecore/issues/new
