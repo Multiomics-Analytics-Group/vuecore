@@ -1,12 +1,8 @@
 name: Test Changelog Update
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to run on'
-        required: true
-        default: 'main'
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   test_changelog:
@@ -16,7 +12,7 @@ jobs:
       - name: Checkout specified branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
 
       - name: Run changelog-from-release for all releases
         uses: rhysd/changelog-from-release/action@v3
@@ -24,5 +20,3 @@ jobs:
           file: CHANGELOG.md
           github_token: ${{ secrets.GITHUB_TOKEN }}
           args: "-l 6"
-          commit: false
-          push: false
