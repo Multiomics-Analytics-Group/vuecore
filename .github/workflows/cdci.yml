@@ -2,17 +2,11 @@ name: Python package
 
 on:
   push:
-    branches: [main, add-changelog]
+    branches: [main]
   pull_request:
     branches: [main]
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to run on'
-        required: true
-        default: 'main'
     
 jobs:
   format:
@@ -59,18 +53,10 @@ jobs:
 
   changelog:
     name: Update changelog
-    if: github.event_name == 'release' && github.event.action == 'published' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout branch for manual run
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Checkout main branch for release
-        if: github.event_name == 'release'
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main 

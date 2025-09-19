@@ -1,0 +1,28 @@
+name: Test Changelog Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run on'
+        required: true
+        default: 'main'
+
+jobs:
+  test_changelog:
+    name: Test Changelog Generation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout specified branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Run changelog-from-release for all releases
+        uses: rhysd/changelog-from-release/action@v3
+        with:
+          file: CHANGELOG.md
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          args: "-l 6"
+          commit: false
+          push: false
