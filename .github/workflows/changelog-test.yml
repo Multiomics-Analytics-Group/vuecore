@@ -19,7 +19,11 @@ jobs:
         with:
           file: CHANGELOG.md
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          args: "-l 6"
+          header: |
+            # Release Notes
+
+            All notable changes to this project are documented in this file. It was
+            automatically generated with the [changelog-from-release](https://github.com/rhysd/changelog-from-release) tool.
           commit: false
           push: false
 
