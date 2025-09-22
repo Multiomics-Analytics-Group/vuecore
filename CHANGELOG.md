@@ -1,7 +1,18 @@
 # Release Notes
 
-All notable changes to this project are documented in this file. It was automatically generated with 
+All notable changes to this project are documented in this file. It was automatically generated with
 the [changelog-from-release](https://github.com/rhysd/changelog-from-release) tool.
+
+<a id="v0.1.1"></a>
+# [v0.1.1](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.1.1) - 2025-09-22
+
+## What's Changed
+* Update API examples  by [@enryH](https://github.com/enryH) in [#40](https://github.com/Multiomics-Analytics-Group/vuecore/pull/40)
+* 📄 Docs: replace MIT license by GPL and update authors in pyproject.toml by [@sayalaruano](https://github.com/sayalaruano) in [#43](https://github.com/Multiomics-Analytics-Group/vuecore/pull/43)
+* 📝 Docs: Create CHANGELOG.md using git-changelog by [@sayalaruano](https://github.com/sayalaruano) in [#38](https://github.com/Multiomics-Analytics-Group/vuecore/pull/38)
+
+[Changes][v0.1.1]
+
 
 <a id="v0.1.0"></a>
 # [v0.1.0](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.1.0) - 2025-09-18
@@ -34,8 +45,6 @@ the [changelog-from-release](https://github.com/rhysd/changelog-from-release) to
 ## New Contributors
 * [@sayalaruano](https://github.com/sayalaruano) made their first contribution in [#10](https://github.com/Multiomics-Analytics-Group/vuecore/pull/10)
 
-**Full Changelog**: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.5...v0.1.0
-
 [Changes][v0.1.0]
 
 
@@ -44,9 +53,6 @@ the [changelog-from-release](https://github.com/rhysd/changelog-from-release) to
 
 ## What's Changed
 * :truck: move PCA plot from acore normalization example by [@enryH](https://github.com/enryH) in [#8](https://github.com/Multiomics-Analytics-Group/vuecore/pull/8)
-
-
-**Full Changelog**: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.4...v0.0.5
 
 [Changes][v0.0.5]
 
@@ -57,9 +63,6 @@ the [changelog-from-release](https://github.com/rhysd/changelog-from-release) to
 ## What's Changed
 * :truck: add functionality from acore by [@enryH](https://github.com/enryH) in [#7](https://github.com/Multiomics-Analytics-Group/vuecore/pull/7)
 
-
-**Full Changelog**: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.3...v0.0.4
-
 [Changes][v0.0.4]
 
 
@@ -67,7 +70,6 @@ the [changelog-from-release](https://github.com/rhysd/changelog-from-release) to
 # [v0.0.3](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.0.3) - 2024-12-18
 
 - fix import error (file was not renamed correctly)
-**Full Changelog**: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.2...v0.0.3
 
 [Changes][v0.0.3]
 
@@ -82,7 +84,6 @@ Prepare for use in acore api examples: format and fix imports
 * Fix imports by [@enryH](https://github.com/enryH) in [#3](https://github.com/Multiomics-Analytics-Group/vuecore/pull/3)
 
 
-**Full Changelog**: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.1...v0.0.2
 
 [Changes][v0.0.2]
 
@@ -98,11 +99,10 @@ First release to have a development version on PyPI. All plots and their depende
 ## New Contributors
 * [@enryH](https://github.com/enryH) made their first contribution in [#1](https://github.com/Multiomics-Analytics-Group/vuecore/pull/1)
 
-**Full Changelog**: https://github.com/Multiomics-Analytics-Group/vuecore/commits/v0.0.1
-
 [Changes][v0.0.1]
 
 
+[v0.1.1]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.1.0...v0.1.1
 [v0.1.0]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.5...v0.1.0
 [v0.0.5]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.4...v0.0.5
 [v0.0.4]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.3...v0.0.4
