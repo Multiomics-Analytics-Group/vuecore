@@ -6,7 +6,7 @@
 
 | Information           | Links                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | :-------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Package**           | [![PyPI Latest Release](https://img.shields.io/pypi/v/vuecore.svg)][vuecore-pypi] [![Supported versions](https://img.shields.io/pypi/pyversions/vuecore.svg)][vuecore-pypi] [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)][mit-license]|
+| **Package**           | [![PyPI Latest Release](https://img.shields.io/pypi/v/vuecore.svg)][vuecore-pypi] [![Supported versions](https://img.shields.io/pypi/pyversions/vuecore.svg)][vuecore-pypi] [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)][gpl-license] |
 | **Documentation**     | [![View - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=flat)][vuecore-docs] [![made-with-sphinx-doc](https://img.shields.io/badge/Made%20with-Sphinx-1f425f.svg)](https://www.sphinx-doc.org/) ![Docs](https://readthedocs.org/projects/vuecore/badge/?style=flat) [![CC BY 4.0][cc-by-shield]][vuecore-license]|
 | **Build**             | [![CI](https://github.com/Multiomics-Analytics-Group/vuecore/actions/workflows/cdci.yml/badge.svg)][ci-gh-action]|                                                                                     
 | **Discuss on GitHub** | [![GitHub issues](https://img.shields.io/github/issues/Multiomics-Analytics-Group/vuecore)][issues] [![GitHub pull requests](https://img.shields.io/github/issues-pr/Multiomics-Analytics-Group/vuecore)][pulls]|
@@ -76,7 +76,7 @@ We appreciate your feedback! If you have any comments, suggestions, or run into 
 [vuecore-license]: https://github.com/Multiomics-Analytics-Group/vuecore/blob/main/LICENSE.md
 [vuecore-docs]: https://vuecore.readthedocs.io/
 [cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
-[mit-license]: https://opensource.org/licenses/MIT
+[gpl-license]: https://www.gnu.org/licenses/gpl-3.0
 [ci-gh-action]: https://github.com/Multiomics-Analytics-Group/vuecore/actions/workflows/cdci.yml
 [issues]: https://github.com/Multiomics-Analytics-Group/vuecore/issues
 [pulls]: https://github.com/Multiomics-Analytics-Group/vuecore/pulls

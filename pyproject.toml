@@ -2,10 +2,11 @@
 authors = [
   { name = "Alberto Santos Delgado", email = "albsad@dtu.dk" },
   { name = "Henry Webel", email = "heweb@dtu.dk" },
+  { name = "Sebastian Ayala Ruano", email = "asaru@dtu.dk" },
 ]
 name = "vuecore"
 dynamic = ["version"]
-description = "A Python package for plotting related to multimodal molecular data. Works with acore."
+description = "A Python package for creating interactive and static visualizations of multi-omics data"
 license = { text = "GNU General Public License v3" }
 readme = "README.md"
 requires-python = ">=3.9"
