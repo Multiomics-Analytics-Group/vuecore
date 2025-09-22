@@ -2,9 +2,9 @@
 
 In order to build the docs you need to
 
-1. install sphinx and additional support packages
-2. build the package reference files
-3. run sphinx to create a local html version
+1. Install sphinx and additional support packages
+2. Build the package reference files
+3. Run sphinx to create a local html version
 
 The documentation is build using readthedocs automatically.
 
@@ -12,23 +12,30 @@ Install the docs dependencies of the package (as speciefied in toml):
 
 ```bash
 # in main folder
-# pip install ".[docs]"
-poetry install --with docs
+pip install ".[docs]"
 ```
 
 ## Build docs using Sphinx command line tools
 
-Command to be run from `path/to/docs`, i.e. from within the `docs` package folder:
+We use `sphinx-apidoc` to create the API reference files from the source code and 
+`sphinx-build` to create the html files. Also, we use a custom script `split_readme.py` to
+split the main `README.md` file into smaller sections for inclusion in the docs.
 
-Options:
-
-- `--separate` to build separate pages for each (sub-)module
+We provide a [Makefile](https://github.com/Multiomics-Analytics-Group/vuecore/blob/HEAD/docs/Makefile) 
+to simplify the cleaning and building process, which you can run from the `docs` folder:
 
 ```bash
 # pwd: docs
-# apidoc
+make clean
+make build
+```
+
+Alternatevely, you can run these commands manually each at a time, as follows:
+
+```bash
+# pwd: docs
 sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/vuecore
-# build docs
+python split_readme.py
 sphinx-build -n -W --keep-going -b html ./ ./_build/
 ```
 
