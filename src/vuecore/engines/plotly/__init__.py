@@ -7,6 +7,7 @@ from .bar import build as build_bar
 from .box import build as build_box
 from .violin import build as build_violin
 from .histogram import build as build_histogram
+from .scatter_map import build as build_scatter_map
 from .saver import save
 
 # Import build_utils to ensure it's available
@@ -22,6 +23,9 @@ register_builder(plot_type=PlotType.BOX, engine=EngineType.PLOTLY, func=build_bo
 register_builder(plot_type=PlotType.VIOLIN, engine=EngineType.PLOTLY, func=build_violin)
 register_builder(
     plot_type=PlotType.HISTOGRAM, engine=EngineType.PLOTLY, func=build_histogram
+)
+register_builder(
+    plot_type=PlotType.SCATTER_MAP, engine=EngineType.PLOTLY, func=build_scatter_map
 )
 
 register_saver(engine=EngineType.PLOTLY, func=save)

@@ -16,6 +16,7 @@ class PlotType(StrEnum):
     BOX = auto()
     VIOLIN = auto()
     HISTOGRAM = auto()
+    SCATTER_MAP = auto()
 
 
 class EngineType(StrEnum):
