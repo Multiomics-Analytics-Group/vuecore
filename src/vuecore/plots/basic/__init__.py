@@ -13,4 +13,5 @@ __all__ = [
     "create_scatter_plot",
     "create_histogram_plot",
     "create_violin_plot",
+    "create_scatter_map_plot",
 ]
