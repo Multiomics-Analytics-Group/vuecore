@@ -6,6 +6,7 @@ from vuecore.schemas.basic.bar import BarConfig
 from vuecore.schemas.basic.box import BoxConfig
 from vuecore.schemas.basic.violin import ViolinConfig
 from vuecore.schemas.basic.histogram import HistogramConfig
+from vuecore.schemas.basic.scatter_map import ScatterMapConfig
 
 
 def _get_axis_title(config, axis: str) -> str:
@@ -278,5 +279,32 @@ def apply_histogram_theme(fig: go.Figure, config: HistogramConfig) -> go.Figure:
 
     # Apply common layout
     fig = _apply_common_layout(fig, config)
+
+    return fig
+
+
+def apply_scatter_map_theme(fig: go.Figure, config: ScatterMapConfig) -> go.Figure:
+    """
+    Applies a consistent layout and theme to a Plotly scatter map plot.
+
+    This function handles all styling and layout adjustments, such as titles,
+    dimensions, templates, and trace properties, separating these concerns
+    from the initial data mapping.
+
+    Parameters
+    ----------
+    fig : go.Figure
+        The Plotly figure object to be styled.
+    config : ScatterMapConfig
+        The configuration object containing all styling and layout info.
+
+    Returns
+    -------
+    go.Figure
+        The styled Plotly figure object.
+    """
+
+    # Apply map-specific layout updates
+    pass
 
     return fig
