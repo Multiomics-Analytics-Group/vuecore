@@ -1,1 +1,15 @@
-from .interactive import get_enrichment_plots
+from .interactive import (
+    create_enrichment_plots_interactive,
+    get_enrichment_plot,
+    get_enrichment_plots,
+    get_scatterplot,
+)
+from .static import create_enrichment_plots_static
+
+__all__ = [
+    "get_scatterplot",
+    "get_enrichment_plot",
+    "get_enrichment_plots",
+    "create_enrichment_plots_interactive",
+    "create_enrichment_plots_static",
+]
