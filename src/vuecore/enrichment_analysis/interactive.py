@@ -3,6 +3,23 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
+DIRECTION_COLORS = {
+    "upregulated": "#cb181d",
+    "downregulated": "#3288bd",
+    "regulated": "#ae017e",
+    "non-regulated": "#fcc5c0",
+}
+
+ENRICHMENT_HOVERING_COLS = [
+    "foreground",
+    "foreground_pop",
+    "background",
+    "background_pop",
+    "pvalue",
+    "padj",
+    "identifiers",
+]
+
 
 def get_scatterplot(
     data,
@@ -86,8 +103,14 @@ def get_scatterplot(
     return figure
 
 
-# ! define schema for enrichment_results
-def get_enrichment_plots(enrichment_results, width=900, height=800, title="Enrichment"):
+def get_enrichment_plots(
+    enrichment_results,
+    width=900,
+    height=800,
+    title="Enrichment",
+    colors=DIRECTION_COLORS,
+    hovering_cols=ENRICHMENT_HOVERING_COLS,
+):
     """
     This function generates a scatter plot with enriched terms (y-axis)
     and their adjusted pvalues (x-axis)
@@ -97,6 +120,9 @@ def get_enrichment_plots(enrichment_results, width=900, height=800, title="Enric
     :param int width: plot width.
     :param int height: plot height.
     :param str title: title of the figure.
+    :param dict colors: dictionary with colors to be used for each direction/group.
+    :param list hovering_cols: list of columns in dataframe that will be shown when
+                                hovering over a dot.
     :return list: list of scatter plots one for each enrichment table available
                   (i.e pairwise comparisons)
 
@@ -105,51 +131,37 @@ def get_enrichment_plots(enrichment_results, width=900, height=800, title="Enric
         figure = get_enrichment_plots(df, width=1500, height=800, title="Enrichment")
     """
     figures = []
-    colors = {
-        "upregulated": "#cb181d",
-        "downregulated": "#3288bd",
-        "regulated": "#ae017e",
-        "non-regulated": "#fcc5c0",
-    }
 
     if not isinstance(enrichment_results, dict):
-        aux = enrichment_results.copy()
-        enrichment_results = {"regulated~non-regulated": aux}
+        enrichment_results = {"regulated~non-regulated": enrichment_results.copy()}
 
-    for g in enrichment_results:
+    for g, table in enrichment_results.items():
+        if table.empty:
+            continue
+        df = table[table.rejected]
+        if df.empty:
+            continue
+        group = "direction" if "direction" in df else None
+        df = df.sort_values(by=[group, "padj"], ascending=False)
+        df["x"] = -np.log10(df["padj"])
+
         g1, g2 = g.split("~")
-        group = "direction"
-        if not enrichment_results[g].empty:
-            df = enrichment_results[g][enrichment_results[g].rejected]
-            if "direction" not in df:
-                group = None
-            if not df.empty:
-                df = df.sort_values(by=[group, "padj"], ascending=False)
-                df["x"] = -np.log10(df["padj"])
-                fig = get_scatterplot(
-                    df,
-                    x="x",
-                    y="terms",
-                    group=group,
-                    symbol=group,
-                    size="foreground",
-                    hovering_cols=[
-                        "foreground",
-                        "foreground_pop",
-                        "background",
-                        "background_pop",
-                        "pvalue",
-                        "padj",
-                        "identifiers",
-                    ],
-                    title="{} {} vs {}".format(title, g1, g2),
-                    x_title="-log10(padj)",
-                    y_title="Enriched terms",
-                    width=width,
-                    height=height,
-                    colors=colors,
-                )
-                figures.append(fig)
+        fig = get_scatterplot(
+            df,
+            x="x",
+            y="terms",
+            group=group,
+            symbol=group,
+            size="foreground",
+            hovering_cols=hovering_cols,
+            title="{} {} vs {}".format(title, g1, g2),
+            x_title="-log10(padj)",
+            y_title="Enriched terms",
+            width=width,
+            height=height,
+            colors=colors,
+        )
+        figures.append(fig)
 
     return figures
 
