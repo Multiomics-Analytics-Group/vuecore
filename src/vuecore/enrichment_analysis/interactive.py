@@ -4,93 +4,63 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def get_scatterplot(data, args):
+def get_scatterplot(
+    data,
+    x="x",
+    y="y",
+    group=None,
+    hovering_cols=None,
+    size=None,
+    symbol=None,
+    trendline=None,
+    text=None,
+    title="Scatter plot",
+    x_title="x",
+    y_title="y",
+    height=800,
+    width=800,
+    colors=None,
+):
     """
     This function plots a simple Scatterplot.
 
     :param data: is a Pandas DataFrame with four columns: "name", x values and y values
                  (provided as variables) to plot.
-    :param dict args: see below.
-    :Arguments:
-        * **title** (str) -- title of the figure.
-        * **x** (str) -- column in dataframe with values for x
-        * **y** (str) -- column in dataframe with values for y
-        * **group** (str) -- column in dataframe with the groups - translates into colors \
-                             (default None)
-        * **hovering_cols** (list) -- list of columns in dataframe that will be shown when \
-                                      hovering over a dot
-        * **size**  (str) -- column in dataframe that contains the size of the dots (default None)
-        * **trendline** (bool) -- whether or not to draw a trendline
-        * **text** (str) -- column in dataframe that contains the values shown for each dot
-        * **x_title** (str) -- plot x axis title.
-        * **y_title** (str) -- plot y axis title.
-        * **height** (int) -- plot height.
-        * **width** (int) -- plot width.
-        * **colors** (dict) -- dictionary with colors to be used for each group
+    :param str x: column in dataframe with values for x
+    :param str y: column in dataframe with values for y
+    :param str group: column in dataframe with the groups - translates into colors
+    :param list hovering_cols: list of columns in dataframe that will be shown when
+                                hovering over a dot
+    :param str size: column in dataframe that contains the size of the dots
+    :param str symbol: column in dataframe that contains the symbol of the dots
+    :param bool trendline: whether or not to draw a trendline
+    :param str text: column in dataframe that contains the values shown for each dot
+    :param str title: title of the figure.
+    :param str x_title: plot x axis title.
+    :param str y_title: plot y axis title.
+    :param int height: plot height.
+    :param int width: plot width.
+    :param dict colors: dictionary with colors to be used for each group
     :return: scatterplot figure within the <div id="_dash-app-content">.
 
     Example::
 
-        result = get_scatterplot(data,
-                                 identifier='scatter plot',
-                                 args={'title':'Scatter Plot',
-                                        'x_title':'x_axis',
-                                        'y_title':'y_axis',
-                                        'height':100,
-                                        'width':100}
-                                )
+        result = get_scatterplot(
+            data,
+            title="Scatter Plot",
+            x_title="x_axis",
+            y_title="y_axis",
+            height=100,
+            width=100,
+        )
     """
-    annotation = []
-    title = "Scatter plot"
-    x_title = "x"
-    y_title = "y"
-    height = 800
-    width = 800
-    size = None
-    symbol = None
-    x = "x"
-    y = "y"
-    trendline = None
-    group = None
-    text = None
-    if "x" in args:
-        x = args["x"]
-    if "y" in args:
-        y = args["y"]
-    if "group" in args:
-        group = args["group"]
-    if "hovering_cols" in args:
-        annotation = args["hovering_cols"]
-    if "title" in args:
-        title = args["title"]
-    if "x_title" in args:
-        x_title = args["x_title"]
-    if "y_title" in args:
-        y_title = args["y_title"]
-    if "height" in args:
-        height = args["height"]
-    if "width" in args:
-        width = args["width"]
-    if "size" in args:
-        size = args["size"]
-    if "symbol" in args:
-        symbol = args["symbol"]
-    if "trendline" in args:
-        trendline = args["trendline"]
-    if "text" in args:
-        text = args["text"]
-
-    colors = None
-    if "colors" in args and isinstance(args["colors"], dict):
-        colors = args["colors"]
-
     figure = px.scatter(
         data,
         x=x,
         y=y,
         color=group,
         color_discrete_map=colors,
-        hover_data=annotation,
+        hover_data=hovering_cols,
         size=size,
         symbol=symbol,
         trendline=trendline,
@@ -117,43 +87,30 @@ def get_scatterplot(data, args):
 
 
 # ! define schema for enrichment_results
-def get_enrichment_plots(enrichment_results, args):
+def get_enrichment_plots(enrichment_results, width=900, height=800, title="Enrichment"):
     """
     This function generates a scatter plot with enriched terms (y-axis)
     and their adjusted pvalues (x-axis)
 
     :param pandas.DataFrame enrichment_results: dataframe with the enrichment data to plot
                                          (see enrichment functions for format)
-    :param dict args: dictionary containing the arguments needed to plot the figure
-                      (width, height, title)
+    :param int width: plot width.
+    :param int height: plot height.
+    :param str title: title of the figure.
     :return list: list of scatter plots one for each enrichment table available
                   (i.e pairwise comparisons)
 
     Example::
 
-        figure = get_enrichment_plots(df,
-                                     identifier='enrichment',
-                                     args={'width':1500,
-                                           'height':800,
-                                           'title':'Enrichment'}
-                                    )
+        figure = get_enrichment_plots(df, width=1500, height=800, title="Enrichment")
     """
     figures = []
-    width = 900
-    height = 800
     colors = {
         "upregulated": "#cb181d",
         "downregulated": "#3288bd",
         "regulated": "#ae017e",
         "non-regulated": "#fcc5c0",
     }
-    title = "Enrichment"
-    if "width" in args:
-        width = args["width"]
-    if "height" in args:
-        height = args["height"]
-    if "title" in args:
-        title = args["title"]
 
     if not isinstance(enrichment_results, dict):
         aux = enrichment_results.copy()
@@ -171,28 +128,26 @@ def get_enrichment_plots(enrichment_results, args):
                 df["x"] = -np.log10(df["padj"])
                 fig = get_scatterplot(
                     df,
-                    args={
-                        "x": "x",
-                        "y": "terms",
-                        "group": group,
-                        "title": "{} {} vs {}".format(title, g1, g2),
-                        "symbol": group,
-                        "colors": colors,
-                        "x_title": "-log10(padj)",
-                        "y_title": "Enriched terms",
-                        "width": width,
-                        "height": height,
-                        "hovering_cols": [
-                            "foreground",
-                            "foreground_pop",
-                            "background",
-                            "background_pop",
-                            "pvalue",
-                            "padj",
-                            "identifiers",
-                        ],
-                        "size": "foreground",
-                    },
+                    x="x",
+                    y="terms",
+                    group=group,
+                    symbol=group,
+                    size="foreground",
+                    hovering_cols=[
+                        "foreground",
+                        "foreground_pop",
+                        "background",
+                        "background_pop",
+                        "pvalue",
+                        "padj",
+                        "identifiers",
+                    ],
+                    title="{} {} vs {}".format(title, g1, g2),
+                    x_title="-log10(padj)",
+                    y_title="Enriched terms",
+                    width=width,
+                    height=height,
+                    colors=colors,
                 )
                 figures.append(fig)
 
@@ -208,7 +163,5 @@ if __name__ == "__main__":
     enrichment_results = pd.read_csv(fname, index_col=0)
 
     # %%
-    figures = get_enrichment_plots(
-        enrichment_results, args={"width": 1500, "height": 800, "title": "Enrichment"}
-    )
+    figures = get_enrichment_plots(enrichment_results, width=1500, height=800, title="Enrichment")
     figures[0]
