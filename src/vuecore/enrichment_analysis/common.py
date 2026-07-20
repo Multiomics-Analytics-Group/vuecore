@@ -1,17 +1,21 @@
 from typing import Dict, Iterable, List, Optional, Tuple, Union
+
+DEFAULT_COMPARISON_SEPARATOR = "~"
 DEFAULT_DIRECTION_COLORS = ["#cb181d", "#3288bd", "#ae017e", "#fcc5c0"]
 
 
-def split_comparison_key(comparison_key: str) -> Tuple[str, str]:
+def split_comparison_key(comparison_key: str, separator: str = "~") -> Tuple[str, str]:
     """Split a key of the form 'group1~group2' into individual labels."""
-    if "~" not in comparison_key:
+    if separator not in comparison_key:
         return comparison_key, ""
-    return comparison_key.split("~", 1)
+    return comparison_key.split(separator, 1)
 
 
-def format_comparison_title(base_title: str, comparison_key: str) -> str:
+def format_comparison_title(
+    base_title: str, comparison_key: str, separator: str = DEFAULT_COMPARISON_SEPARATOR
+) -> str:
     """Build a readable figure title from base title and comparison key."""
-    group_1, group_2 = split_comparison_key(comparison_key)
+    group_1, group_2 = split_comparison_key(comparison_key, separator)
     if not group_2:
         return f"{base_title} {group_1}"
     return f"{base_title} {group_1} vs {group_2}"
