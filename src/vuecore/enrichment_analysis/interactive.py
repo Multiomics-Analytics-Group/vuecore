@@ -9,7 +9,6 @@ from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
 
 from vuecore.enrichment_analysis.common import (
     format_comparison_title,
-    prepare_enrichment_tables,
 )
 
 DIRECTION_COLORS = {
@@ -30,6 +29,7 @@ ENRICHMENT_HOVERING_COLS = [
 ]
 
 
+# ToDo: get_enrichment_plot_plotly
 def get_scatterplot(
     data,
     x="x",
@@ -112,59 +112,7 @@ def get_scatterplot(
     return figure
 
 
-def get_enrichment_plots(
-    enrichment_results,
-    width=900,
-    height=800,
-    title="Enrichment",
-    colors=DIRECTION_COLORS,
-    hovering_cols=ENRICHMENT_HOVERING_COLS,
-):
-    """
-    This function generates a scatter plot with enriched terms (y-axis)
-    and their adjusted pvalues (x-axis)
-
-    :param pandas.DataFrame enrichment_results: dataframe with the enrichment data to plot
-                                         (see enrichment functions for format)
-    :param int width: plot width.
-    :param int height: plot height.
-    :param str title: title of the figure.
-    :param dict colors: dictionary with colors to be used for each direction/group.
-    :param list hovering_cols: list of columns in dataframe that will be shown when
-                                hovering over a dot.
-    :return list: list of scatter plots one for each enrichment table available
-                  (i.e pairwise comparisons)
-
-    Example::
-
-        figure = get_enrichment_plots(df, width=1500, height=800, title="Enrichment")
-    """
-    figures = []
-
-    for comparison_key, df, g1, g2, group in prepare_enrichment_tables(
-        enrichment_results
-    ):
-        fig = get_scatterplot(
-            df,
-            x="x",
-            y="terms",
-            group=group,
-            symbol=group,
-            size="foreground",
-            hovering_cols=hovering_cols,
-            title="{} {} vs {}".format(title, g1, g2),
-            x_title="-log10(padj)",
-            y_title="Enriched terms",
-            width=width,
-            height=height,
-            colors=colors,
-        )
-        figures.append(fig)
-
-    return figures
-
-
-def create_enrichment_plots_interactive(
+def get_enrichment_plot(
     enrichment_results: pd.DataFrame,
     comparison: Optional[str] = None,
     width: int = 900,
@@ -239,10 +187,6 @@ def create_enrichment_plots_interactive(
     )
 
 
-# Backward-compatible alias to match historical singular import name.
-get_enrichment_plot = get_enrichment_plots
-
-
 # %%
 if __name__ == "__main__":
     # %%
@@ -251,7 +195,9 @@ if __name__ == "__main__":
     fname = "/Users/heweb/Documents/repos/vuecore/tests/data/enrichment_analysis.csv"
     enrichment_results = pd.read_csv(fname, index_col=0)
 
-    figures = get_enrichment_plots(
+    figure = get_enrichment_plot(
         enrichment_results, width=1500, height=800, title="Enrichment"
     )
-    figures[0]
+    figure.show()
+
+# %%
