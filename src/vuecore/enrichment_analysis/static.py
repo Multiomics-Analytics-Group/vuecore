@@ -1,4 +1,5 @@
 # %%
+from logging import getLogger
 from typing import Dict, Optional, Union
 
 import matplotlib.figure
@@ -15,6 +16,8 @@ from vuecore.enrichment_analysis.interactive import (
 )
 
 DEFAULT_DPI = 100
+
+logger = getLogger(__name__)
 
 
 def _scale_marker_sizes(
@@ -93,7 +96,7 @@ def get_enrichment_plot(
     height: int = 500,
     title: str = "Enrichment",
     colors: Dict[str, str] = DIRECTION_COLORS,
-    hovering_cols: list = ENRICHMENT_HOVERING_COLS,
+    **kwargs,
 ) -> matplotlib.figure.Figure:
     """
     Create a static enrichment scatter plot for a single comparison based on an
@@ -115,8 +118,8 @@ def get_enrichment_plot(
         Base title for the plot.
     colors : dict[str, str], optional
         Color mapping by direction.
-    hovering_cols : list, optional
-        Accepted for API parity with the interactive version. Static figures do
+    **kwargs : dict
+        Additional keyword arguments for API parity with the interactive version. Static figures do
         not render hover tooltips.
 
     Returns
@@ -126,6 +129,9 @@ def get_enrichment_plot(
     """
 
     df: pd.DataFrame = EnrichmentAnalysisSchema.validate(enrichment_results)
+
+    if kwargs:
+        logger.info(f"Additional unused kwargs passed to get_enrichment_plot: {kwargs}")
 
     available = sorted(df["comparison"].unique())
     if comparison is None:

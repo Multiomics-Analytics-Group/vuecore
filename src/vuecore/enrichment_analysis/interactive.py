@@ -1,4 +1,5 @@
 # %%
+from logging import getLogger
 from typing import Dict, Optional, Union
 
 import numpy as np
@@ -11,6 +12,8 @@ from pandera.typing.pandas import DataFrame
 from vuecore.enrichment_analysis.common import (
     format_comparison_title,
 )
+
+logger = getLogger(__name__)
 
 DIRECTION_COLORS = {
     "upregulated": "#cb181d",
@@ -121,6 +124,7 @@ def get_enrichment_plot(
     title: str = "Enrichment",
     colors: Dict[str, str] = DIRECTION_COLORS,
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
+    **kwargs,
 ) -> go.Figure:
     """
     Create an interactive enrichment scatter plot for a single comparison.
@@ -143,6 +147,8 @@ def get_enrichment_plot(
         Color mapping by direction.
     hovering_cols : list, optional
         Hover columns shown in tooltips.
+    **kwargs : dict
+        Additional keyword arguments for API parity with the static version.
 
     Returns
     -------
@@ -150,6 +156,9 @@ def get_enrichment_plot(
         The scatter plot for the selected comparison.
     """
     df: pd.DataFrame = EnrichmentAnalysisSchema.validate(enrichment_results)
+
+    if kwargs:
+        logger.info(f"Additional unused kwargs passed to get_enrichment_plot: {kwargs}")
 
     available = sorted(df["comparison"].unique())
     if comparison is None:
