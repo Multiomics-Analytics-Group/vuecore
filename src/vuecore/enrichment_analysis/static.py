@@ -1,18 +1,13 @@
 # %%
-from pathlib import Path
-from typing import Any, Dict, Mapping, Optional, Union
+from typing import Dict, Optional
 
 import matplotlib.figure
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
 
-from vuecore.enrichment_analysis.common import (
-    STATIC_OUTPUT_FORMATS,
-    build_output_path,
-    format_comparison_title,
-    prepare_enrichment_tables,
-    validate_output_format,
-)
+from vuecore.enrichment_analysis.common import format_comparison_title
 from vuecore.enrichment_analysis.interactive import (
     DIRECTION_COLORS,
     ENRICHMENT_HOVERING_COLS,
@@ -34,16 +29,6 @@ def _scale_marker_sizes(
         return [min_size] * len(numeric)
     scaled = (numeric - min_value) / (max_value - min_value)
     return (min_size + scaled * (max_size - min_size)).tolist()
-
-
-def _save_matplotlib_figure(
-    fig: matplotlib.figure.Figure,
-    output_path: Path,
-    output_format: str,
-    dpi: int = DEFAULT_DPI,
-) -> None:
-    """Save a matplotlib figure with a format inferred from the API contract."""
-    fig.savefig(output_path, format=output_format, bbox_inches="tight", dpi=dpi)
 
 
 def _build_static_enrichment_figure(
@@ -101,82 +86,73 @@ def _build_static_enrichment_figure(
 
 
 def create_enrichment_plots_static(
-    enrichment_results: Union[pd.DataFrame, Mapping[str, pd.DataFrame]],
-    output_folder: Optional[str] = None,
-    output_format: str = "png",
-    width: int = 900,
-    height: int = 800,
+    enrichment_results: pd.DataFrame,
+    comparison: Optional[str] = None,
+    width: int = 700,
+    height: int = 500,
     title: str = "Enrichment",
     colors: Dict[str, str] = DIRECTION_COLORS,
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
-) -> Dict[str, Dict[str, Any]]:
+) -> matplotlib.figure.Figure:
     """
-    Create enrichment scatter plots and optionally save static files per comparison.
+    Create a static enrichment scatter plot for a single comparison.
 
     Parameters
     ----------
-    enrichment_results : pd.DataFrame or mapping[str, pd.DataFrame]
-        One enrichment table or dictionary keyed by comparison label.
-    output_folder : str, optional
-        Directory where files are written. If omitted, no files are saved.
-    output_format : str, optional
-        Static format (png, svg, pdf, webp, jpg, jpeg). Default is "png".
+    enrichment_results : pd.DataFrame
+        Enrichment results validated against `EnrichmentAnalysisSchema`, with
+        one or more comparisons stacked in the 'comparison' column.
+    comparison : str, optional
+        Comparison to plot. Required when more than one comparison is present;
+        inferred automatically when there is only one.
     width : int, optional
         Plot width.
     height : int, optional
         Plot height.
     title : str, optional
-        Base title for all plots.
+        Base title for the plot.
     colors : dict[str, str], optional
-        Color mapping by direction/group.
+        Color mapping by direction.
     hovering_cols : list, optional
         Accepted for API parity with the interactive version. Static figures do
         not render hover tooltips.
 
     Returns
     -------
-    dict[str, dict[str, Any]]
-        Mapping from comparison key to payload containing the figure and output path.
+    matplotlib.figure.Figure
+        The scatter plot for the selected comparison.
     """
-    normalized_output_format = validate_output_format(
-        output_format=output_format,
-        allowed_formats=STATIC_OUTPUT_FORMATS,
-    )
-    results: Dict[str, Dict[str, Any]] = {}
+    df: pd.DataFrame = EnrichmentAnalysisSchema.validate(enrichment_results)
 
-    for comparison_key, df, _, _, group in prepare_enrichment_tables(
-        enrichment_results
-    ):
-        fig = _build_static_enrichment_figure(
-            df=df,
-            comparison_key=comparison_key,
-            group=group,
-            width=width,
-            height=height,
-            title=title,
-            colors=colors,
+    available = sorted(df["comparison"].unique())
+    if comparison is None:
+        if len(available) > 1:
+            raise ValueError(
+                "Multiple comparisons are available: "
+                f"{', '.join(available)}. Pass `comparison` to select one."
+            )
+        comparison = available[0]
+    elif comparison not in available:
+        raise ValueError(
+            f"Comparison '{comparison}' not found. Available comparisons: "
+            f"{', '.join(available)}."
         )
 
-        output_path = None
-        if output_folder:
-            output_path = build_output_path(
-                output_folder=output_folder,
-                comparison_key=comparison_key,
-                output_format=normalized_output_format,
-            )
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            _save_matplotlib_figure(
-                fig=fig,
-                output_path=output_path,
-                output_format=normalized_output_format,
-            )
+    df = df.query("comparison == @comparison and rejected").copy()
+    df = df.sort_values(by=["direction", "padj"], ascending=False).reset_index(
+        drop=True
+    )
+    df["x"] = -np.log10(df["padj"])
 
-        results[comparison_key] = {
-            "figure": fig,
-            "output_path": str(output_path) if output_path else None,
-        }
-
-    return results
+    return _build_static_enrichment_figure(
+        df=df,
+        comparison_key=comparison,
+        group="direction",
+        width=width,
+        height=height,
+        title=title,
+        colors=colors,
+    )
 
 
 # %%
@@ -187,9 +163,9 @@ if __name__ == "__main__":
     fname = "/Users/heweb/Documents/repos/vuecore/tests/data/enrichment_analysis.csv"
     enrichment_results = pd.read_csv(fname, index_col=0)
 
-    figures = create_enrichment_plots_static(
+    figure = create_enrichment_plots_static(
         enrichment_results, width=1500, height=800, title="Enrichment"
     )
-    figures["regulated~non-regulated"]["figure"]
+    # figure
 
 # %%
