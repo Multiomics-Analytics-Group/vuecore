@@ -1,11 +1,12 @@
 # %%
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
+from pandera.typing.pandas import DataFrame
 
 from vuecore.enrichment_analysis.common import format_comparison_title
 from vuecore.enrichment_analysis.interactive import (
@@ -86,7 +87,7 @@ def _build_static_enrichment_figure(
 
 
 def get_enrichment_plot_static(
-    enrichment_results: pd.DataFrame,
+    enrichment_results: Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]],
     comparison: Optional[str] = None,
     width: int = 700,
     height: int = 500,
@@ -95,11 +96,12 @@ def get_enrichment_plot_static(
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
 ) -> matplotlib.figure.Figure:
     """
-    Create a static enrichment scatter plot for a single comparison.
+    Create a static enrichment scatter plot for a single comparison based on an
+    EnrichmentAnalysisSchema compliant DataFrame. The plot is rendered using matplotlib.
 
     Parameters
     ----------
-    enrichment_results : pd.DataFrame
+    enrichment_results : Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]]
         Enrichment results validated against `EnrichmentAnalysisSchema`, with
         one or more comparisons stacked in the 'comparison' column.
     comparison : str, optional
@@ -122,6 +124,7 @@ def get_enrichment_plot_static(
     matplotlib.figure.Figure
         The scatter plot for the selected comparison.
     """
+
     df: pd.DataFrame = EnrichmentAnalysisSchema.validate(enrichment_results)
 
     available = sorted(df["comparison"].unique())

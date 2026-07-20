@@ -1,11 +1,12 @@
 # %%
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
+from pandera.typing.pandas import DataFrame
 
 from vuecore.enrichment_analysis.common import (
     format_comparison_title,
@@ -113,7 +114,7 @@ def get_enrichment_plot_plotly(
 
 
 def get_enrichment_plot(
-    enrichment_results: pd.DataFrame,
+    enrichment_results: Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]],
     comparison: Optional[str] = None,
     width: int = 900,
     height: int = 800,
@@ -126,7 +127,7 @@ def get_enrichment_plot(
 
     Parameters
     ----------
-    enrichment_results : pd.DataFrame
+    enrichment_results : Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]]
         Enrichment results validated against `EnrichmentAnalysisSchema`, with
         one or more comparisons stacked in the 'comparison' column.
     comparison : str, optional
