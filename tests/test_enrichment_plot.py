@@ -7,7 +7,7 @@ from pandera.errors import SchemaError
 from plotly.graph_objects import Figure as PlotlyFigure
 
 from vuecore.enrichment_analysis import (
-    get_enrichment_plot,
+    get_enrichment_plot_interactive,
     get_enrichment_plot_static,
 )
 
@@ -21,7 +21,7 @@ def enrichment_df() -> pd.DataFrame:
 def test_get_enrichment_plot_infers_single_comparison(
     enrichment_df: pd.DataFrame,
 ):
-    figure = get_enrichment_plot(enrichment_results=enrichment_df)
+    figure = get_enrichment_plot_interactive(enrichment_results=enrichment_df)
 
     assert isinstance(figure, PlotlyFigure)
 
@@ -34,9 +34,9 @@ def test_get_enrichment_plot_splits_by_comparison_column(
     combined = pd.concat([enrichment_df, other_df], ignore_index=True)
 
     with pytest.raises(ValueError, match="Multiple comparisons are available"):
-        get_enrichment_plot(enrichment_results=combined)
+        get_enrichment_plot_interactive(enrichment_results=combined)
 
-    figure = get_enrichment_plot(
+    figure = get_enrichment_plot_interactive(
         enrichment_results=combined, comparison="control~20 µm sulforaphane"
     )
     assert isinstance(figure, PlotlyFigure)
@@ -46,7 +46,7 @@ def test_get_enrichment_plot_unknown_comparison_raises(
     enrichment_df: pd.DataFrame,
 ):
     with pytest.raises(ValueError, match="not found"):
-        get_enrichment_plot(
+        get_enrichment_plot_interactive(
             enrichment_results=enrichment_df, comparison="does-not-exist"
         )
 
@@ -57,7 +57,7 @@ def test_get_enrichment_plot_missing_required_columns_raises(
     bad_df = enrichment_df.drop(columns=["padj"])
 
     with pytest.raises(SchemaError):
-        get_enrichment_plot(enrichment_results=bad_df)
+        get_enrichment_plot_interactive(enrichment_results=bad_df)
 
 
 def test_get_enrichment_plots_static_infers_single_comparison(

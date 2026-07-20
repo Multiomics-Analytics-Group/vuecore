@@ -32,7 +32,7 @@ def _scale_marker_sizes(
     return (min_size + scaled * (max_size - min_size)).tolist()
 
 
-def _build_static_enrichment_figure(
+def get_enrichment_plot_mpl(
     df: pd.DataFrame,
     comparison_key: str,
     group: Optional[str],
@@ -86,7 +86,7 @@ def _build_static_enrichment_figure(
     return fig
 
 
-def get_enrichment_plot_static(
+def get_enrichment_plot(
     enrichment_results: Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]],
     comparison: Optional[str] = None,
     width: int = 700,
@@ -147,7 +147,7 @@ def get_enrichment_plot_static(
     )
     df["x"] = -np.log10(df["padj"])
 
-    return _build_static_enrichment_figure(
+    return get_enrichment_plot_mpl(
         df=df,
         comparison_key=comparison,
         group="direction",
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     fname = "/Users/heweb/Documents/repos/vuecore/tests/data/enrichment_analysis.csv"
     enrichment_results = pd.read_csv(fname, index_col=0)
 
-    figure = get_enrichment_plot_static(
+    figure = get_enrichment_plot(
         enrichment_results, width=1500, height=800, title="Enrichment"
     )
     # figure
