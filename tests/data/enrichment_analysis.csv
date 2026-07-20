@@ -1,21 +1,21 @@
 ,terms,identifiers,foreground,background,foreground_pop,background_pop,pvalue,padj,rejected,direction,comparison
-0, citrate CoA-transferase activity [GO:0008814],P75726,1,0,1,1446,0.0006915629322268326,0.001659751037344398,True,upregulated,control~10 µm sulforaphane
-1, citrate metabolic process [GO:0006101],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated,control~10 µm sulforaphane
-3,ATP-independent citrate lyase complex [GO:0009346],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated,control~10 µm sulforaphane
-4,acetyl-CoA metabolic process [GO:0006084],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated,control~10 µm sulforaphane
-5,citrate (pro-3S)-lyase activity [GO:0008815],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated,control~10 µm sulforaphane
-2, cytoplasm [GO:0005737],P75726,1,28,1,1446,0.020055325034578145,0.020055325034578145,True,upregulated,control~10 µm sulforaphane
-1, maltodextrin transmembrane transporter activity [GO:0042958],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,downregulated,control~10 µm sulforaphane
-2, maltose transmembrane transport [GO:1904981],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,downregulated,control~10 µm sulforaphane
-3, maltose transmembrane transporter activity [GO:0005363],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,downregulated,control~10 µm sulforaphane
-4, maltose transporting porin activity [GO:0015481],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,downregulated,control~10 µm sulforaphane
-7, polysaccharide transport [GO:0015774],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,downregulated,control~10 µm sulforaphane
-0, maltodextrin transmembrane transport [GO:0042956],P02943,1,1,1,1446,0.0013831258644536651,0.0024204702627939143,True,downregulated,control~10 µm sulforaphane
-10, virus receptor activity [GO:0001618],P02943,1,1,1,1446,0.0013831258644536651,0.0024204702627939143,True,downregulated,control~10 µm sulforaphane
-12,carbohydrate transmembrane transporter activity [GO:0015144],P02943,1,1,1,1446,0.0013831258644536651,0.0024204702627939143,True,downregulated,control~10 µm sulforaphane
-5, monoatomic ion transport [GO:0006811],P02943,1,2,1,1446,0.002074688796680498,0.002904564315352697,True,downregulated,control~10 µm sulforaphane
-6, outer membrane protein complex [GO:0106234],P02943,1,2,1,1446,0.002074688796680498,0.002904564315352697,True,downregulated,control~10 µm sulforaphane
-8, pore complex [GO:0046930],P02943,1,5,1,1446,0.004149377593360996,0.004840940525587829,True,downregulated,control~10 µm sulforaphane
-9, porin activity [GO:0015288],P02943,1,5,1,1446,0.004149377593360996,0.004840940525587829,True,downregulated,control~10 µm sulforaphane
-13,cell outer membrane [GO:0009279],P02943,1,37,1,1446,0.02627939142461964,0.028300883072667305,True,downregulated,control~10 µm sulforaphane
-11,DNA damage response [GO:0006974],P02943,1,42,1,1446,0.029737206085753802,0.029737206085753802,True,downregulated,control~10 µm sulforaphane
+0, citrate CoA-transferase activity [GO:0008814],P75726,1,0,1,1446,0.0006915629322268326,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+1, citrate metabolic process [GO:0006101],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+3,ATP-independent citrate lyase complex [GO:0009346],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+4,acetyl-CoA metabolic process [GO:0006084],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+5,citrate (pro-3S)-lyase activity [GO:0008815],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+2, cytoplasm [GO:0005737],P75726,1,28,1,1446,0.020055325034578145,0.020055325034578145,True,upregulated in control,control~10 µm sulforaphane
+1, maltodextrin transmembrane transporter activity [GO:0042958],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+2, maltose transmembrane transport [GO:1904981],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+3, maltose transmembrane transporter activity [GO:0005363],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+4, maltose transporting porin activity [GO:0015481],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+7, polysaccharide transport [GO:0015774],P02943,1,0,1,1446,0.0006915629322268326,0.0019363762102351312,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+0, maltodextrin transmembrane transport [GO:0042956],P02943,1,1,1,1446,0.0013831258644536651,0.0024204702627939143,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+10, virus receptor activity [GO:0001618],P02943,1,1,1,1446,0.0013831258644536651,0.0024204702627939143,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+12,carbohydrate transmembrane transporter activity [GO:0015144],P02943,1,1,1,1446,0.0013831258644536651,0.0024204702627939143,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+5, monoatomic ion transport [GO:0006811],P02943,1,2,1,1446,0.002074688796680498,0.002904564315352697,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+6, outer membrane protein complex [GO:0106234],P02943,1,2,1,1446,0.002074688796680498,0.002904564315352697,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+8, pore complex [GO:0046930],P02943,1,5,1,1446,0.004149377593360996,0.004840940525587829,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+9, porin activity [GO:0015288],P02943,1,5,1,1446,0.004149377593360996,0.004840940525587829,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+13,cell outer membrane [GO:0009279],P02943,1,37,1,1446,0.02627939142461964,0.028300883072667305,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
+11,DNA damage response [GO:0006974],P02943,1,42,1,1446,0.029737206085753802,0.029737206085753802,True,upregulated in 10um sulforaphane,control~10 µm sulforaphane
