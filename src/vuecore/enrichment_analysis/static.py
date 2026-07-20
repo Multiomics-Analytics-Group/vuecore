@@ -87,6 +87,8 @@ def get_enrichment_plot_mpl(
     return fig
 
 
+# acore related plotting function using a defined type in acore.types
+# ToDo: move to acore.plotting?
 def get_enrichment_plot(
     enrichment_results: Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]],
     comparison: Optional[str] = None,
