@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from matplotlib.figure import Figure
 import pandas as pd
 import pytest
+from matplotlib.figure import Figure
 
 from vuecore.enrichment_analysis import (
     create_enrichment_plots_interactive,
-    create_enrichment_plots_static,
+    get_enrichment_plots_static,
 )
 
 
@@ -34,15 +34,15 @@ def test_create_enrichment_plots_interactive_saves_html(
     assert Path(output_path).stat().st_size > 0
 
 
-def test_create_enrichment_plots_static_infers_single_comparison(
+def test_get_enrichment_plots_static_infers_single_comparison(
     enrichment_df: pd.DataFrame,
 ):
-    figure = create_enrichment_plots_static(enrichment_results=enrichment_df)
+    figure = get_enrichment_plots_static(enrichment_results=enrichment_df)
 
     assert isinstance(figure, Figure)
 
 
-def test_create_enrichment_plots_static_splits_by_comparison_column(
+def test_get_enrichment_plots_static_splits_by_comparison_column(
     enrichment_df: pd.DataFrame,
 ):
     other_df = enrichment_df.copy()
@@ -50,19 +50,19 @@ def test_create_enrichment_plots_static_splits_by_comparison_column(
     combined = pd.concat([enrichment_df, other_df], ignore_index=True)
 
     with pytest.raises(ValueError, match="Multiple comparisons are available"):
-        create_enrichment_plots_static(enrichment_results=combined)
+        get_enrichment_plots_static(enrichment_results=combined)
 
-    figure = create_enrichment_plots_static(
+    figure = get_enrichment_plots_static(
         enrichment_results=combined, comparison="control~20 µm sulforaphane"
     )
     assert isinstance(figure, Figure)
 
 
-def test_create_enrichment_plots_static_unknown_comparison_raises(
+def test_get_enrichment_plots_static_unknown_comparison_raises(
     enrichment_df: pd.DataFrame,
 ):
     with pytest.raises(ValueError, match="not found"):
-        create_enrichment_plots_static(
+        get_enrichment_plots_static(
             enrichment_results=enrichment_df, comparison="does-not-exist"
         )
 
