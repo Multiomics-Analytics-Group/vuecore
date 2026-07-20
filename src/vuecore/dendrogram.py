@@ -120,7 +120,7 @@ class Dendrogram(object):
         else:
             self.sign[self.yaxis] = -1
 
-        (dd_traces, xvals, yvals, ordered_labels, leaves) = self.get_dendrogram_traces(
+        dd_traces, xvals, yvals, ordered_labels, leaves = self.get_dendrogram_traces(
             Z_dendrogram, hang, colorscale, hovertext, color_threshold
         )
 

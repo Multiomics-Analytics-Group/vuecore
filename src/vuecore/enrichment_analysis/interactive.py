@@ -1,17 +1,15 @@
 # %%
-from typing import Any, Dict, Mapping, Optional, Union
+from typing import Dict, Optional
 
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
 
-from vuecore.engines.plotly.saver import save as plotly_save
 from vuecore.enrichment_analysis.common import (
-    build_output_path,
     format_comparison_title,
-    INTERACTIVE_OUTPUT_FORMATS,
     prepare_enrichment_tables,
-    validate_output_format,
 )
 
 DIRECTION_COLORS = {
@@ -167,83 +165,78 @@ def get_enrichment_plots(
 
 
 def create_enrichment_plots_interactive(
-    enrichment_results: Union[pd.DataFrame, Mapping[str, pd.DataFrame]],
-    output_folder: Optional[str] = None,
-    output_format: str = "html",
+    enrichment_results: pd.DataFrame,
+    comparison: Optional[str] = None,
     width: int = 900,
     height: int = 800,
     title: str = "Enrichment",
     colors: Dict[str, str] = DIRECTION_COLORS,
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
-) -> Dict[str, Dict[str, Any]]:
+) -> go.Figure:
     """
-    Create enrichment scatter plots and optionally save interactive files per comparison.
+    Create an interactive enrichment scatter plot for a single comparison.
 
     Parameters
     ----------
-    enrichment_results : pd.DataFrame or mapping[str, pd.DataFrame]
-        One enrichment table or dictionary keyed by comparison label.
-    output_folder : str, optional
-        Directory where files are written. If omitted, no files are saved.
-    output_format : str, optional
-        Interactive format (html or json). Default is "html".
+    enrichment_results : pd.DataFrame
+        Enrichment results validated against `EnrichmentAnalysisSchema`, with
+        one or more comparisons stacked in the 'comparison' column.
+    comparison : str, optional
+        Comparison to plot. Required when more than one comparison is present;
+        inferred automatically when there is only one.
     width : int, optional
         Plot width.
     height : int, optional
         Plot height.
     title : str, optional
-        Base title for all plots.
+        Base title for the plot.
     colors : dict[str, str], optional
-        Color mapping by direction/group.
+        Color mapping by direction.
     hovering_cols : list, optional
         Hover columns shown in tooltips.
 
     Returns
     -------
-    dict[str, dict[str, Any]]
-        Mapping from comparison key to payload containing the figure and output path.
+    plotly.graph_objects.Figure
+        The scatter plot for the selected comparison.
     """
-    normalized_output_format = validate_output_format(
-        output_format=output_format,
-        allowed_formats=INTERACTIVE_OUTPUT_FORMATS,
-    )
-    results: Dict[str, Dict[str, Any]] = {}
+    df: pd.DataFrame = EnrichmentAnalysisSchema.validate(enrichment_results)
 
-    for comparison_key, df, _, _, group in prepare_enrichment_tables(
-        enrichment_results
-    ):
-        fig = get_scatterplot(
-            df,
-            x="x",
-            y="terms",
-            group=group,
-            symbol=group,
-            size="foreground",
-            hovering_cols=hovering_cols,
-            title=format_comparison_title(title, comparison_key),
-            x_title="-log10(padj)",
-            y_title="Enriched terms",
-            width=width,
-            height=height,
-            colors=colors,
+    available = sorted(df["comparison"].unique())
+    if comparison is None:
+        if len(available) > 1:
+            raise ValueError(
+                "Multiple comparisons are available: "
+                f"{', '.join(available)}. Pass `comparison` to select one."
+            )
+        comparison = available[0]
+    elif comparison not in available:
+        raise ValueError(
+            f"Comparison '{comparison}' not found. Available comparisons: "
+            f"{', '.join(available)}."
         )
 
-        output_path = None
-        if output_folder:
-            output_path = build_output_path(
-                output_folder=output_folder,
-                comparison_key=comparison_key,
-                output_format=normalized_output_format,
-            )
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            plotly_save(fig, str(output_path))
+    df = df.query("comparison == @comparison and rejected").copy()
+    df = df.sort_values(by=["direction", "padj"], ascending=False).reset_index(
+        drop=True
+    )
+    df["x"] = -np.log10(df["padj"])
 
-        results[comparison_key] = {
-            "figure": fig,
-            "output_path": str(output_path) if output_path else None,
-        }
-
-    return results
+    return get_scatterplot(
+        df,
+        x="x",
+        y="terms",
+        group="direction",
+        symbol="direction",
+        size="foreground",
+        hovering_cols=hovering_cols,
+        title=format_comparison_title(title, comparison),
+        x_title="-log10(padj)",
+        y_title="Enriched terms",
+        width=width,
+        height=height,
+        colors=colors,
+    )
 
 
 # Backward-compatible alias to match historical singular import name.
@@ -262,4 +255,3 @@ if __name__ == "__main__":
         enrichment_results, width=1500, height=800, title="Enrichment"
     )
     figures[0]
-
