@@ -30,7 +30,7 @@ ENRICHMENT_HOVERING_COLS = [
 
 
 # ToDo: get_enrichment_plot_plotly
-def get_scatterplot(
+def get_enrichment_plot_plotly(
     data,
     x="x",
     y="y",
@@ -71,7 +71,7 @@ def get_scatterplot(
 
     Example::
 
-        result = get_scatterplot(
+        result = get_enrichment_plot_plotly(
             data,
             title="Scatter Plot",
             x_title="x_axis",
@@ -170,7 +170,7 @@ def get_enrichment_plot(
     )
     df["x"] = -np.log10(df["padj"])
 
-    return get_scatterplot(
+    return get_enrichment_plot_plotly(
         df,
         x="x",
         y="terms",
