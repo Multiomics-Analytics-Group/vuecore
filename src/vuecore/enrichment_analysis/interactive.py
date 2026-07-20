@@ -27,7 +27,6 @@ ENRICHMENT_HOVERING_COLS = [
 ]
 
 
-# ToDo: get_enrichment_plot_plotly
 def get_enrichment_plot_plotly(
     data,
     x="x",
@@ -183,7 +182,7 @@ def get_enrichment_plot(
         y="terms",
         group="direction",
         symbol="direction",
-        size="foreground",
+        size="foreground",  # column foreground in enrichment_result
         hovering_cols=hovering_cols,
         title=format_comparison_title(title, comparison),
         x_title="-log10(padj)",

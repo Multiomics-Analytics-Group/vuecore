@@ -39,6 +39,8 @@ def get_enrichment_plot_mpl(
     height: int,
     title: str,
     colors: Dict[str, str],
+    col_x: str = "x",
+    col_markersize: str = "foreground",
 ) -> matplotlib.figure.Figure:
     """Create one enrichment scatter plot as a matplotlib figure."""
     fig_width = max(width / DEFAULT_DPI, 4)
@@ -46,11 +48,11 @@ def get_enrichment_plot_mpl(
     fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=DEFAULT_DPI)
 
     y_positions = list(range(len(df)))
-    marker_sizes = _scale_marker_sizes(df["foreground"])
+    marker_sizes = _scale_marker_sizes(df[col_markersize])
 
     if group is None:
         ax.scatter(
-            df["x"],
+            df[col_x],
             y_positions,
             s=marker_sizes,
             alpha=0.7,
@@ -62,9 +64,9 @@ def get_enrichment_plot_mpl(
         for group_value, group_df in df.groupby(group, sort=False):
             group_positions = [df.index.get_loc(idx) for idx in group_df.index]
             ax.scatter(
-                group_df["x"],
+                group_df[col_x],
                 group_positions,
-                s=_scale_marker_sizes(group_df["foreground"]),
+                s=_scale_marker_sizes(group_df[col_markersize]),
                 alpha=0.7,
                 linewidths=0.5,
                 edgecolors="DarkSlateGrey",
@@ -160,6 +162,8 @@ def get_enrichment_plot(
         height=height,
         title=title,
         colors=colors,
+        col_x="x",
+        col_markersize="foreground",
     )
 
 
@@ -174,6 +178,5 @@ if __name__ == "__main__":
     figure = get_enrichment_plot(
         enrichment_results, width=1500, height=800, title="Enrichment"
     )
-    # figure
 
 # %%
