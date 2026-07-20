@@ -1,6 +1,6 @@
 # %%
 from logging import getLogger
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import matplotlib.figure
 import matplotlib.pyplot as plt
@@ -9,11 +9,7 @@ import pandas as pd
 from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
 from pandera.typing.pandas import DataFrame
 
-from vuecore.enrichment_analysis.common import format_comparison_title
-from vuecore.enrichment_analysis.interactive import (
-    DIRECTION_COLORS,
-    ENRICHMENT_HOVERING_COLS,
-)
+from vuecore.enrichment_analysis.common import build_color_map, format_comparison_title
 
 DEFAULT_DPI = 100
 
@@ -95,7 +91,7 @@ def get_enrichment_plot(
     width: int = 700,
     height: int = 500,
     title: str = "Enrichment",
-    colors: Dict[str, str] = DIRECTION_COLORS,
+    colors: Optional[Union[Dict[str, str], List[str]]] = None,
     **kwargs,
 ) -> matplotlib.figure.Figure:
     """
@@ -116,8 +112,10 @@ def get_enrichment_plot(
         Plot height.
     title : str, optional
         Base title for the plot.
-    colors : dict[str, str], optional
-        Color mapping by direction.
+    colors : dict[str, str] or list[str], optional
+        Color mapping by direction, or a palette to assign to directions in
+        order. Defaults to a built-in palette, cycling if there are more
+        unique directions than colors.
     **kwargs : dict
         Additional keyword arguments for API parity with the interactive version. Static figures do
         not render hover tooltips.
@@ -152,6 +150,7 @@ def get_enrichment_plot(
         drop=True
     )
     df["x"] = -np.log10(df["padj"])
+    colors = build_color_map(df["direction"], colors)
 
     return get_enrichment_plot_mpl(
         df=df,

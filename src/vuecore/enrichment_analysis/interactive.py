@@ -1,6 +1,6 @@
 # %%
 from logging import getLogger
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -10,17 +10,11 @@ from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
 from pandera.typing.pandas import DataFrame
 
 from vuecore.enrichment_analysis.common import (
+    build_color_map,
     format_comparison_title,
 )
 
 logger = getLogger(__name__)
-
-DIRECTION_COLORS = {
-    "upregulated": "#cb181d",
-    "downregulated": "#3288bd",
-    "regulated": "#ae017e",
-    "non-regulated": "#fcc5c0",
-}
 
 ENRICHMENT_HOVERING_COLS = [
     "foreground",
@@ -122,7 +116,7 @@ def get_enrichment_plot(
     width: int = 900,
     height: int = 800,
     title: str = "Enrichment",
-    colors: Dict[str, str] = DIRECTION_COLORS,
+    colors: Optional[Union[Dict[str, str], List[str]]] = None,
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
     **kwargs,
 ) -> go.Figure:
@@ -143,8 +137,10 @@ def get_enrichment_plot(
         Plot height.
     title : str, optional
         Base title for the plot.
-    colors : dict[str, str], optional
-        Color mapping by direction.
+    colors : dict[str, str] or list[str], optional
+        Color mapping by direction, or a palette to assign to directions in
+        order. Defaults to a built-in palette, cycling if there are more
+        unique directions than colors.
     hovering_cols : list, optional
         Hover columns shown in tooltips.
     **kwargs : dict
@@ -179,6 +175,7 @@ def get_enrichment_plot(
         drop=True
     )
     df["x"] = -np.log10(df["padj"])
+    colors = build_color_map(df["direction"], colors)
 
     return get_enrichment_plot_plotly(
         df,

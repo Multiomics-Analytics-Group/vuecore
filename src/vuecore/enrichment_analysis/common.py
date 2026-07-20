@@ -1,4 +1,5 @@
-from typing import Tuple
+from typing import Dict, Iterable, List, Optional, Tuple, Union
+DEFAULT_DIRECTION_COLORS = ["#cb181d", "#3288bd", "#ae017e", "#fcc5c0"]
 
 
 def split_comparison_key(comparison_key: str) -> Tuple[str, str]:
@@ -14,3 +15,20 @@ def format_comparison_title(base_title: str, comparison_key: str) -> str:
     if not group_2:
         return f"{base_title} {group_1}"
     return f"{base_title} {group_1} vs {group_2}"
+
+
+def build_color_map(
+    values: Iterable[str],
+    colors: Optional[Union[Dict[str, str], List[str]]] = None,
+) -> Dict[str, str]:
+    """Map each unique value in `values` to a color.
+
+    If `colors` is a dict, it is returned as-is (a custom scheme). If it is a
+    list (or omitted), unique values are assigned colors in order, cycling
+    through the list if there are more values than colors.
+    """
+    if isinstance(colors, dict):
+        return colors
+    palette = colors if colors is not None else DEFAULT_DIRECTION_COLORS
+    unique_values = sorted(set(values))
+    return {value: palette[i % len(palette)] for i, value in enumerate(unique_values)}
