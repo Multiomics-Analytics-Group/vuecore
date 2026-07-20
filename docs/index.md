@@ -1,4 +1,5 @@
 ## VueCore Documentation
+
 <!-- https://myst-parser.readthedocs.io/en/latest/faq/index.html
 #include-a-file-from-outside-the-docs-folder-like-readme-md -->
 
@@ -7,7 +8,7 @@
 :relative-images:
 ```
 
-```{toctree} 
+```{toctree}
 :maxdepth: 1
 :caption: Overview
 
@@ -21,11 +22,11 @@ sections_readme/license
 :maxdepth: 1
 :caption: API Usage Examples
 
-api_examples/scatter_plot
-api_examples/line_plot
-api_examples/bar_plot
-api_examples/box_violin_plot
-api_examples/histogram_plot
+basic_plot_examples/scatter_plot
+basic_plot_examples/line_plot
+basic_plot_examples/bar_plot
+basic_plot_examples/box_violin_plot
+basic_plot_examples/histogram_plot
 ```
 
 ```{toctree}
@@ -36,7 +37,7 @@ api_examples/histogram_plot
 reference/vuecore
 ```
 
-```{toctree} 
+```{toctree}
 :maxdepth: 1
 :caption: Project Support
 
