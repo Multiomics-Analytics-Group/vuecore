@@ -136,9 +136,28 @@ help(get_enrichment_plot_interactive)
 
 # %%
 interactive_fig = get_enrichment_plot_interactive(
-    enrichment_results, width=800, height=500
+    enrichment_results, width=790, height=500
 )
 interactive_fig
+
+# %% [markdown]
+# Note the margins around the figure
+
+# %% tags=["hide-input"]
+full = interactive_fig.full_figure_for_development(warn=False)
+print(full.layout.margin)
+print(
+    "l:",
+    full.layout.margin.l,
+    "r:",
+    full.layout.margin.r,
+    "t:",
+    full.layout.margin.t,
+    "b:",
+    full.layout.margin.b,
+    "pad:",
+    full.layout.margin.pad,
+)
 
 # %% [markdown]
 # ## Manuel calling of plotly related function
@@ -158,7 +177,7 @@ interactive_fig = get_enrichment_plot_plotly(
     title="Enrichment manuel",
     x_title="-log10(pvalue)",
     y_title="Enriched terms",
-    width=800,
+    width=780,
     height=500,
     colors={
         "upregulated in control": "pink",
