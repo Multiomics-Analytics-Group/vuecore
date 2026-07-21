@@ -39,7 +39,7 @@ enrichment_results
 
 # %% [markdown]
 # ## Reduced dataset for manual plotting function calling
-# For illustration we will create a reduced dataset for manuel plotting function calling.
+# For illustration we will create a reduced dataset for manual plotting function calling.
 # - here we only have one comparison, but for illustration we keep the boilerplate code
 #   (show code) it as if there were multiple comparisons. The user has to select one of
 #   the available comparisons for plotting. Most importantly, each category of the `direction`
@@ -102,7 +102,7 @@ static_fig.get_axes()[0].legend(title="Direction", loc="lower left")
 print(f"Static figure size (inches): {static_fig.get_size_inches()}")
 
 # %% [markdown]
-# ## Manuel calling of matplotlib (mpl) related function
+# ## Manual calling of matplotlib (mpl) related function
 # - data has to make sense for the plot
 # - size and other details can be adjusted
 
@@ -116,7 +116,7 @@ static_fig = get_enrichment_plot_mpl(
     group="direction",
     width=900,
     height=500,
-    title="Enrichment manuel",
+    title="Enrichment manual",
     colors={
         "upregulated in control": "pink",
         "upregulated in 10 µm sulforaphane": "orange",
@@ -141,7 +141,7 @@ interactive_fig = get_enrichment_plot_interactive(
 interactive_fig
 
 # %% [markdown]
-# ## Manuel calling of plotly related function
+# ## Manual calling of plotly related function
 # - data has to make sense for the plot
 
 # %%
@@ -155,7 +155,7 @@ interactive_fig = get_enrichment_plot_plotly(
     group="direction",
     symbol="direction",
     size="foreground",
-    title="Enrichment manuel",
+    title="Enrichment manual",
     x_title="-log10(pvalue)",
     y_title="Enriched terms",
     width=790,
