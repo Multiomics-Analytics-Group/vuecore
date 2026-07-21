@@ -136,7 +136,7 @@ help(get_enrichment_plot_interactive)
 
 # %%
 interactive_fig = get_enrichment_plot_interactive(
-    enrichment_results, width=790, height=500
+    enrichment_results, width=795, height=500
 )
 interactive_fig
 
@@ -158,7 +158,7 @@ interactive_fig = get_enrichment_plot_plotly(
     title="Enrichment manuel",
     x_title="-log10(pvalue)",
     y_title="Enriched terms",
-    width=780,
+    width=799,
     height=500,
     colors={
         "upregulated in control": "pink",
