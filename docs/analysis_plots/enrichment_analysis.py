@@ -168,6 +168,10 @@ interactive_fig = get_enrichment_plot_plotly(
 print(
     f"Interactive figure size (pixels): {interactive_fig.layout.width} x {interactive_fig.layout.height}"
 )
+# get rid of the left and right large margin
+interactive_fig.update_layout(
+    margin=dict(l=5, r=5),
+)
 interactive_fig
 
 # %%
