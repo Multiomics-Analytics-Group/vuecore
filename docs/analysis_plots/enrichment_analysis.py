@@ -29,7 +29,7 @@ from vuecore.enrichment_analysis.interactive import get_enrichment_plot_plotly
 from vuecore.enrichment_analysis.static import get_enrichment_plot_mpl
 
 # %% [markdown]
-# ## Load example data
+# # Load example data
 # - compatible with the `EnrichmentAnalysisSchema` type in acore.types
 
 # %%
@@ -38,7 +38,7 @@ enrichment_results = pd.read_csv(fname, index_col=0).reset_index(drop=True)
 enrichment_results
 
 # %% [markdown]
-# ### Reduced dataset for manual plotting function calling
+# ## Reduced dataset for manual plotting function calling
 # For illustration we will create a reduced dataset for manuel plotting function calling.
 # - here we only have one comparison, but for illustration we keep the boilerplate code
 #   (show code) it as if there were multiple comparisons. The user has to select one of
@@ -74,7 +74,7 @@ df["x"] = -np.log10(df["pvalue"])
 df
 
 # %% [markdown]
-# ## Scatter Plot (Static)
+# # Scatter Plot (Static)
 
 # %% [markdown]
 # Acore function has defaults for the result type
@@ -102,7 +102,7 @@ static_fig.get_axes()[0].legend(title="Direction", loc="lower left")
 print(f"Static figure size (inches): {static_fig.get_size_inches()}")
 
 # %% [markdown]
-# ### Manuel calling of matplotlib (mpl) related function
+# ## Manuel calling of matplotlib (mpl) related function
 # - data has to make sense for the plot
 # - size and other details can be adjusted
 
@@ -126,7 +126,7 @@ static_fig.get_axes()[0].legend(title="Direction", loc="lower left")
 print(f"Static figure size (inches): {static_fig.get_size_inches()}")
 
 # %% [markdown]
-# ## Scatter Plot (Interactive)
+# # Scatter Plot (Interactive)
 
 # %% [markdown]
 # Acore function has defaults for the result type
@@ -135,11 +135,13 @@ print(f"Static figure size (inches): {static_fig.get_size_inches()}")
 help(get_enrichment_plot_interactive)
 
 # %%
-interactive_fig = get_enrichment_plot_interactive(enrichment_results, height=500)
+interactive_fig = get_enrichment_plot_interactive(
+    enrichment_results, width=800, height=500
+)
 interactive_fig
 
 # %% [markdown]
-# Manuel calling of plotly related function
+# ## Manuel calling of plotly related function
 # - data has to make sense for the plot
 
 # %%
@@ -156,7 +158,7 @@ interactive_fig = get_enrichment_plot_plotly(
     title="Enrichment manuel",
     x_title="-log10(pvalue)",
     y_title="Enriched terms",
-    width=900,
+    width=800,
     height=500,
     colors={
         "upregulated in control": "pink",
