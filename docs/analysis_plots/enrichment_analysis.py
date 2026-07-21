@@ -141,25 +141,6 @@ interactive_fig = get_enrichment_plot_interactive(
 interactive_fig
 
 # %% [markdown]
-# Note the margins around the figure
-
-# %% tags=["hide-input"]
-full = interactive_fig.full_figure_for_development(warn=False)
-print(full.layout.margin)
-print(
-    "l:",
-    full.layout.margin.l,
-    "r:",
-    full.layout.margin.r,
-    "t:",
-    full.layout.margin.t,
-    "b:",
-    full.layout.margin.b,
-    "pad:",
-    full.layout.margin.pad,
-)
-
-# %% [markdown]
 # ## Manuel calling of plotly related function
 # - data has to make sense for the plot
 
