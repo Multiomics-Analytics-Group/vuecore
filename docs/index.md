@@ -20,6 +20,13 @@ sections_readme/license
 
 ```{toctree}
 :maxdepth: 1
+:caption: Analysis Plots
+
+analysis_plots/enrichment_analysis
+```
+
+```{toctree}
+:maxdepth: 1
 :caption: API Usage Examples
 
 basic_plot_examples/scatter_plot
