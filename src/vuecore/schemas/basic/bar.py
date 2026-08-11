@@ -1,5 +1,7 @@
-from typing import Dict, Optional
-from pydantic import Field, ConfigDict
+from __future__ import annotations
+
+from pydantic import ConfigDict, Field
+
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
 
 
@@ -25,13 +27,13 @@ class BarConfig(PlotlyBaseConfig):
     model_config = ConfigDict(extra="allow")
 
     # Data Mapping
-    pattern_shape: Optional[str] = Field(
+    pattern_shape: str | None = Field(
         None, description="Column to assign pattern shapes to bars."
     )
-    text: Optional[str] = Field(None, description="Column for text labels on bars.")
-    error_x: Optional[str] = Field(None, description="Column for x-axis error bars.")
-    error_y: Optional[str] = Field(None, description="Column for y-axis error bars.")
-    pattern_shape_map: Optional[Dict[str, str]] = Field(
+    text: str | None = Field(None, description="Column for text labels on bars.")
+    error_x: str | None = Field(None, description="Column for x-axis error bars.")
+    error_y: str | None = Field(None, description="Column for y-axis error bars.")
+    pattern_shape_map: dict[str, str] | None = Field(
         None, description="Map values to specific pattern shapes."
     )
 

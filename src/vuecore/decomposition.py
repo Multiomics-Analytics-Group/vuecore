@@ -1,7 +1,7 @@
 """Decompositon plots like pca, umap, tsne, etc."""
+from __future__ import annotations
 
 import itertools
-from typing import Optional
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -10,7 +10,7 @@ import sklearn.decomposition
 
 
 def plot_explained_variance(
-    pca: sklearn.decomposition.PCA, ax: Optional[matplotlib.axes.Axes] = None
+    pca: sklearn.decomposition.PCA, ax: matplotlib.axes.Axes | None = None
 ) -> matplotlib.axes.Axes:
     """Plot explained variance of PCA from scikit-learn."""
     exp_var = pd.Series(pca.explained_variance_ratio_).to_frame("explained variance")
@@ -25,7 +25,7 @@ def pca_grid(
     PCs: pd.DataFrame,
     meta_column: pd.Series,
     n_components: int = 4,
-    meta_col_name: Optional[str] = None,
+    meta_col_name: str | None = None,
     figsize=(6, 8),
 ) -> plt.Figure:
     """Plot a grid of scatter plots for the first n_components of PCA,  per default 4.

@@ -13,8 +13,8 @@ def get_module_color_annotation(
     col_annotation=False,
     row_annotation=False,
     bygene=False,
-    module_colors=[],
-    dendrogram=[],
+    module_colors=None,
+    dendrogram=None,
 ):
     """
     This function takes a list of values, converts them into colors, and creates a new plotly object to be used as an annotation.
@@ -30,6 +30,10 @@ def get_module_color_annotation(
 
     .. note:: map_list and module_colors must have the same length.
     """
+    if dendrogram is None:
+        dendrogram = []
+    if module_colors is None:
+        module_colors = []
     colors_dict = color_list.make_color_dict()
 
     n = len(map_list)
@@ -150,9 +154,9 @@ def get_heatmap(df, colorscale=None, color_missing=True):
                 x=list(df.columns),
                 colorscale=colors,
                 showscale=True,
-                colorbar=dict(
-                    x=1, y=0, xanchor="left", yanchor="bottom", len=0.35, thickness=15
-                ),
+                colorbar={
+                    "x": 1, "y": 0, "xanchor": "left", "yanchor": "bottom", "len": 0.35, "thickness": 15
+                },
             )
         )
         if color_missing:
@@ -174,7 +178,7 @@ def plot_labeled_heatmap(
     df,
     textmatrix,
     title,
-    colorscale=[[0, "rgb(0,255,0)"], [0.5, "rgb(255,255,255)"], [1, "rgb(255,0,0)"]],
+    colorscale=None,
     width=1200,
     height=800,
     row_annotation=False,
@@ -193,6 +197,8 @@ def plot_labeled_heatmap(
     :param bool col_annotation: if True, adds a color-coded row at the bottom of the heatmap.
     :return: Plotly object figure.
     """
+    if colorscale is None:
+        colorscale = [[0, "rgb(0,255,0)"], [0.5, "rgb(255,255,255)"], [1, "rgb(255,0,0)"]]
     figure = {}
     if df is not None:
         figure = get_heatmap(df, colorscale=colorscale, color_missing=False)
@@ -211,7 +217,7 @@ def plot_labeled_heatmap(
                 annotations.append(
                     go.layout.Annotation(
                         text=str(textmatrix.values[n][m]),
-                        font=dict(size=8),
+                        font={"size": 8},
                         x=df.columns[m],
                         y=df.index[n],
                         xref="x",
@@ -224,48 +230,48 @@ def plot_labeled_heatmap(
             width=width,
             height=height,
             title=title,
-            xaxis=dict(
-                domain=[0.015, 1],
-                autorange=True,
-                showgrid=False,
-                zeroline=False,
-                showline=False,
-                ticks="",
-                showticklabels=True,
-                automargin=True,
-                anchor="y",
-            ),
-            yaxis=dict(
-                autorange="reversed",
-                ticklen=5,
-                ticks="outside",
-                tickcolor="white",
-                showticklabels=False,
-                automargin=True,
-                showgrid=False,
-                anchor="x",
-            ),
-            xaxis2=dict(
-                domain=[0, 0.01],
-                autorange=True,
-                showgrid=False,
-                zeroline=False,
-                showline=False,
-                ticks="",
-                showticklabels=False,
-                automargin=True,
-                anchor="y2",
-            ),
-            yaxis2=dict(
-                autorange="reversed",
-                showgrid=False,
-                zeroline=False,
-                showline=False,
-                ticks="",
-                showticklabels=True,
-                automargin=True,
-                anchor="x2",
-            ),
+            xaxis={
+                "domain": [0.015, 1],
+                "autorange": True,
+                "showgrid": False,
+                "zeroline": False,
+                "showline": False,
+                "ticks": "",
+                "showticklabels": True,
+                "automargin": True,
+                "anchor": "y",
+            },
+            yaxis={
+                "autorange": "reversed",
+                "ticklen": 5,
+                "ticks": "outside",
+                "tickcolor": "white",
+                "showticklabels": False,
+                "automargin": True,
+                "showgrid": False,
+                "anchor": "x",
+            },
+            xaxis2={
+                "domain": [0, 0.01],
+                "autorange": True,
+                "showgrid": False,
+                "zeroline": False,
+                "showline": False,
+                "ticks": "",
+                "showticklabels": False,
+                "automargin": True,
+                "anchor": "y2",
+            },
+            yaxis2={
+                "autorange": "reversed",
+                "showgrid": False,
+                "zeroline": False,
+                "showline": False,
+                "ticks": "",
+                "showticklabels": True,
+                "automargin": True,
+                "anchor": "x2",
+            },
         )
 
         figure["layout"] = layout
@@ -346,7 +352,7 @@ def plot_intramodular_correlation(
         )
 
         figure.layout.template = "plotly_white"
-        layout = dict(width=width, height=height, showlegend=False, title=title)
+        layout = {"width": width, "height": height, "showlegend": False, "title": title}
         figure.layout.update(layout)
 
         axis_dict = {}
@@ -354,22 +360,20 @@ def plot_intramodular_correlation(
             n_p = len(FS.columns) * (len(MM.columns) - 1) - len(
                 MM.columns[MM.columns.str.startswith("MM")]
             )
-            axis_dict["xaxis{}".format(n_p + i + 1)] = dict(
-                title=j, titlefont=dict(size=13)
-            )
+            axis_dict[f"xaxis{n_p + i + 1}"] = {
+                "title": j, "titlefont": {"size": 13}
+            }
         print(axis_dict)
         n = 1
         for a, b in enumerate(FS.columns):
             name = b.split(" ")
             if len(name) > 1:
-                label = ["<br>".join(name[i : i + 3]) for i in range(0, len(name), 3)][
-                    0
-                ]
+                label = next("<br>".join(name[i : i + 3]) for i in range(0, len(name), 3))
             else:
                 label = name[0]
-            axis_dict["yaxis{}".format(a + n)] = dict(
-                title=label, titlefont=dict(size=13)
-            )
+            axis_dict[f"yaxis{a + n}"] = {
+                "title": label, "titlefont": {"size": 13}
+            }
             n += len(MM.columns[MM.columns.str.startswith("MM")]) - 1
 
         annotation = []
@@ -381,7 +385,7 @@ def plot_intramodular_correlation(
                 x = abs(MM[MM["modColor"] == j[2:]][j].values)
                 y = abs(FS[FS.index.isin(name)][b].values)
 
-                slope, intercept, r_value, p_value, std_err = scp.stats.linregress(x, y)
+                slope, intercept, r_value, p_value, _std_err = scp.stats.linregress(x, y)
                 line = slope * x + intercept
 
                 figure.append_trace(
@@ -407,14 +411,14 @@ def plot_intramodular_correlation(
                     i + 1,
                 )
 
-                annot = dict(
-                    x=0.7,
-                    y=0.7,
-                    xref="x{}".format(x_axis),
-                    yref="y{}".format(y_axis),
-                    text="R={:0.2}, p={:.0e}".format(r_value, p_value),
-                    showarrow=False,
-                )
+                annot = {
+                    "x": 0.7,
+                    "y": 0.7,
+                    "xref": f"x{x_axis}",
+                    "yref": f"y{y_axis}",
+                    "text": f"R={r_value:0.2}, p={p_value:.0e}",
+                    "showarrow": False,
+                }
                 annotation.append(annot)
                 x_axis += 1
                 y_axis += 1
@@ -429,12 +433,12 @@ def plot_complex_dendrogram(
     dendro_df,
     subplot_df,
     title,
-    dendro_labels=[],
+    dendro_labels=None,
     distfun="euclidean",
     linkagefun="average",
     hang=0.04,
     subplot="module colors",
-    subplot_colorscale=[],
+    subplot_colorscale=None,
     color_missingvals=True,
     row_annotation=False,
     col_annotation=False,
@@ -460,6 +464,10 @@ def plot_complex_dendrogram(
     :param int height: the height of the figure.
     :return: Plotly object figure.
     """
+    if subplot_colorscale is None:
+        subplot_colorscale = []
+    if dendro_labels is None:
+        dendro_labels = []
     figure = {}
     dendro_tree = wgcna_analysis.get_dendrogram(
         dendro_df,
@@ -478,46 +486,46 @@ def plot_complex_dendrogram(
             height=height,
             showlegend=False,
             title=title,
-            xaxis=dict(
-                domain=[0, 1],
-                range=[
+            xaxis={
+                "domain": [0, 1],
+                "range": [
                     np.min(dendrogram_["layout"]["xaxis"]["tickvals"]) - 6,
                     np.max(dendrogram_["layout"]["xaxis"]["tickvals"]) + 4,
                 ],
-                showgrid=False,
-                zeroline=True,
-                ticks="",
-                automargin=True,
-                anchor="y",
-            ),
-            yaxis=dict(
-                domain=[0.7, 1],
-                autorange=True,
-                showgrid=False,
-                zeroline=False,
-                ticks="outside",
-                title="Height",
-                automargin=True,
-                anchor="x",
-            ),
-            xaxis2=dict(
-                domain=[0, 1],
-                autorange=True,
-                showgrid=True,
-                zeroline=False,
-                ticks="",
-                showticklabels=False,
-                automargin=True,
-                anchor="y2",
-            ),
-            yaxis2=dict(
-                domain=[0, 0.64],
-                autorange=True,
-                showgrid=False,
-                zeroline=False,
-                automargin=True,
-                anchor="x2",
-            ),
+                "showgrid": False,
+                "zeroline": True,
+                "ticks": "",
+                "automargin": True,
+                "anchor": "y",
+            },
+            yaxis={
+                "domain": [0.7, 1],
+                "autorange": True,
+                "showgrid": False,
+                "zeroline": False,
+                "ticks": "outside",
+                "title": "Height",
+                "automargin": True,
+                "anchor": "x",
+            },
+            xaxis2={
+                "domain": [0, 1],
+                "autorange": True,
+                "showgrid": True,
+                "zeroline": False,
+                "ticks": "",
+                "showticklabels": False,
+                "automargin": True,
+                "anchor": "y2",
+            },
+            yaxis2={
+                "domain": [0, 0.64],
+                "autorange": True,
+                "showgrid": False,
+                "zeroline": False,
+                "automargin": True,
+                "anchor": "x2",
+            },
         )
 
         if subplot == "module colors":
@@ -540,14 +548,14 @@ def plot_complex_dendrogram(
             figure["layout"].update(
                 {
                     "shapes": shapes,
-                    "xaxis": dict(showticklabels=False),
-                    "yaxis": dict(domain=[0.2, 1]),
-                    "yaxis2": dict(
-                        domain=[0, 0.19],
-                        title="Module colors",
-                        ticks="",
-                        showticklabels=False,
-                    ),
+                    "xaxis": {"showticklabels": False},
+                    "yaxis": {"domain": [0.2, 1]},
+                    "yaxis2": {
+                        "domain": [0, 0.19],
+                        "title": "Module colors",
+                        "ticks": "",
+                        "showticklabels": False,
+                    },
                 }
             )
 
@@ -597,52 +605,52 @@ def plot_complex_dendrogram(
                 figure.layout.template = "plotly_white"
                 figure["layout"].update(
                     {
-                        "xaxis": dict(ticks="", showticklabels=False, anchor="y"),
-                        "xaxis2": dict(
-                            domain=[0, 0.01],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="y2",
-                        ),
-                        "xaxis3": dict(
-                            domain=[0.015, 1],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="y3",
-                        ),
-                        "xaxis4": dict(
-                            domain=[0.015, 1],
-                            ticks="",
-                            showticklabels=True,
-                            automargin=True,
-                            anchor="y4",
-                        ),
-                        "yaxis": dict(domain=[0.635, 1], automargin=True, anchor="x"),
-                        "yaxis2": dict(
-                            domain=[0.015, 0.635],
-                            autorange="reversed",
-                            ticks="",
-                            showticklabels=True,
-                            automargin=True,
-                            anchor="x2",
-                        ),
-                        "yaxis3": dict(
-                            domain=[0.01, 0.635],
-                            autorange="reversed",
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="x3",
-                        ),
-                        "yaxis4": dict(
-                            domain=[0, 0.01],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="x4",
-                        ),
+                        "xaxis": {"ticks": "", "showticklabels": False, "anchor": "y"},
+                        "xaxis2": {
+                            "domain": [0, 0.01],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "y2",
+                        },
+                        "xaxis3": {
+                            "domain": [0.015, 1],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "y3",
+                        },
+                        "xaxis4": {
+                            "domain": [0.015, 1],
+                            "ticks": "",
+                            "showticklabels": True,
+                            "automargin": True,
+                            "anchor": "y4",
+                        },
+                        "yaxis": {"domain": [0.635, 1], "automargin": True, "anchor": "x"},
+                        "yaxis2": {
+                            "domain": [0.015, 0.635],
+                            "autorange": "reversed",
+                            "ticks": "",
+                            "showticklabels": True,
+                            "automargin": True,
+                            "anchor": "x2",
+                        },
+                        "yaxis3": {
+                            "domain": [0.01, 0.635],
+                            "autorange": "reversed",
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "x3",
+                        },
+                        "yaxis4": {
+                            "domain": [0, 0.01],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "x4",
+                        },
                     }
                 )
 
@@ -658,13 +666,13 @@ def plot_complex_dendrogram(
                 figure.layout.template = "plotly_white"
                 figure.layout.update(
                     {
-                        "xaxis": dict(
-                            ticktext=np.array(
+                        "xaxis": {
+                            "ticktext": np.array(
                                 dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            tickvals=list(dendrogram_["layout"]["xaxis"]["tickvals"]),
-                        ),
-                        "yaxis2": dict(autorange="reversed"),
+                            "tickvals": list(dendrogram_["layout"]["xaxis"]["tickvals"]),
+                        },
+                        "yaxis2": {"autorange": "reversed"},
                     }
                 )
 
@@ -692,44 +700,44 @@ def plot_complex_dendrogram(
                 figure.layout.template = "plotly_white"
                 figure["layout"].update(
                     {
-                        "xaxis": dict(
-                            domain=[0.015, 1],
-                            ticktext=np.array(
+                        "xaxis": {
+                            "domain": [0.015, 1],
+                            "ticktext": np.array(
                                 dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            tickvals=list(dendrogram_["layout"]["xaxis"]["tickvals"]),
-                            automargin=True,
-                            anchor="y",
-                        ),
-                        "xaxis2": dict(
-                            domain=[0, 0.010],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="y2",
-                        ),
-                        "xaxis3": dict(
-                            domain=[0.015, 1],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="y3",
-                        ),
-                        "yaxis": dict(automargin=True, anchor="x"),
-                        "yaxis2": dict(
-                            autorange="reversed",
-                            ticks="",
-                            showticklabels=True,
-                            automargin=True,
-                            anchor="x2",
-                        ),
-                        "yaxis3": dict(
-                            domain=[0, 0.64],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="x3",
-                        ),
+                            "tickvals": list(dendrogram_["layout"]["xaxis"]["tickvals"]),
+                            "automargin": True,
+                            "anchor": "y",
+                        },
+                        "xaxis2": {
+                            "domain": [0, 0.010],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "y2",
+                        },
+                        "xaxis3": {
+                            "domain": [0.015, 1],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "y3",
+                        },
+                        "yaxis": {"automargin": True, "anchor": "x"},
+                        "yaxis2": {
+                            "autorange": "reversed",
+                            "ticks": "",
+                            "showticklabels": True,
+                            "automargin": True,
+                            "anchor": "x2",
+                        },
+                        "yaxis3": {
+                            "domain": [0, 0.64],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "x3",
+                        },
                     }
                 )
 
@@ -755,40 +763,40 @@ def plot_complex_dendrogram(
                 figure.layout.template = "plotly_white"
                 figure["layout"].update(
                     {
-                        "xaxis": dict(
-                            ticktext=np.array(
+                        "xaxis": {
+                            "ticktext": np.array(
                                 dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            tickvals=list(dendrogram_["layout"]["xaxis"]["tickvals"]),
-                            automargin=True,
-                            anchor="y",
-                        ),
-                        "xaxis2": dict(
-                            ticks="", showticklabels=False, automargin=True, anchor="y2"
-                        ),
-                        "xaxis3": dict(
-                            domain=[0, 1],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="y3",
-                        ),
-                        "yaxis": dict(domain=[0.70, 1], automargin=True, anchor="x"),
-                        "yaxis2": dict(
-                            domain=[0.615, 0.625],
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="x2",
-                        ),
-                        "yaxis3": dict(
-                            domain=[0, 0.61],
-                            autorange="reversed",
-                            ticks="",
-                            showticklabels=False,
-                            automargin=True,
-                            anchor="x3",
-                        ),
+                            "tickvals": list(dendrogram_["layout"]["xaxis"]["tickvals"]),
+                            "automargin": True,
+                            "anchor": "y",
+                        },
+                        "xaxis2": {
+                            "ticks": "", "showticklabels": False, "automargin": True, "anchor": "y2"
+                        },
+                        "xaxis3": {
+                            "domain": [0, 1],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "y3",
+                        },
+                        "yaxis": {"domain": [0.70, 1], "automargin": True, "anchor": "x"},
+                        "yaxis2": {
+                            "domain": [0.615, 0.625],
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "x2",
+                        },
+                        "yaxis3": {
+                            "domain": [0, 0.61],
+                            "autorange": "reversed",
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "x3",
+                        },
                     }
                 )
 

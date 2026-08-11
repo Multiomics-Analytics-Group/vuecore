@@ -1,11 +1,11 @@
 import plotly.graph_objects as go
 
-from vuecore.schemas.basic.scatter import ScatterConfig
-from vuecore.schemas.basic.line import LineConfig
 from vuecore.schemas.basic.bar import BarConfig
 from vuecore.schemas.basic.box import BoxConfig
-from vuecore.schemas.basic.violin import ViolinConfig
 from vuecore.schemas.basic.histogram import HistogramConfig
+from vuecore.schemas.basic.line import LineConfig
+from vuecore.schemas.basic.scatter import ScatterConfig
+from vuecore.schemas.basic.violin import ViolinConfig
 
 
 def _get_axis_title(config, axis: str) -> str:
@@ -112,11 +112,11 @@ def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
     """
     # Apply trace-specific updates
     fig.update_traces(
-        marker=dict(
-            opacity=config.opacity,
-            line=dict(width=config.marker_line_width, color=config.marker_line_color),
-        ),
-        selector=dict(mode="markers"),
+        marker={
+            "opacity": config.opacity,
+            "line": {"width": config.marker_line_width, "color": config.marker_line_color},
+        },
+        selector={"mode": "markers"},
     )
 
     # Apply common layout
@@ -178,7 +178,7 @@ def apply_bar_theme(fig: go.Figure, config: BarConfig) -> go.Figure:
         The styled Plotly figure object.
     """
     # Apply trace-specific updates for bar plots
-    fig.update_traces(opacity=config.opacity, selector=dict(type="bar"))
+    fig.update_traces(opacity=config.opacity, selector={"type": "bar"})
 
     # Apply common layout
     fig = _apply_common_layout(fig, config)
@@ -208,7 +208,7 @@ def apply_box_theme(fig: go.Figure, config: BoxConfig) -> go.Figure:
     """
     # Apply trace-specific updates for box plots
     fig.update_traces(
-        boxpoints=config.points, notched=config.notched, selector=dict(type="box")
+        boxpoints=config.points, notched=config.notched, selector={"type": "box"}
     )
 
     # Apply common layout
@@ -241,7 +241,7 @@ def apply_violin_theme(fig: go.Figure, config: ViolinConfig) -> go.Figure:
     box_dict = {"visible": config.box}
 
     # Apply trace-specific updates for violin plots
-    fig.update_traces(points=config.points, box=box_dict, selector=dict(type="violin"))
+    fig.update_traces(points=config.points, box=box_dict, selector={"type": "violin"})
 
     # Apply common layout
     fig = _apply_common_layout(fig, config)
@@ -273,7 +273,7 @@ def apply_histogram_theme(fig: go.Figure, config: HistogramConfig) -> go.Figure:
     fig.update_traces(
         opacity=config.opacity,
         orientation=config.orientation,
-        selector=dict(type="histogram"),
+        selector={"type": "histogram"},
     )
 
     # Apply common layout

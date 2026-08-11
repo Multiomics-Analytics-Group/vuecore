@@ -1,16 +1,15 @@
+from vuecore import EngineType, PlotType
 from vuecore.engines.registry import register_builder, register_saver
-from vuecore import PlotType, EngineType
-
-from .scatter import build as build_scatter
-from .line import build as build_line
-from .bar import build as build_bar
-from .box import build as build_box
-from .violin import build as build_violin
-from .histogram import build as build_histogram
-from .saver import save
 
 # Import build_utils to ensure it's available
 from . import plot_builder  # noqa: F401
+from .bar import build as build_bar
+from .box import build as build_box
+from .histogram import build as build_histogram
+from .line import build as build_line
+from .saver import save
+from .scatter import build as build_scatter
+from .violin import build as build_violin
 
 # Register the functions with the central dispatcher
 register_builder(

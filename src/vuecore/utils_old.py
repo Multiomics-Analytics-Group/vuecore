@@ -32,15 +32,14 @@ def generate_html(network):
     use_link_template = False
     for n in network.nodes:
         title = n.get("title", None)
-        if title:
-            if "href" in title:
-                """
+        if title and "href" in title:
+            """
                 this tells the template to override default hover
                 mechanic, as the tooltip would move with the mouse
                 cursor which made interacting with hover data useless.
                 """
-                use_link_template = True
-                break
+            use_link_template = True
+            break
     template = network.template
 
     nodes, edges, height, width, options = network.get_network_data()
@@ -186,8 +185,8 @@ def get_clustergrammer_link(net, filename=None):
             fake_filename = net.dat["filename"]
         r = requests.post(clustergrammer_url, files={"file": (fake_filename, file_obj)})
     else:
-        file_obj = open(filename, "r")
-        r = requests.post(clustergrammer_url, files={"file": file_obj})
+        with open(filename) as file_obj:
+            r = requests.post(clustergrammer_url, files={"file": file_obj})
     link = r.text
     return link
 
@@ -292,7 +291,7 @@ def get_hex_colors(n):
     colors = []
     for i in range(n):
         random.seed(initial_seed + i)
-        color = "#%06x" % random.randint(0, 0xFFFFFF)
+        color = f"#{random.randint(0, 0xFFFFFF):06x}"
         colors.append(color)
 
     return colors
@@ -318,9 +317,9 @@ def getMedlineAbstracts(idList):
         results = []
         for record in records:
             aux = {}
-            for field in fields:
+            for field, value in fields.items():
                 if field in record:
-                    aux[fields[field]] = record[field]
+                    aux[value] = record[field]
             if "PMID" in aux:
                 aux["url"] = pubmedUrl + aux["PMID"]
             else:
@@ -329,10 +328,10 @@ def getMedlineAbstracts(idList):
 
         abstracts = pd.DataFrame.from_dict(results)
     except error.URLError as e:
-        print("URLError: Request to Bio.Entrez failed. Error: {}".format(e))
+        print(f"URLError: Request to Bio.Entrez failed. Error: {e}")
     except error.HTTPError as e:
-        print("HTTPError: Request to Bio.Entrez failed. Error: {}".format(e))
-    except Exception as e:
-        print("Request to Bio.Entrez failed. Error: {}".format(e))
+        print(f"HTTPError: Request to Bio.Entrez failed. Error: {e}")
+    except (TypeError, ValueError, KeyError) as e:
+        print(f"Request to Bio.Entrez failed. Error: {e}")
 
     return abstracts

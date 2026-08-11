@@ -1,5 +1,6 @@
 from typing import Callable
-from vuecore import PlotType, EngineType
+
+from vuecore import EngineType, PlotType
 
 # Registries to hold the functions from each backend
 PLOT_BUILDERS = {}
