@@ -1,6 +1,7 @@
-import plotly.graph_objects as go
-import kaleido
 from pathlib import Path
+
+import kaleido
+import plotly.graph_objects as go
 
 from vuecore.constants import OutputFileFormat
 

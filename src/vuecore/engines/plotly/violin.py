@@ -3,8 +3,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from vuecore.schemas.basic.violin import ViolinConfig
-from .theming import apply_violin_theme
+
 from .plot_builder import build_plot
+from .theming import apply_violin_theme
 
 # Define parameters handled by the theme script
 THEMING_PARAMS = [

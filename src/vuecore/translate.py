@@ -15,6 +15,6 @@ def mpl_to_html_image(plot, width=800):
     buf = io.BytesIO()
     plot.savefig(buf, format="png")
     data = base64.b64encode(buf.getbuffer()).decode("utf8")
-    figure = html.Img(src="data:image/png;base64,{}".format(data), width=f"{width}")
+    figure = html.Img(src=f"data:image/png;base64,{data}", width=f"{width}")
 
     return figure

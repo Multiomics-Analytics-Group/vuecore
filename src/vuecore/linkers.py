@@ -14,7 +14,7 @@ def get_clustergrammer_link(net, filename=None):
             fake_filename = net.dat["filename"]
         r = requests.post(clustergrammer_url, files={"file": (fake_filename, file_obj)})
     else:
-        file_obj = open(filename, "r")
-        r = requests.post(clustergrammer_url, files={"file": file_obj})
+        with open(filename) as file_obj:
+            r = requests.post(clustergrammer_url, files={"file": file_obj})
     link = r.text
     return link

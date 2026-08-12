@@ -1,5 +1,7 @@
-from typing import Optional
-from pydantic import Field, ConfigDict
+from __future__ import annotations
+
+from pydantic import ConfigDict, Field
+
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
 
 
@@ -24,7 +26,7 @@ class ViolinConfig(PlotlyBaseConfig):
     model_config = ConfigDict(extra="allow")
 
     # Styling and Layout
-    orientation: Optional[str] = Field(
+    orientation: str | None = Field(
         None,
         description="Orientation of the violin plots ('v' for vertical, 'h' for horizontal).",
     )
