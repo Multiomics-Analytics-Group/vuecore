@@ -1,6 +1,7 @@
 # %%
+from __future__ import annotations
+
 from logging import getLogger
-from typing import Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -91,18 +92,18 @@ def get_enrichment_plot_plotly(
     )
 
     figure.update_traces(
-        marker=dict(size=14, opacity=0.7, line=dict(width=0.5, color="DarkSlateGrey")),
-        selector=dict(mode="markers"),
+        marker={"size": 14, "opacity": 0.7, "line": {"width": 0.5, "color": "DarkSlateGrey"}},
+        selector={"mode": "markers"},
     )
     figure["layout"] = go.Layout(
         title=title,
         xaxis={"title": x_title},
         yaxis={"title": y_title},
-        legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="right", x=1),
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.0, "xanchor": "right", "x": 1},
         hovermode="closest",
         height=height,
         width=width,
-        annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+        annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
         template="plotly_white",
     )
 
@@ -112,12 +113,12 @@ def get_enrichment_plot_plotly(
 # acore related plotting function using a defined type in acore.types
 # ToDo: move to acore.plotting?
 def get_enrichment_plot(
-    enrichment_results: Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]],
-    comparison: Optional[str] = None,
+    enrichment_results: pd.DataFrame | DataFrame[EnrichmentAnalysisSchema],
+    comparison: str | None = None,
     width: int = 900,
     height: int = 800,
     title: str = "Enrichment",
-    colors: Optional[Union[Dict[str, str], List[str]]] = None,
+    colors: dict[str, str] | list[str] | None = None,
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
     **kwargs,
 ) -> go.Figure:

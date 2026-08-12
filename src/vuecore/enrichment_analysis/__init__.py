@@ -12,7 +12,7 @@ from .static import get_enrichment_plot_mpl
 
 __all__ = [
     "get_enrichment_plot_interactive",
-    "get_enrichment_plot_static",
-    "get_enrichment_plot_plotly",
     "get_enrichment_plot_mpl",
+    "get_enrichment_plot_plotly",
+    "get_enrichment_plot_static",
 ]

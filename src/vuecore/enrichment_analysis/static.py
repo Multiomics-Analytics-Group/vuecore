@@ -1,6 +1,7 @@
 # %%
+from __future__ import annotations
+
 from logging import getLogger
-from typing import Dict, List, Optional, Union
 
 import matplotlib.figure
 import matplotlib.pyplot as plt
@@ -34,11 +35,11 @@ def _scale_marker_sizes(
 def get_enrichment_plot_mpl(
     df: pd.DataFrame,
     comparison_key: str,
-    group: Optional[str],
+    group: str | None,
     width: int,
     height: int,
     title: str,
-    colors: Dict[str, str],
+    colors: dict[str, str],
     col_x: str = "x",
     col_markersize: str = "foreground",
 ) -> matplotlib.figure.Figure:
@@ -90,12 +91,12 @@ def get_enrichment_plot_mpl(
 # acore related plotting function using a defined type in acore.types
 # ToDo: move to acore.plotting?
 def get_enrichment_plot(
-    enrichment_results: Union[pd.DataFrame, DataFrame[EnrichmentAnalysisSchema]],
-    comparison: Optional[str] = None,
+    enrichment_results: pd.DataFrame | DataFrame[EnrichmentAnalysisSchema],
+    comparison: str | None = None,
     width: int = 700,
     height: int = 500,
     title: str = "Enrichment",
-    colors: Optional[Union[Dict[str, str], List[str]]] = None,
+    colors: dict[str, str] | list[str] | None = None,
     **kwargs,
 ) -> matplotlib.figure.Figure:
     """

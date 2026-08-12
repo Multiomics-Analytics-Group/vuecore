@@ -1,10 +1,12 @@
-from typing import Dict, Iterable, List, Optional, Tuple, Union
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 DEFAULT_COMPARISON_SEPARATOR = "~"
 DEFAULT_DIRECTION_COLORS = ["#cb181d", "#3288bd", "#ae017e", "#fcc5c0"]
 
 
-def split_comparison_key(comparison_key: str, separator: str = "~") -> Tuple[str, str]:
+def split_comparison_key(comparison_key: str, separator: str = "~") -> tuple[str, str]:
     """Split a key of the form 'group1~group2' into individual labels."""
     if separator not in comparison_key:
         return comparison_key, ""
@@ -23,8 +25,8 @@ def format_comparison_title(
 
 def build_color_map(
     values: Iterable[str],
-    colors: Optional[Union[Dict[str, str], List[str]]] = None,
-) -> Dict[str, str]:
+    colors: dict[str, str] | list[str] | None = None,
+) -> dict[str, str]:
     """Map each unique value in `values` to a color.
 
     If `colors` is a dict, it is returned as-is (a custom scheme). If it is a
