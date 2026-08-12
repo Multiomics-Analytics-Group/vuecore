@@ -13,7 +13,7 @@ def plot_split_auc(
 ) -> matplotlib.axes.Axes:
     """Add receiver operation curve to ax of a split of the data."""
     col_name = f"{name} (auc: {result.auc:.3f})"
-    roc = pd.DataFrame(result.roc, index="fpr tpr cutoffs".split()).rename(
+    roc = pd.DataFrame(result.roc, index=["fpr", "tpr", "cutoffs"]).rename(
         {"tpr": col_name}
     )
     ax = roc.T.plot(
@@ -39,7 +39,7 @@ def plot_auc(
 ) -> matplotlib.axes.Axes:
     """Plot ROC curve for train and test data."""
     if ax is None:
-        fig, ax = plt.subplots(1, 1, **kwargs)
+        _fig, ax = plt.subplots(1, 1, **kwargs)
     ax = plot_split_auc(results.train, f"{label_train}", ax)
     ax = plot_split_auc(results.test, f"{label_test}", ax)
     return ax
@@ -50,7 +50,7 @@ def plot_split_prc(
 ) -> matplotlib.axes.Axes:
     """Add precision recall curve to ax of a split of the data."""
     col_name = f"{name} (aps: {result.aps:.3f})"
-    roc = pd.DataFrame(result.prc, index="precision recall cutoffs".split()).rename(
+    roc = pd.DataFrame(result.prc, index=["precision", "recall", "cutoffs"]).rename(
         {"precision": col_name}
     )
     ax = roc.T.plot(
@@ -75,7 +75,7 @@ def plot_prc(
 ):
     """Plot precision recall curve for train and test data."""
     if ax is None:
-        fig, ax = plt.subplots(1, 1, **kwargs)
+        _fig, ax = plt.subplots(1, 1, **kwargs)
     ax = plot_split_prc(results.train, f"{label_train}", ax)
     ax = plot_split_prc(results.test, f"{label_test}", ax)
     return ax

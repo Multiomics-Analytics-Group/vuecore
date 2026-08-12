@@ -75,7 +75,7 @@ def getPlotTraces(
                 y=data[col],
                 name=col + " " + key,
                 mode="markers",
-                marker=dict(size=data[col].values / div_factor, sizemode="area"),
+                marker={"size": data[col].values / div_factor, "sizemode": "area"},
             )
             for col in data.columns
         ]
@@ -97,7 +97,7 @@ def getPlotTraces(
     return traces
 
 
-def get_markdown(text, args={}):
+def get_markdown(text, args=None):
     """
     Converts a given text into a Dash Markdown component. It includes a syntax for things
     like bold text and italics, links, inline code snippets, lists, quotes, and more.
@@ -108,6 +108,8 @@ def get_markdown(text, args={}):
     :param dict args: dictionary with items from https://dash.plot.ly/dash-core-components/markdown.
     :return: dash Markdown component.
     """
+    if args is None:
+        args = {}
     mkdown = dcc.Markdown(text)
 
     return mkdown
@@ -141,7 +143,9 @@ def get_pieplot(data, identifier, args):
     figure["layout"] = go.Layout(
         height=args["height"],
         width=args["width"],
-        annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+        annotations=[
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         template="plotly_white",
     )
 
@@ -178,7 +182,9 @@ def get_distplot(data, identifier, args):
             height=600,
             width=1000,
             title="Distribution plot " + i,
-            annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
         graphs.append(dcc.Graph(id=identifier + "_" + i, figure=fig))
@@ -255,7 +261,9 @@ def get_boxplot_grid(data, identifier, args):
             )
         fig.update_xaxes(type="category")
         fig.update_layout(
-            annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
     else:
@@ -299,9 +307,8 @@ def get_barplot(data, identifier, args):
     if "group" in args:
         for g in data[args["group"]].unique():
             color = None
-            if "colors" in args:
-                if g in args["colors"]:
-                    color = args["colors"][g]
+            if "colors" in args and g in args["colors"]:
+                color = args["colors"][g]
             errors = []
             if "errors" in args:
                 errors = data.loc[data[args["group"]] == g, args["errors"]]
@@ -310,9 +317,9 @@ def get_barplot(data, identifier, args):
                 trace = go.Bar(
                     x=data.loc[data[args["group"]] == g, args["x"]],
                     y=data.loc[data[args["group"]] == g, args["y"]],
-                    error_y=dict(type="data", array=errors),
+                    error_y={"type": "data", "array": errors},
                     name=g,
-                    marker=dict(color=color),
+                    marker={"color": color},
                     orientation=args["orientation"],
                 )
             else:
@@ -321,9 +328,9 @@ def get_barplot(data, identifier, args):
                         data[args["group"]] == g, args["x"]
                     ],  # assign x as the dataframe column 'x'
                     y=data.loc[data[args["group"]] == g, args["y"]],
-                    error_y=dict(type="data", array=errors),
+                    error_y={"type": "data", "array": errors},
                     name=g,
-                    marker=dict(color=color),
+                    marker={"color": color},
                 )
             figure["data"].append(trace)
     else:
@@ -348,7 +355,9 @@ def get_barplot(data, identifier, args):
         yaxis={"title": args["y_title"]},
         height=args["height"],
         width=args["width"],
-        annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+        annotations=[
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         template="plotly_white",
     )
 
@@ -385,21 +394,13 @@ def get_histogram(data, identifier, args):
     """
     figure = None
     if "x" in args and args["x"] in data:
-        if "y" not in args:
+        if "y" not in args or args["y"] not in data:
             args["y"] = None
-        elif args["y"] not in data:
-            args["y"] = None
-        if "color" not in args:
+        if "color" not in args or args["color"] not in data:
             args["color"] = None
-        elif args["color"] not in data:
-            args["color"] = None
-        if "facet_row" not in args:
+        if "facet_row" not in args or args["facet_row"] not in data:
             args["facet_row"] = None
-        elif args["facet_row"] not in data:
-            args["facet_row"] = None
-        if "facet_col" not in args:
-            args["facet_col"] = None
-        elif args["facet_col"] not in data:
+        if "facet_col" not in args or args["facet_col"] not in data:
             args["facet_col"] = None
         if "height" not in args:
             args["height"] = 800
@@ -468,13 +469,15 @@ def get_facet_grid_plot(data, identifier, args):
         color_is_cat=True,
         trace_type=args["plot_type"],
     )
-    figure["layout"] = dict(
-        title=args["title"].title(),
-        paper_bgcolor=None,
-        legend=None,
-        annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
-        template="plotly_white",
-    )
+    figure["layout"] = {
+        "title": args["title"].title(),
+        "paper_bgcolor": None,
+        "legend": None,
+        "annotations": [
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
+        "template": "plotly_white",
+    }
 
     return dcc.Graph(id=identifier, figure=figure)
 
@@ -523,7 +526,7 @@ def get_ranking_plot(data, identifier, args):
     num_cols = 3
     fig = {}
     layouts = []
-    if "index" in args and args["index"]:
+    if args.get("index"):
         num_groups = len(data.index.unique())
         num_rows = math.ceil(num_groups / num_cols)
         fig = tools.make_subplots(
@@ -532,8 +535,7 @@ def get_ranking_plot(data, identifier, args):
         r = 1
         c = 1
         range_y = [data["y"].min(), data["y"].max() + 1]
-        i = 0
-        for index in data.index.unique():
+        for i, index in enumerate(data.index.unique(), start=1):
             gdata = (
                 data.loc[index, :]
                 .dropna()
@@ -553,22 +555,22 @@ def get_ranking_plot(data, identifier, args):
             glayout = gfig.figure["layout"]["annotations"]
 
             for _l in glayout:
-                nlayout = dict(
-                    x=_l.x,
-                    y=_l.y,
-                    xref="x" + str(i + 1),
-                    yref="y" + str(i + 1),
-                    text=_l.text,
-                    showarrow=True,
-                    ax=_l.ax,
-                    ay=_l.ay,
-                    font=_l.font,
-                    align="center",
-                    arrowhead=1,
-                    arrowsize=1,
-                    arrowwidth=1,
-                    arrowcolor="#636363",
-                )
+                nlayout = {
+                    "x": _l.x,
+                    "y": _l.y,
+                    "xref": "x" + str(i),
+                    "yref": "y" + str(i),
+                    "text": _l.text,
+                    "showarrow": True,
+                    "ax": _l.ax,
+                    "ay": _l.ay,
+                    "font": _l.font,
+                    "align": "center",
+                    "arrowhead": 1,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": "#636363",
+                }
                 layouts.append(nlayout)
             trace.name = index
             fig.append_trace(trace, r, c)
@@ -578,16 +580,15 @@ def get_ranking_plot(data, identifier, args):
                 c = 1
             else:
                 c += 1
-            i += 1
         fig["layout"].update(
-            dict(
-                height=args["height"],
-                width=args["width"],
-                title=args["title"],
-                xaxis={"title": args["x_title"], "autorange": True},
-                yaxis={"title": args["y_title"], "range": range_y},
-                template="plotly_white",
-            )
+            {
+                "height": args["height"],
+                "width": args["width"],
+                "title": args["title"],
+                "xaxis": {"title": args["x_title"], "autorange": True},
+                "yaxis": {"title": args["y_title"], "range": range_y},
+                "template": "plotly_white",
+            }
         )
         [
             fig["layout"][e].update(range=range_y)
@@ -595,7 +596,7 @@ def get_ranking_plot(data, identifier, args):
             if e[0:5] == "yaxis"
         ]
         fig["layout"].annotations = [
-            dict(xref="paper", yref="paper", showarrow=False, text="")
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
         ] + layouts
     else:
         if "group" in args:
@@ -647,12 +648,8 @@ def get_scatterplot_matrix(data, identifier, args):
         group = args["group"]
         num_groups = len(data[group].unique())
         num_rows = math.ceil(num_groups / num_cols)
-        if "colors" not in data.columns:
-            if "colors" in args:
-                data["colors"] = [
-                    args["colors"][g] if g in args["colors"] else "#999999"
-                    for g in data[group]
-                ]
+        if "colors" not in data.columns and "colors" in args:
+            data["colors"] = [args["colors"].get(g, "#999999") for g in data[group]]
 
         fig = tools.make_subplots(
             rows=num_rows, cols=num_cols, shared_yaxes=True, print_grid=False
@@ -677,18 +674,18 @@ def get_scatterplot_matrix(data, identifier, args):
                 c += 1
 
         fig["layout"].update(
-            dict(
-                height=args["height"],
-                width=args["width"],
-                title=args["title"],
-                xaxis={"title": args["x_title"], "autorange": True},
-                yaxis={"title": args["y_title"], "range": range_y},
-                template="plotly_white",
-            )
+            {
+                "height": args["height"],
+                "width": args["width"],
+                "title": args["title"],
+                "xaxis": {"title": args["x_title"], "autorange": True},
+                "yaxis": {"title": args["y_title"], "range": range_y},
+                "template": "plotly_white",
+            }
         )
 
         fig["layout"].annotations = [
-            dict(xref="paper", yref="paper", showarrow=False, text="")
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
         ]
 
     return fig
@@ -753,7 +750,7 @@ def get_simple_scatterplot(data, identifier, args):
                         "showarrow": False,
                         "ax": 55,
                         "ay": -1,
-                        "font": dict(size=8),
+                        "font": {"size": 8},
                     }
                 )
     figure["data"] = [
@@ -777,7 +774,7 @@ def get_simple_scatterplot(data, identifier, args):
         height=args["height"],
         width=args["width"],
         annotations=annots
-        + [dict(xref="paper", yref="paper", showarrow=False, text="")],
+        + [{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
         showlegend=False,
         template="plotly_white",
     )
@@ -875,7 +872,7 @@ def get_scatterplot(data, identifier, args):
             trendline=trendline,
             text=text,
         )
-    elif "density" in args and args["density"]:
+    elif args.get("density"):
         color = get_density(data[x], data[y])
         figure = px.scatter(
             data,
@@ -902,18 +899,30 @@ def get_scatterplot(data, identifier, args):
         )
 
     figure.update_traces(
-        marker=dict(size=14, opacity=0.7, line=dict(width=0.5, color="DarkSlateGrey")),
-        selector=dict(mode="markers"),
+        marker={
+            "size": 14,
+            "opacity": 0.7,
+            "line": {"width": 0.5, "color": "DarkSlateGrey"},
+        },
+        selector={"mode": "markers"},
     )
     figure["layout"] = go.Layout(
         title=title,
         xaxis={"title": x_title},
         yaxis={"title": y_title},
-        legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="right", x=1),
+        legend={
+            "orientation": "h",
+            "yanchor": "bottom",
+            "y": 1.0,
+            "xanchor": "right",
+            "x": 1,
+        },
         hovermode="closest",
         height=height,
         width=width,
-        annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+        annotations=[
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         template="plotly_white",
     )
 
@@ -1035,7 +1044,7 @@ def get_volcanoplot(results, args):
             width=950,
             height=1050,
             annotations=result["annotations"]
-            + [dict(xref="paper", yref="paper", showarrow=False, text="")],
+            + [{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
             template="plotly_white",
             showlegend=False,
         )
@@ -1047,17 +1056,7 @@ def get_volcanoplot(results, args):
 def run_volcano(
     data,
     identifier,
-    args={
-        "alpha": 0.05,
-        "fc": 2,
-        "colorscale": "Blues",
-        "showscale": False,
-        "marker_size": 8,
-        "x_title": "log2FC",
-        "y_title": "-log10(pvalue)",
-        "num_annotations": 10,
-        "annotate_list": [],
-    },
+    args=None,
 ):
     """
     This function parsers the regulation data from statistical tests and
@@ -1101,6 +1100,18 @@ def run_volcano(
                             )
     """
     # Loop through signature
+    if args is None:
+        args = {
+            "alpha": 0.05,
+            "fc": 2,
+            "colorscale": "Blues",
+            "showscale": False,
+            "marker_size": 8,
+            "x_title": "log2FC",
+            "y_title": "-log10(pvalue)",
+            "num_annotations": 10,
+            "annotate_list": [],
+        }
     volcano_plot_results = {}
     grouping = data.groupby(["group1", "group2"])
 
@@ -1111,7 +1122,7 @@ def run_volcano(
         line_colors = []
         text = []
         annotations = []
-        num_annotations = args["num_annotations"] if "num_annotations" in args else 10
+        num_annotations = args.get("num_annotations", 10)
         gidentifier = identifier + "_".join(map(str, group))
         title = "Comparison: " + str(group[0]) + " vs " + str(group[1])
         # sig_pval = False # ! not used
@@ -1144,9 +1155,9 @@ def run_volcano(
                 + "<br>log2FC = "
                 + str(round(row["log2FC"], ndigits=2))
                 + "<br>p = "
-                + "{:.2e}".format(row[pval_col])
+                + f"{row[pval_col]:.2e}"
                 + "<br>FDR = "
-                + "{:.2e}".format(row[padj_col])
+                + f"{row[padj_col]:.2e}"
             )
 
             # Color
@@ -1164,7 +1175,7 @@ def run_volcano(
                             "showarrow": False,
                             "ax": 0,
                             "ay": -10,
-                            "font": dict(color="#2c7bb6", size=13),
+                            "font": {"color": "#2c7bb6", "size": 13},
                         }
                     )
                     color.append("rgba(44, 123, 182, 0.7)")
@@ -1181,7 +1192,7 @@ def run_volcano(
                             "showarrow": False,
                             "ax": 0,
                             "ay": -10,
-                            "font": dict(color="#d7191c", size=13),
+                            "font": {"color": "#d7191c", "size": 13},
                         }
                     )
                     color.append("rgba(215, 25, 28, 0.7)")
@@ -1203,28 +1214,26 @@ def run_volcano(
                 color.append("rgba(153, 153, 153, 0.3)")
                 line_colors.append("#999999")
 
-        if "annotate_list" in args:
-            if len(args["annotate_list"]) > 0:
-                annotations = []
-                hits = args["annotate_list"]
-                selected = signature[signature["identifier"].isin(hits)]
-                for index, row in selected.iterrows():
-                    annotations.append(
-                        {
-                            "x": row["log2FC"],
-                            "y": row["-log10 pvalue"],
-                            "xref": "x",
-                            "yref": "y",
-                            "text": str(row["identifier"]),
-                            "showarrow": False,
-                            "ax": 0,
-                            "ay": -10,
-                            "font": dict(color=color_dict[row["identifier"]], size=12),
-                        }
-                    )
+        if "annotate_list" in args and len(args["annotate_list"]) > 0:
+            annotations = []
+            hits = args["annotate_list"]
+            selected = signature[signature["identifier"].isin(hits)]
+            for index, row in selected.iterrows():
+                annotations.append(
+                    {
+                        "x": row["log2FC"],
+                        "y": row["-log10 pvalue"],
+                        "xref": "x",
+                        "yref": "y",
+                        "text": str(row["identifier"]),
+                        "showarrow": False,
+                        "ax": 0,
+                        "ay": -10,
+                        "font": {"color": color_dict[row["identifier"]], "size": 12},
+                    }
+                )
 
-        if len(annotations) < num_annotations:
-            num_annotations = len(annotations)
+        num_annotations = min(num_annotations, len(annotations))
 
         if len(pvals) > 0:
             pvals.sort()
@@ -1291,7 +1300,9 @@ def get_heatmapplot(data, identifier, args):
         "title": args["title"],
         "height": 500,
         "width": 700,
-        "annotations": [dict(xref="paper", yref="paper", showarrow=False, text="")],
+        "annotations": [
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         "template": "plotly_white",
     }
     figure["data"].append(
@@ -1407,7 +1418,9 @@ def get_complex_heatmapplot(data, identifier, args):
                 "showticklabels": False,
                 "ticks": "",
             },
-            "annotations": [dict(xref="paper", yref="paper", showarrow=False, text="")],
+            "annotations": [
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
         }
     )
 
@@ -1417,7 +1430,7 @@ def get_complex_heatmapplot(data, identifier, args):
     )
 
 
-def get_notebook_network_pyvis(graph, args={}):
+def get_notebook_network_pyvis(graph, args=None):
     """
     This function converts a Networkx graph into a PyVis graph supporting Jupyter notebook embedding.
 
@@ -1432,6 +1445,8 @@ def get_notebook_network_pyvis(graph, args={}):
 
         result = get_notebook_network_pyvis(graph, args={'height':100, 'width':100})
     """
+    if args is None:
+        args = {}
     if "width" not in args:
         args["width"] = 800
     if "height" not in args:
@@ -1648,165 +1663,160 @@ def get_network(data, identifier, args):
     if "title" not in args:
         args["title"] = identifier
 
-    if not data.empty:
-        if utils_old.check_columns(data, cols=[args["source"], args["target"]]):
-            if "values" not in args:
-                args["values"] = "width"
-                data[args["values"]] = 1
+    if not data.empty and utils_old.check_columns(
+        data, cols=[args["source"], args["target"]]
+    ):
+        if "values" not in args:
+            args["values"] = "width"
+            data[args["values"]] = 1
 
-            if "cutoff" in args:
-                if args["cutoff_abs"]:
-                    data = data[np.abs(data[args["values"]]) >= args["cutoff"]]
-                else:
-                    data = data[data[args["values"]] >= args["cutoff"]]
+        if "cutoff" in args:
+            if args["cutoff_abs"]:
+                data = data[np.abs(data[args["values"]]) >= args["cutoff"]]
+            else:
+                data = data[data[args["values"]] >= args["cutoff"]]
 
-            if not data.empty:
-                data[args["source"]] = [
-                    str(n).replace("'", "") for n in data[args["source"]]
+        if not data.empty:
+            data[args["source"]] = [
+                str(n).replace("'", "") for n in data[args["source"]]
+            ]
+            data[args["target"]] = [
+                str(n).replace("'", "") for n in data[args["target"]]
+            ]
+
+            data = data.rename(index=str, columns={args["values"]: "width"})
+            data["width"] = data["width"].fillna(1.0)
+            data = data.fillna("null")
+            data.columns = [c.replace("_", "") for c in data.columns]
+            data["edgewidth"] = data["width"].apply(np.abs)
+            min_edge_value = data["edgewidth"].min()
+            max_edge_value = data["edgewidth"].max()
+            if min_edge_value == max_edge_value:
+                min_edge_value = 0.0
+            graph = nx.from_pandas_edgelist(
+                data, args["source"], args["target"], edge_attr=True
+            )
+
+            degrees = dict(graph.degree())
+            nx.set_node_attributes(graph, degrees, "degree")
+            betweenness = None
+            ev_centrality = None
+            if data.shape[0] < 150 and data.shape[0] > 5:
+                try:
+                    betweenness = nx.betweenness_centrality(graph, weight="width")
+                    ev_centrality = nx.eigenvector_centrality_numpy(graph)
+                    ev_centrality = {
+                        k: f"{round(v, 3):.3f}" for k, v in ev_centrality.items()
+                    }
+                    nx.set_node_attributes(graph, betweenness, "betweenness")
+                    nx.set_node_attributes(graph, ev_centrality, "eigenvector")
+                except (nx.NetworkXException, ValueError) as e:
+                    print(f"There was an exception when calculating centralities: {e}")
+
+            min_node_size = 0
+            max_node_size = 0
+            if "node_size" not in args:
+                args["node_size"] = "degree"
+
+            if args["node_size"] == "betweenness" and betweenness is not None:
+                min_node_size = min(betweenness.values())
+                max_node_size = max(betweenness.values())
+                nx.set_node_attributes(graph, betweenness, "radius")
+            elif args["node_size"] == "ev_centrality" and ev_centrality is not None:
+                min_node_size = min(ev_centrality.values())
+                max_node_size = max(ev_centrality.values())
+                nx.set_node_attributes(graph, ev_centrality, "radius")
+            elif args["node_size"] == "degree" and len(degrees) > 0:
+                min_node_size = min(degrees.values())
+                max_node_size = max(degrees.values())
+                nx.set_node_attributes(graph, degrees, "radius")
+
+            clusters = network_analysis.get_network_communities(graph, args)
+            col = utils_old.get_hex_colors(len(set(clusters.values())))
+            colors = {n: col[clusters[n]] for n in clusters}
+            nx.set_node_attributes(graph, colors, "color")
+            nx.set_node_attributes(graph, clusters, "cluster")
+
+            vis_graph = graph
+            limit = 500
+            if "limit" in args:
+                limit = args["limit"]
+            if limit is not None and len(vis_graph.edges()) > 500:
+                max_nodes = 150
+                cluster_members = defaultdict(list)
+                cluster_nums = {}
+                for n in clusters:
+                    if clusters[n] not in cluster_nums:
+                        cluster_nums[clusters[n]] = 0
+                    cluster_members[clusters[n]].append(n)
+                    cluster_nums[clusters[n]] += 1
+                valid_clusters = [
+                    c for c, n in sorted(cluster_nums.items(), key=lambda x: x[1])
                 ]
-                data[args["target"]] = [
-                    str(n).replace("'", "") for n in data[args["target"]]
-                ]
+                valid_nodes = []
+                for c in valid_clusters:
+                    valid_nodes.extend(cluster_members[c])
+                    if len(valid_nodes) >= max_nodes:
+                        valid_nodes = valid_nodes[0:max_nodes]
+                        break
+                vis_graph = vis_graph.subgraph(valid_nodes)
 
-                data = data.rename(index=str, columns={args["values"]: "width"})
-                data["width"] = data["width"].fillna(1.0)
-                data = data.fillna("null")
-                data.columns = [c.replace("_", "") for c in data.columns]
-                data["edgewidth"] = data["width"].apply(np.abs)
-                min_edge_value = data["edgewidth"].min()
-                max_edge_value = data["edgewidth"].max()
-                if min_edge_value == max_edge_value:
-                    min_edge_value = 0.0
-                graph = nx.from_pandas_edgelist(
-                    data, args["source"], args["target"], edge_attr=True
+            nodes_table, edges_table = network_to_tables(
+                graph, source=args["source"], target=args["target"]
+            )
+            nodes_fig_table = get_table(
+                nodes_table,
+                identifier=identifier + "_nodes_table",
+                args={"title": args["title"] + " nodes table"},
+            )
+            edges_fig_table = get_table(
+                edges_table,
+                identifier=identifier + "_edges_table",
+                args={"title": args["title"] + " edges table"},
+            )
+
+            stylesheet, layout = get_network_style(colors, args["color_weight"])
+            stylesheet.append(
+                {
+                    "selector": "edge",
+                    "style": {
+                        "width": "mapData(edgewidth,"
+                        + str(min_edge_value)
+                        + ","
+                        + str(max_edge_value)
+                        + ", .5, 8)"
+                    },
+                }
+            )
+            if min_node_size > 0 and max_node_size > 0:
+                mapper = (
+                    "mapData(radius,"
+                    + str(min_node_size)
+                    + ","
+                    + str(max_node_size)
+                    + ", 15, 50)"
                 )
-
-                degrees = dict(graph.degree())
-                nx.set_node_attributes(graph, degrees, "degree")
-                betweenness = None
-                ev_centrality = None
-                if data.shape[0] < 150 and data.shape[0] > 5:
-                    try:
-                        betweenness = nx.betweenness_centrality(graph, weight="width")
-                        ev_centrality = nx.eigenvector_centrality_numpy(graph)
-                        ev_centrality = {
-                            k: "%.3f" % round(v, 3) for k, v in ev_centrality.items()
-                        }
-                        nx.set_node_attributes(graph, betweenness, "betweenness")
-                        nx.set_node_attributes(graph, ev_centrality, "eigenvector")
-                    except Exception as e:
-                        print(
-                            "There was an exception when calculating centralities: {}".format(
-                                e
-                            )
-                        )
-
-                min_node_size = 0
-                max_node_size = 0
-                if "node_size" not in args:
-                    args["node_size"] = "degree"
-
-                if args["node_size"] == "betweenness" and betweenness is not None:
-                    min_node_size = min(betweenness.values())
-                    max_node_size = max(betweenness.values())
-                    nx.set_node_attributes(graph, betweenness, "radius")
-                elif args["node_size"] == "ev_centrality" and ev_centrality is not None:
-                    min_node_size = min(ev_centrality.values())
-                    max_node_size = max(ev_centrality.values())
-                    nx.set_node_attributes(graph, ev_centrality, "radius")
-                elif args["node_size"] == "degree" and len(degrees) > 0:
-                    min_node_size = min(degrees.values())
-                    max_node_size = max(degrees.values())
-                    nx.set_node_attributes(graph, degrees, "radius")
-
-                clusters = network_analysis.get_network_communities(graph, args)
-                col = utils_old.get_hex_colors(len(set(clusters.values())))
-                colors = {n: col[clusters[n]] for n in clusters}
-                nx.set_node_attributes(graph, colors, "color")
-                nx.set_node_attributes(graph, clusters, "cluster")
-
-                vis_graph = graph
-                limit = 500
-                if "limit" in args:
-                    limit = args["limit"]
-                if limit is not None:
-                    if len(vis_graph.edges()) > 500:
-                        max_nodes = 150
-                        cluster_members = defaultdict(list)
-                        cluster_nums = {}
-                        for n in clusters:
-                            if clusters[n] not in cluster_nums:
-                                cluster_nums[clusters[n]] = 0
-                            cluster_members[clusters[n]].append(n)
-                            cluster_nums[clusters[n]] += 1
-                        valid_clusters = [
-                            c
-                            for c, n in sorted(cluster_nums.items(), key=lambda x: x[1])
-                        ]
-                        valid_nodes = []
-                        for c in valid_clusters:
-                            valid_nodes.extend(cluster_members[c])
-                            if len(valid_nodes) >= max_nodes:
-                                valid_nodes = valid_nodes[0:max_nodes]
-                                break
-                        vis_graph = vis_graph.subgraph(valid_nodes)
-
-                nodes_table, edges_table = network_to_tables(
-                    graph, source=args["source"], target=args["target"]
-                )
-                nodes_fig_table = get_table(
-                    nodes_table,
-                    identifier=identifier + "_nodes_table",
-                    args={"title": args["title"] + " nodes table"},
-                )
-                edges_fig_table = get_table(
-                    edges_table,
-                    identifier=identifier + "_edges_table",
-                    args={"title": args["title"] + " edges table"},
-                )
-
-                stylesheet, layout = get_network_style(colors, args["color_weight"])
                 stylesheet.append(
                     {
-                        "selector": "edge",
-                        "style": {
-                            "width": "mapData(edgewidth,"
-                            + str(min_edge_value)
-                            + ","
-                            + str(max_edge_value)
-                            + ", .5, 8)"
-                        },
+                        "selector": "node",
+                        "style": {"width": mapper, "height": mapper},
                     }
                 )
-                if min_node_size > 0 and max_node_size > 0:
-                    mapper = (
-                        "mapData(radius,"
-                        + str(min_node_size)
-                        + ","
-                        + str(max_node_size)
-                        + ", 15, 50)"
-                    )
-                    stylesheet.append(
-                        {
-                            "selector": "node",
-                            "style": {"width": mapper, "height": mapper},
-                        }
-                    )
-                args["stylesheet"] = stylesheet
-                args["layout"] = layout
+            args["stylesheet"] = stylesheet
+            args["layout"] = layout
 
-                cy_elements, mouseover_node = utils_old.networkx_to_cytoscape(vis_graph)
+            cy_elements, _mouseover_node = utils_old.networkx_to_cytoscape(vis_graph)
 
-                app_net = get_cytoscape_network(cy_elements, identifier, args)
-                # args['mouseover_node'] = mouseover_node
+            app_net = get_cytoscape_network(cy_elements, identifier, args)
+            # args['mouseover_node'] = mouseover_node
 
-                net = {
-                    "notebook": [cy_elements, stylesheet, layout],
-                    "app": app_net,
-                    "net_tables": (nodes_table, edges_table),
-                    "net_tables_viz": (nodes_fig_table, edges_fig_table),
-                    "net_json": json_graph.node_link_data(graph),
-                }
+            net = {
+                "notebook": [cy_elements, stylesheet, layout],
+                "app": app_net,
+                "net_tables": (nodes_table, edges_table),
+                "net_tables_viz": (nodes_fig_table, edges_fig_table),
+                "net_json": json_graph.node_link_data(graph),
+            }
     return net
 
 
@@ -1882,7 +1892,7 @@ def get_network_style(node_colors, color_edges):
     return stylesheet, layout
 
 
-def visualize_notebook_network(network, notebook_type="jupyter", layout={}):
+def visualize_notebook_network(network, notebook_type="jupyter", layout=None):
     """
     This function returns a Cytoscape network visualization for Jupyter notebooks
 
@@ -1899,6 +1909,8 @@ def visualize_notebook_network(network, notebook_type="jupyter", layout={}):
                                                             'title':'Network Figure', 'color_weight': True})
         visualize_notebook_network(net['notebook'], notebook_type='jupyter', layout={'width':'100%', 'height':'700px'})
     """
+    if layout is None:
+        layout = {}
     net = None
     if len(layout) == 0:
         layout = {
@@ -1983,7 +1995,7 @@ def get_pca_plot(data, identifier, args):
                                     'width':100}
                             )
     """
-    pca_data, loadings, variance = data
+    pca_data, loadings, _variance = data
     figure = {}
     traces = []
     annotations = []
@@ -2006,29 +2018,29 @@ def get_pca_plot(data, identifier, args):
             x=[0, x],
             y=[0, y],
             mode="markers+lines",
-            text=str(index) + " loading: {0:.2f}".format(value),
+            text=str(index) + f" loading: {value:.2f}",
             name=index,
-            marker=dict(
-                size=3,
-                symbol=1,
-                color="darkgrey",  # set color equal to a variable
-                showscale=False,
-                opacity=0.9,
-            ),
+            marker={
+                "size": 3,
+                "symbol": 1,
+                "color": "darkgrey",  # set color equal to a variable
+                "showscale": False,
+                "opacity": 0.9,
+            },
             showlegend=False,
         )
-        annotation = dict(
-            x=x * 1.15,
-            y=y * 1.15,
-            xref="x",
-            yref="y",
-            text=index,
-            showarrow=False,
-            font=dict(size=12, color="darkgrey"),
-            align="center",
-            ax=20,
-            ay=-30,
-        )
+        annotation = {
+            "x": x * 1.15,
+            "y": y * 1.15,
+            "xref": "x",
+            "yref": "y",
+            "text": index,
+            "showarrow": False,
+            "font": {"size": 12, "color": "darkgrey"},
+            "align": "center",
+            "ax": 20,
+            "ay": -30,
+        }
         annotations.append(annotation)
         traces.append(trace)
 
@@ -2042,19 +2054,7 @@ def get_pca_plot(data, identifier, args):
 def get_sankey_plot(
     data,
     identifier,
-    args={
-        "source": "source",
-        "target": "target",
-        "weight": "weight",
-        "source_colors": "source_colors",
-        "target_colors": "target_colors",
-        "orientation": "h",
-        "valueformat": ".0f",
-        "width": 800,
-        "height": 800,
-        "font": 12,
-        "title": "Sankey plot",
-    },
+    args=None,
 ):
     """
     This function generates a Sankey plot in Plotly.
@@ -2094,6 +2094,20 @@ def get_sankey_plot(
                                        'title':'Sankey plot'}
                                 )
     """
+    if args is None:
+        args = {
+            "source": "source",
+            "target": "target",
+            "weight": "weight",
+            "source_colors": "source_colors",
+            "target_colors": "target_colors",
+            "orientation": "h",
+            "valueformat": ".0f",
+            "width": 800,
+            "height": 800,
+            "font": 12,
+            "title": "Sankey plot",
+        }
     figure = {}
     if data is not None and not data.empty:
         nodes = list(set(data[args["source"]].tolist() + data[args["target"]].tolist()))
@@ -2119,17 +2133,17 @@ def get_sankey_plot(
             args["target_colors"] = "target_colors"
             data["target_colors"] = scolors
 
-        data_trace = dict(
-            type="sankey",
-            orientation="h" if "orientation" not in args else args["orientation"],
-            valueformat=".0f" if "valueformat" not in args else args["valueformat"],
-            arrangement="snap",
-            node=dict(
-                pad=10 if "pad" not in args else args["pad"],
-                thickness=10 if "thickness" not in args else args["thickness"],
-                line=dict(color="black", width=0.3),
-                label=nodes,
-                color=[
+        data_trace = {
+            "type": "sankey",
+            "orientation": args.get("orientation", "h"),
+            "valueformat": args.get("valueformat", ".0f"),
+            "arrangement": "snap",
+            "node": {
+                "pad": args.get("pad", 10),
+                "thickness": args.get("thickness", 10),
+                "line": {"color": "black", "width": 0.3},
+                "label": nodes,
+                "color": [
                     (
                         "rgba" + str(hex2rgb(node_colors[c]))
                         if node_colors[c].startswith("#")
@@ -2137,30 +2151,32 @@ def get_sankey_plot(
                     )
                     for c in nodes
                 ],
-            ),
-            link=dict(
-                source=[list(nodes).index(i) for i in data[args["source"]].tolist()],
-                target=[list(nodes).index(i) for i in data[args["target"]].tolist()],
-                value=data[args["weight"]].tolist(),
-                color=[
+            },
+            "link": {
+                "source": [list(nodes).index(i) for i in data[args["source"]].tolist()],
+                "target": [list(nodes).index(i) for i in data[args["target"]].tolist()],
+                "value": data[args["weight"]].tolist(),
+                "color": [
                     "rgba" + str(hex2rgb(c)) if c.startswith("#") else c
                     for c in data[args["source_colors"]].tolist()
                 ],
-                label=hover_data,
-            ),
-        )
-        layout = dict(
-            width=800 if "width" not in args else args["width"],
-            height=800 if "height" not in args else args["height"],
-            title=args["title"],
-            annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
-            font=dict(
-                size=12 if "font" not in args else args["font"],
-            ),
-            template="plotly_white",
-        )
+                "label": hover_data,
+            },
+        }
+        layout = {
+            "width": args.get("width", 800),
+            "height": args.get("height", 800),
+            "title": args["title"],
+            "annotations": [
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
+            "font": {
+                "size": args.get("font", 12),
+            },
+            "template": "plotly_white",
+        }
 
-        figure = dict(data=[data_trace], layout=layout)
+        figure = {"data": [data_trace], "layout": layout}
 
     return dcc.Graph(id=identifier, figure=figure)
 
@@ -2194,45 +2210,40 @@ def get_table(data, identifier, args):
                 cols = args["index"]
             else:
                 cols.append(args["index"])
-        if "cols" in args:
-            if args["cols"] is not None and len(args["cols"]) > 0:
-                selected_cols = list(set(args["cols"]).intersection(data.columns))
-                if len(selected_cols) > 0:
-                    data = data[selected_cols + cols]
-                else:
-                    data = pd.DataFrame()
-                    table.append(
-                        html.Div(
-                            children=[
-                                dcc.Markdown(
-                                    "### Columns not found: {}".format(
-                                        ",".join(args["cols"])
-                                    )
+        if "cols" in args and args["cols"] is not None and len(args["cols"]) > 0:
+            selected_cols = list(set(args["cols"]).intersection(data.columns))
+            if len(selected_cols) > 0:
+                data = data[selected_cols + cols]
+            else:
+                data = pd.DataFrame()
+                table.append(
+                    html.Div(
+                        children=[
+                            dcc.Markdown(
+                                "### Columns not found: {}".format(
+                                    ",".join(args["cols"])
                                 )
-                            ]
-                        )
+                            )
+                        ]
                     )
-        if "rows" in args:
-            if args["rows"] is not None and len(args["rows"]) > 0:
-                selected_rows = list(set(args["rows"]).intersection(data.index))
-                if len(selected_rows) > 0:
-                    data = data.loc[selected_rows]
-                else:
-                    data = pd.DataFrame()
-                    table.append(
-                        html.Div(
-                            children=[
-                                dcc.Markdown(
-                                    "### Rows not found: {}".format(
-                                        ",".join(args["rows"])
-                                    )
-                                )
-                            ]
-                        )
+                )
+        if "rows" in args and args["rows"] is not None and len(args["rows"]) > 0:
+            selected_rows = list(set(args["rows"]).intersection(data.index))
+            if len(selected_rows) > 0:
+                data = data.loc[selected_rows]
+            else:
+                data = pd.DataFrame()
+                table.append(
+                    html.Div(
+                        children=[
+                            dcc.Markdown(
+                                "### Rows not found: {}".format(",".join(args["rows"]))
+                            )
+                        ]
                     )
-        if "head" in args:
-            if len(args["head"]) > 1:
-                data = data.iloc[: args["head"][0], : args["head"][1]]
+                )
+        if "head" in args and len(args["head"]) > 1:
+            data = data.iloc[: args["head"][0], : args["head"][1]]
         list_cols = data.applymap(lambda x: isinstance(x, list)).all()
         list_cols = list_cols.index[list_cols].tolist()
 
@@ -2344,11 +2355,10 @@ def get_violinplot(data, identifier, args):
     color_map = {}
     if "colors" in args:
         color_map = args["colors"]
-    if "drop_cols" in args:
-        if len(list(set(args["drop_cols"]).intersection(df.columns))) == len(
-            args["drop_cols"]
-        ):
-            df = df.drop(args["drop_cols"], axis=1)
+    if "drop_cols" in args and len(
+        list(set(args["drop_cols"]).intersection(df.columns))
+    ) == len(args["drop_cols"]):
+        df = df.drop(args["drop_cols"], axis=1)
 
     for c in df.columns.unique():
         if c != args["group"]:
@@ -2357,7 +2367,7 @@ def get_violinplot(data, identifier, args):
             )
             figure.update_layout(
                 annotations=[
-                    dict(xref="paper", yref="paper", showarrow=False, text="")
+                    {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
                 ],
                 template="plotly_white",
             )
@@ -2366,7 +2376,7 @@ def get_violinplot(data, identifier, args):
     return graphs
 
 
-def create_violinplot(df, x, y, color, color_map={}):
+def create_violinplot(df, x, y, color, color_map=None):
     """
     This function creates traces for a simple violin plot.
 
@@ -2382,6 +2392,8 @@ def create_violinplot(df, x, y, color, color_map={}):
         result = create_violinplot(df, x='group', y='protein a', color='group', color_map={})
     """
     # traces = [] # ! or is this some hack?
+    if color_map is None:
+        color_map = {}
     violin = px.violin(
         df, x=x, y=y, color=color, color_discrete_map=color_map, box=True, points="all"
     )
@@ -2409,11 +2421,10 @@ def get_clustergrammer_plot(data, identifier, args):
 
     div = None
     if not data.empty:
-        if "format" in args:
-            if args["format"] == "edgelist":
-                data = data[["node1", "node2", "weight"]].pivot(
-                    index="node1", columns="node2"
-                )
+        if "format" in args and args["format"] == "edgelist":
+            data = data[["node1", "node2", "weight"]].pivot(
+                index="node1", columns="node2"
+            )
         clustergrammer_net.load_df(data)
 
         link = get_clustergrammer_link(clustergrammer_net, filename=None)
@@ -2453,10 +2464,9 @@ def get_parallel_plot(data, identifier, args):
     fig = None
     if "group" in args:
         group = args["group"]
-        if "zscore" in args:
-            if args["zscore"]:
-                data = data.set_index(group).apply(zscore)
-                data = data.reset_index()
+        if args.get("zscore"):
+            data = data.set_index(group).apply(zscore)
+            data = data.reset_index()
         color = "#de77ae"
         if "color" in args:
             color = args["color"]
@@ -2467,17 +2477,19 @@ def get_parallel_plot(data, identifier, args):
         for i in group_values.index:
             values = group_values.loc[i].values.tolist()
 
-            dim = dict(label=i, range=[min_val, max_val], values=values)
+            dim = {"label": i, "range": [min_val, max_val], "values": values}
             dims.append(dim)
 
-        fig_data = [go.Parcoords(line=dict(color=color), dimensions=dims)]
+        fig_data = [go.Parcoords(line={"color": color}, dimensions=dims)]
         layout = go.Layout(
             title=args["title"],
-            annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
 
-        fig = dict(data=fig_data, layout=layout)
+        fig = {"data": fig_data, "layout": layout}
 
     return dcc.Graph(id=identifier, figure=fig)
 
@@ -2505,7 +2517,7 @@ def get_WGCNAPlots(data, identifier):
             dissTOM,
             moduleColors,
             Features_per_Module,
-            MEs,
+            _MEs,
             moduleTraitCor,
             textMatrix,
             METDiss,
@@ -2563,46 +2575,46 @@ def get_WGCNAPlots(data, identifier):
                 height=900,
                 showlegend=False,
                 title="",
-                xaxis=dict(
-                    domain=[0, 1],
-                    range=[
+                xaxis={
+                    "domain": [0, 1],
+                    "range": [
                         np.min(dendrogram_["layout"]["xaxis"]["tickvals"]) - 6,
                         np.max(dendrogram_["layout"]["xaxis"]["tickvals"]) + 4,
                     ],
-                    showgrid=False,
-                    zeroline=True,
-                    ticks="",
-                    automargin=True,
-                    anchor="y",
-                ),
-                yaxis=dict(
-                    domain=[0.7, 1],
-                    autorange=True,
-                    showgrid=False,
-                    zeroline=False,
-                    ticks="outside",
-                    title="Height",
-                    automargin=True,
-                    anchor="x",
-                ),
-                xaxis2=dict(
-                    domain=[0, 1],
-                    autorange=True,
-                    showgrid=True,
-                    zeroline=False,
-                    ticks="",
-                    showticklabels=False,
-                    automargin=True,
-                    anchor="y2",
-                ),
-                yaxis2=dict(
-                    domain=[0, 0.64],
-                    autorange=True,
-                    showgrid=False,
-                    zeroline=False,
-                    automargin=True,
-                    anchor="x2",
-                ),
+                    "showgrid": False,
+                    "zeroline": True,
+                    "ticks": "",
+                    "automargin": True,
+                    "anchor": "y",
+                },
+                yaxis={
+                    "domain": [0.7, 1],
+                    "autorange": True,
+                    "showgrid": False,
+                    "zeroline": False,
+                    "ticks": "outside",
+                    "title": "Height",
+                    "automargin": True,
+                    "anchor": "x",
+                },
+                xaxis2={
+                    "domain": [0, 1],
+                    "autorange": True,
+                    "showgrid": True,
+                    "zeroline": False,
+                    "ticks": "",
+                    "showticklabels": False,
+                    "automargin": True,
+                    "anchor": "y2",
+                },
+                yaxis2={
+                    "domain": [0, 0.64],
+                    "autorange": True,
+                    "showgrid": False,
+                    "zeroline": False,
+                    "automargin": True,
+                    "anchor": "x2",
+                },
             )
 
             if not (
@@ -2640,16 +2652,25 @@ def get_WGCNAPlots(data, identifier):
             figure["layout"]["template"] = "plotly_white"
             figure["layout"].update(
                 {
-                    "xaxis": dict(
-                        domain=[0, 1], ticks="", showticklabels=False, anchor="y"
-                    ),
-                    "xaxis2": dict(
-                        domain=[0, 1], ticks="", showticklabels=True, anchor="y2"
-                    ),
-                    "yaxis": dict(domain=[0.635, 1], anchor="x"),
-                    "yaxis2": dict(
-                        domain=[0.0, 0.635], ticks="", showticklabels=True, anchor="x2"
-                    ),
+                    "xaxis": {
+                        "domain": [0, 1],
+                        "ticks": "",
+                        "showticklabels": False,
+                        "anchor": "y",
+                    },
+                    "xaxis2": {
+                        "domain": [0, 1],
+                        "ticks": "",
+                        "showticklabels": True,
+                        "anchor": "y2",
+                    },
+                    "yaxis": {"domain": [0.635, 1], "anchor": "x"},
+                    "yaxis2": {
+                        "domain": [0.0, 0.635],
+                        "ticks": "",
+                        "showticklabels": True,
+                        "anchor": "x2",
+                    },
                 }
             )
 
@@ -2795,11 +2816,11 @@ def plot_2_venn_diagram(cond1, cond2, unique1, unique2, intersection, identifier
             y=[1, 1, 1],
             text=[str(unique1), str(intersection), str(unique2)],
             mode="text",
-            textfont=dict(
-                color="black",
-                size=14,
-                family="Arial",
-            ),
+            textfont={
+                "color": "black",
+                "size": 14,
+                "family": "Arial",
+            },
         )
     ]
 
@@ -2860,14 +2881,7 @@ def plot_2_venn_diagram(cond1, cond2, unique1, unique2, intersection, identifier
 def get_wordcloud(
     data,
     identifier,
-    args={
-        "stopwords": [],
-        "max_words": 400,
-        "max_font_size": 100,
-        "width": 700,
-        "height": 700,
-        "margin": 1,
-    },
+    args=None,
 ):
     """
     This function generates a Wordcloud based on the natural text in a pandas dataframe column.
@@ -2906,6 +2920,15 @@ def get_wordcloud(
                                     'margin': 1}
                                 )
     """
+    if args is None:
+        args = {
+            "stopwords": [],
+            "max_words": 400,
+            "max_font_size": 100,
+            "width": 700,
+            "height": 700,
+            "margin": 1,
+        }
     figure = None
     if data is not None:
         nltk.download("stopwords")
@@ -3083,45 +3106,48 @@ def get_wordcloud(
         # get the positions
         x = []
         y = []
-        j = 0
-        for i in position_list:
+        for j, i in enumerate(position_list):
             x.append(i[1] + fontsize_list[j] + 10)
             y.append(i[0] + 5)
-            j += 1
 
         # get the relative occurence frequencies
         new_freq_list = []
         for i in freq_list:
             new_freq_list.append(i * 70)
-        new_freq_list
 
         trace = go.Scattergl(
             x=x,
             y=y,
-            textfont=dict(size=new_freq_list, color=color_list),
+            textfont={"size": new_freq_list, "color": color_list},
             hoverinfo="text",
-            hovertext=[
-                "{0} freq: {1}".format(w, f) for w, f in zip(word_list, freq_list)
-            ],
+            hovertext=[f"{w} freq: {f}" for w, f in zip(word_list, freq_list)],
             mode="text",
             text=word_list,
         )
 
         layout = go.Layout(
-            xaxis=dict(
-                showgrid=False, showticklabels=False, zeroline=False, automargin=True
-            ),
-            yaxis=dict(
-                showgrid=False, showticklabels=False, zeroline=False, automargin=True
-            ),
+            xaxis={
+                "showgrid": False,
+                "showticklabels": False,
+                "zeroline": False,
+                "automargin": True,
+            },
+            yaxis={
+                "showgrid": False,
+                "showticklabels": False,
+                "zeroline": False,
+                "automargin": True,
+            },
             width=args["width"],
             height=args["height"],
             title=args["title"],
-            annotations=[dict(xref="paper", yref="paper", showarrow=False, text="")],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
 
-        figure = dict(data=[trace], layout=layout)
+        figure = {"data": [trace], "layout": layout}
 
     return dcc.Graph(id=identifier, figure=figure)
 
@@ -3193,7 +3219,7 @@ def save_DASH_plot(plot, name, plot_format="svg", directory=".", width=800, heig
             with open(plot_file, "w") as f:
                 f.write(figure_json)
     except ValueError as err:
-        print("Plot could not be saved. Error: {}".format(err))
+        print(f"Plot could not be saved. Error: {err}")
 
 
 def mpl_to_plotly(fig, ci=True, legend=True):
@@ -3203,7 +3229,7 @@ def mpl_to_plotly(fig, ci=True, legend=True):
     py_fig = tls.mpl_to_plotly(fig, resize=True)
     # Add fill property to lower limit line
     if ci:
-        style1 = dict(fill="tonexty")
+        style1 = {"fill": "tonexty"}
         # apply style
         py_fig["data"][2].update(style1)
 
@@ -3216,7 +3242,7 @@ def mpl_to_plotly(fig, ci=True, legend=True):
     if legend:
         # Add legend, place it at the top right corner of the plot
         py_fig["layout"].update(
-            font=dict(size=14),
+            font={"size": 14},
             showlegend=True,
             height=400,
             width=1000,
@@ -3254,13 +3280,11 @@ def get_km_plot(data, identifier, args):
     if len(data) == 2:
         kmfit, summary = data
         if kmfit is not None:
-            i = 0
-            for kmf in kmfit:
+            for i, kmf in enumerate(kmfit):
                 c = None
                 if colors is not None:
                     c = colors[i]
                 plot = kmf.plot_survival_function(show_censors=True, ax=plot, c=c)
-                i += 1
             title = "Kaplan-meier plot " + summary
             xlabel = "Time"
             ylabel = "Survival"
@@ -3294,13 +3318,11 @@ def get_cumulative_hazard_plot(data, identifier, args):
     if len(data) == 2:
         hrfit = data
         if hrfit is not None:
-            i = 0
-            for hrdf in hrfit:
+            for i, hrdf in enumerate(hrfit):
                 c = None
                 if colors is not None:
                     c = colors[i]
                 plot = hrdf.plot_cumulative_hazard(ax=plot, c=c)
-                i += 1
             title = "Cumulative Hazard plot "
             xlabel = "Time"
             ylabel = "Nelson Aalen - Cumulative Hazard"
@@ -3363,34 +3385,34 @@ def get_polar_plot(df, identifier, args):
             ptype = args["type"]
 
         figure = go.Figure()
-        if value is not None and group is not None and colors is not None:
-            if not df.empty:
-                min_value = df[value].min()
-                max_value = df[value].max()
-                if ptype == "line":
-                    for color in df[colors].unique():
-                        cdf = df[df[colors] == color]
-                        figure.add_trace(
-                            go.Scatterpolar(
-                                r=cdf[value],
-                                theta=cdf[group],
-                                mode="lines",
-                                name=color,
-                                fill="toself",
-                            )
-                        )
-                else:
-                    print(
-                        "Type {} not available. Try with 'line' or 'bar' types.".format(
-                            ptype
+        if (
+            value is not None
+            and group is not None
+            and colors is not None
+            and not df.empty
+        ):
+            min_value = df[value].min()
+            max_value = df[value].max()
+            if ptype == "line":
+                for color in df[colors].unique():
+                    cdf = df[df[colors] == color]
+                    figure.add_trace(
+                        go.Scatterpolar(
+                            r=cdf[value],
+                            theta=cdf[group],
+                            mode="lines",
+                            name=color,
+                            fill="toself",
                         )
                     )
+            else:
+                print(f"Type {ptype} not available. Try with 'line' or 'bar' types.")
 
-                figure.update_layout(
-                    width=width,
-                    height=height,
-                    polar=dict(radialaxis=dict(range=[min_value, max_value])),
-                )
+            figure.update_layout(
+                width=width,
+                height=height,
+                polar={"radialaxis": {"range": [min_value, max_value]}},
+            )
 
     return dcc.Graph(id=identifier, figure=figure)
 
@@ -3441,7 +3463,7 @@ def get_enrichment_plots(enrichment_results, identifier, args):
     for g in enrichment_results:
         g1, g2 = g.split("~")
         group = "direction"
-        nid = identifier + "_{}_{}".format(g1, g2)
+        nid = identifier + f"_{g1}_{g2}"
         if not enrichment_results[g].empty:
             df = enrichment_results[g][enrichment_results[g].rejected]
             if "direction" not in df:
@@ -3456,7 +3478,7 @@ def get_enrichment_plots(enrichment_results, identifier, args):
                         "x": "x",
                         "y": "terms",
                         "group": group,
-                        "title": "{} {} vs {}".format(title, g1, g2),
+                        "title": f"{title} {g1} vs {g2}",
                         "symbol": group,
                         "colors": colors,
                         "x_title": "-log10(padj)",

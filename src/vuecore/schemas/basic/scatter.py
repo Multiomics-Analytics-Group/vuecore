@@ -1,5 +1,7 @@
-from typing import Dict, Optional
-from pydantic import Field, ConfigDict, model_validator
+from __future__ import annotations
+
+from pydantic import ConfigDict, Field, model_validator
+
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
 
 
@@ -24,22 +26,22 @@ class ScatterConfig(PlotlyBaseConfig):
     model_config = ConfigDict(extra="allow")
 
     # Data Mapping
-    symbol: Optional[str] = Field(None, description="Column to assign marker symbols.")
-    size: Optional[str] = Field(None, description="Column to determine marker size.")
-    text: Optional[str] = Field(None, description="Column for text labels on markers.")
-    error_x: Optional[str] = Field(None, description="Column for x-axis error bars.")
-    error_y: Optional[str] = Field(None, description="Column for y-axis error bars.")
-    symbol_map: Optional[Dict[str, str]] = Field(
+    symbol: str | None = Field(None, description="Column to assign marker symbols.")
+    size: str | None = Field(None, description="Column to determine marker size.")
+    text: str | None = Field(None, description="Column for text labels on markers.")
+    error_x: str | None = Field(None, description="Column for x-axis error bars.")
+    error_y: str | None = Field(None, description="Column for y-axis error bars.")
+    symbol_map: dict[str, str] | None = Field(
         None, description="Specific symbol mappings for symbol column values."
     )
     size_max: int = Field(20, description="Maximum size for markers.")
 
     # Styling and Layout
     opacity: float = Field(0.8, description="Overall opacity of markers.")
-    trendline: Optional[str] = Field(
+    trendline: str | None = Field(
         None, description="Trendline type (ols/lowess/rolling/expanding/ewm)."
     )
-    trendline_options: Optional[Dict] = Field(
+    trendline_options: dict | None = Field(
         None, description="Advanced options for trendline configuration."
     )
     marker_line_width: float = Field(
@@ -55,7 +57,7 @@ class ScatterConfig(PlotlyBaseConfig):
     )
 
     @model_validator(mode="after")
-    def validate_exclusive_color_options(self) -> "ScatterConfig":
+    def validate_exclusive_color_options(self) -> ScatterConfig:
         if self.color_by_density and self.color:
             raise ValueError(
                 "Cannot use both 'color_by_density' and 'color' parameters. "

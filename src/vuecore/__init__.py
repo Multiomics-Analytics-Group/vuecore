@@ -10,16 +10,16 @@ __version__ = metadata.version("vuecore")
 
 import logging
 import pathlib
-from typing import Iterable
+from collections.abc import Iterable
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from .constants import PlotType, EngineType
+from .constants import EngineType, PlotType
 
-__all__ = ["PlotType", "EngineType"]
+__all__ = ["EngineType", "PlotType"]
 
 plt.rcParams["figure.figsize"] = [4.0, 3.0]
 plt.rcParams["pdf.fonttype"] = 42
@@ -97,7 +97,7 @@ def select_dates(date_series: pd.Series, max_ticks=30) -> np.array:
     if offset > 1:
         return xticks[::offset]
     else:
-        xticks
+        return xticks
 
 
 def make_large_descriptors(size="xx-large"):

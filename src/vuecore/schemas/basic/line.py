@@ -1,5 +1,7 @@
-from typing import Dict, Optional
-from pydantic import Field, ConfigDict
+from __future__ import annotations
+
+from pydantic import ConfigDict, Field
+
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
 
 
@@ -25,27 +27,25 @@ class LineConfig(PlotlyBaseConfig):
     model_config = ConfigDict(extra="allow")
 
     # Data Mapping
-    line_group: Optional[str] = Field(
+    line_group: str | None = Field(
         None, description="Column to group data into separate lines."
     )
-    line_dash: Optional[str] = Field(
+    line_dash: str | None = Field(
         None, description="Column to assign dash styles to lines."
     )
-    symbol: Optional[str] = Field(
-        None, description="Column to assign symbols to markers."
-    )
-    text: Optional[str] = Field(None, description="Column for text labels on markers.")
-    error_x: Optional[str] = Field(None, description="Column for x-axis error bars.")
-    error_y: Optional[str] = Field(None, description="Column for y-axis error bars.")
-    line_dash_map: Optional[Dict[str, str]] = Field(
+    symbol: str | None = Field(None, description="Column to assign symbols to markers.")
+    text: str | None = Field(None, description="Column for text labels on markers.")
+    error_x: str | None = Field(None, description="Column for x-axis error bars.")
+    error_y: str | None = Field(None, description="Column for y-axis error bars.")
+    line_dash_map: dict[str, str] | None = Field(
         None, description="Map values to specific dash styles."
     )
-    symbol_map: Optional[Dict[str, str]] = Field(
+    symbol_map: dict[str, str] | None = Field(
         None, description="Map values to specific symbols."
     )
 
     # Styling and Layout
     markers: bool = Field(False, description="If True, displays markers on the lines.")
-    line_shape: Optional[str] = Field(
+    line_shape: str | None = Field(
         "linear", description="Line shape (e.g., 'linear', 'spline')."
     )

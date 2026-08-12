@@ -77,13 +77,13 @@ def plot_dendrogram(
             }
         )
 
-    figure = dict(data=dendrogram.data, layout=dendrogram.layout)
+    figure = {"data": dendrogram.data, "layout": dendrogram.layout}
     figure["layout"]["template"] = "plotly_white"
 
     return figure
 
 
-class Dendrogram(object):
+class Dendrogram:
     """Refer to plot_dendrogram() for docstring."""
 
     def __init__(
@@ -120,7 +120,7 @@ class Dendrogram(object):
         else:
             self.sign[self.yaxis] = -1
 
-        (dd_traces, xvals, yvals, ordered_labels, leaves) = self.get_dendrogram_traces(
+        dd_traces, xvals, yvals, ordered_labels, leaves = self.get_dendrogram_traces(
             Z_dendrogram, hang, colorscale, hovertext, color_threshold
         )
 
@@ -316,18 +316,19 @@ class Dendrogram(object):
                 x_coord.append(x)
                 y_coord.append(y)
 
-            trace = dict(
-                type="scattergl",
-                x=np.multiply(self.sign[self.xaxis], x_coord),
-                y=np.multiply(self.sign[self.yaxis], y_coord),
-                mode="lines",
-                marker=dict(color="rgb(40,35,35)"),
-                line=dict(
-                    color="rgb(40,35,35)", width=1
-                ),  # dict(color=colors[color_key]),
-                text=hovertext_label,
-                hoverinfo="text",
-            )
+            trace = {
+                "type": "scattergl",
+                "x": np.multiply(self.sign[self.xaxis], x_coord),
+                "y": np.multiply(self.sign[self.yaxis], y_coord),
+                "mode": "lines",
+                "marker": {"color": "rgb(40,35,35)"},
+                "line": {
+                    "color": "rgb(40,35,35)",
+                    "width": 1,
+                },  # dict(color=colors[color_key]),
+                "text": hovertext_label,
+                "hoverinfo": "text",
+            }
 
             try:
                 x_index = int(self.xaxis[-1])

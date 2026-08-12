@@ -1,5 +1,8 @@
 # vuecore/engines/plotly/plot_builder.py
-from typing import Any, Optional, List, Callable
+from __future__ import annotations
+
+from typing import Any, Callable
+
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -9,8 +12,8 @@ def build_plot(
     config: Any,
     px_function: Callable,
     theming_function: Callable,
-    theming_params: List[str],
-    preprocess: Optional[Callable] = None,
+    theming_params: list[str],
+    preprocess: Callable | None = None,
 ) -> go.Figure:
     """
     Base function to build Plotly figures with common patterns.

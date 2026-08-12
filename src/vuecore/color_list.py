@@ -66,12 +66,12 @@ def make_color_dict(colors=COLORS):
     prog = re.compile(pattern)
 
     # read the file
-    d = dict()
+    d = {}
     for line in colors.split("\n"):
         ro = prog.match(line)
         if ro:
             r, g, b, name = ro.groups()
-            rgb = "#%02x%02x%02x" % (int(r), int(g), int(b))
+            rgb = f"#{int(r):02x}{int(g):02x}{int(b):02x}"
             d[name] = rgb
 
     return d
@@ -99,7 +99,7 @@ def invert_dict(d):
 
     returns: dict
     """
-    inv = dict()
+    inv = {}
     for key in d:
         val = d[key]
         if val not in inv:

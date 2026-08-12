@@ -1,16 +1,20 @@
-from typing import Any, Type
+from __future__ import annotations
+
+from typing import Any
+
 import pandas as pd
+from pydantic import BaseModel
+
 from vuecore import EngineType, PlotType
 from vuecore.engines import get_builder, get_saver
-from pydantic import BaseModel
 
 
 def create_plot(
     data: pd.DataFrame,
-    config: Type[BaseModel],
+    config: type[BaseModel],
     plot_type: PlotType,
     engine: EngineType = EngineType.PLOTLY,
-    file_path: str = None,
+    file_path: str | None = None,
     **kwargs,
 ) -> Any:
     """
