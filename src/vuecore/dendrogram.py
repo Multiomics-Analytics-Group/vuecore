@@ -120,7 +120,7 @@ class Dendrogram:
         else:
             self.sign[self.yaxis] = -1
 
-        (dd_traces, xvals, yvals, ordered_labels, leaves) = self.get_dendrogram_traces(
+        dd_traces, xvals, yvals, ordered_labels, leaves = self.get_dendrogram_traces(
             Z_dendrogram, hang, colorscale, hovertext, color_threshold
         )
 
@@ -323,7 +323,8 @@ class Dendrogram:
                 "mode": "lines",
                 "marker": {"color": "rgb(40,35,35)"},
                 "line": {
-                    "color": "rgb(40,35,35)", "width": 1
+                    "color": "rgb(40,35,35)",
+                    "width": 1,
                 },  # dict(color=colors[color_key]),
                 "text": hovertext_label,
                 "hoverinfo": "text",

@@ -114,7 +114,10 @@ def apply_scatter_theme(fig: go.Figure, config: ScatterConfig) -> go.Figure:
     fig.update_traces(
         marker={
             "opacity": config.opacity,
-            "line": {"width": config.marker_line_width, "color": config.marker_line_color},
+            "line": {
+                "width": config.marker_line_width,
+                "color": config.marker_line_color,
+            },
         },
         selector={"mode": "markers"},
     )

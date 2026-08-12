@@ -155,7 +155,12 @@ def get_heatmap(df, colorscale=None, color_missing=True):
                 colorscale=colors,
                 showscale=True,
                 colorbar={
-                    "x": 1, "y": 0, "xanchor": "left", "yanchor": "bottom", "len": 0.35, "thickness": 15
+                    "x": 1,
+                    "y": 0,
+                    "xanchor": "left",
+                    "yanchor": "bottom",
+                    "len": 0.35,
+                    "thickness": 15,
                 },
             )
         )
@@ -198,7 +203,11 @@ def plot_labeled_heatmap(
     :return: Plotly object figure.
     """
     if colorscale is None:
-        colorscale = [[0, "rgb(0,255,0)"], [0.5, "rgb(255,255,255)"], [1, "rgb(255,0,0)"]]
+        colorscale = [
+            [0, "rgb(0,255,0)"],
+            [0.5, "rgb(255,255,255)"],
+            [1, "rgb(255,0,0)"],
+        ]
     figure = {}
     if df is not None:
         figure = get_heatmap(df, colorscale=colorscale, color_missing=False)
@@ -360,20 +369,18 @@ def plot_intramodular_correlation(
             n_p = len(FS.columns) * (len(MM.columns) - 1) - len(
                 MM.columns[MM.columns.str.startswith("MM")]
             )
-            axis_dict[f"xaxis{n_p + i + 1}"] = {
-                "title": j, "titlefont": {"size": 13}
-            }
+            axis_dict[f"xaxis{n_p + i + 1}"] = {"title": j, "titlefont": {"size": 13}}
         print(axis_dict)
         n = 1
         for a, b in enumerate(FS.columns):
             name = b.split(" ")
             if len(name) > 1:
-                label = next("<br>".join(name[i : i + 3]) for i in range(0, len(name), 3))
+                label = next(
+                    "<br>".join(name[i : i + 3]) for i in range(0, len(name), 3)
+                )
             else:
                 label = name[0]
-            axis_dict[f"yaxis{a + n}"] = {
-                "title": label, "titlefont": {"size": 13}
-            }
+            axis_dict[f"yaxis{a + n}"] = {"title": label, "titlefont": {"size": 13}}
             n += len(MM.columns[MM.columns.str.startswith("MM")]) - 1
 
         annotation = []
@@ -385,7 +392,9 @@ def plot_intramodular_correlation(
                 x = abs(MM[MM["modColor"] == j[2:]][j].values)
                 y = abs(FS[FS.index.isin(name)][b].values)
 
-                slope, intercept, r_value, p_value, _std_err = scp.stats.linregress(x, y)
+                slope, intercept, r_value, p_value, _std_err = scp.stats.linregress(
+                    x, y
+                )
                 line = slope * x + intercept
 
                 figure.append_trace(
@@ -627,7 +636,11 @@ def plot_complex_dendrogram(
                             "automargin": True,
                             "anchor": "y4",
                         },
-                        "yaxis": {"domain": [0.635, 1], "automargin": True, "anchor": "x"},
+                        "yaxis": {
+                            "domain": [0.635, 1],
+                            "automargin": True,
+                            "anchor": "x",
+                        },
                         "yaxis2": {
                             "domain": [0.015, 0.635],
                             "autorange": "reversed",
@@ -670,7 +683,9 @@ def plot_complex_dendrogram(
                             "ticktext": np.array(
                                 dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            "tickvals": list(dendrogram_["layout"]["xaxis"]["tickvals"]),
+                            "tickvals": list(
+                                dendrogram_["layout"]["xaxis"]["tickvals"]
+                            ),
                         },
                         "yaxis2": {"autorange": "reversed"},
                     }
@@ -705,7 +720,9 @@ def plot_complex_dendrogram(
                             "ticktext": np.array(
                                 dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            "tickvals": list(dendrogram_["layout"]["xaxis"]["tickvals"]),
+                            "tickvals": list(
+                                dendrogram_["layout"]["xaxis"]["tickvals"]
+                            ),
                             "automargin": True,
                             "anchor": "y",
                         },
@@ -767,12 +784,17 @@ def plot_complex_dendrogram(
                             "ticktext": np.array(
                                 dendrogram_["layout"]["xaxis"]["ticktext"]
                             ),
-                            "tickvals": list(dendrogram_["layout"]["xaxis"]["tickvals"]),
+                            "tickvals": list(
+                                dendrogram_["layout"]["xaxis"]["tickvals"]
+                            ),
                             "automargin": True,
                             "anchor": "y",
                         },
                         "xaxis2": {
-                            "ticks": "", "showticklabels": False, "automargin": True, "anchor": "y2"
+                            "ticks": "",
+                            "showticklabels": False,
+                            "automargin": True,
+                            "anchor": "y2",
                         },
                         "xaxis3": {
                             "domain": [0, 1],
@@ -781,7 +803,11 @@ def plot_complex_dendrogram(
                             "automargin": True,
                             "anchor": "y3",
                         },
-                        "yaxis": {"domain": [0.70, 1], "automargin": True, "anchor": "x"},
+                        "yaxis": {
+                            "domain": [0.70, 1],
+                            "automargin": True,
+                            "anchor": "x",
+                        },
                         "yaxis2": {
                             "domain": [0.615, 0.625],
                             "ticks": "",

@@ -34,10 +34,10 @@ def generate_html(network):
         title = n.get("title", None)
         if title and "href" in title:
             """
-                this tells the template to override default hover
-                mechanic, as the tooltip would move with the mouse
-                cursor which made interacting with hover data useless.
-                """
+            this tells the template to override default hover
+            mechanic, as the tooltip would move with the mouse
+            cursor which made interacting with hover data useless.
+            """
             use_link_template = True
             break
     template = network.template

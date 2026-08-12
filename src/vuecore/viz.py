@@ -143,7 +143,9 @@ def get_pieplot(data, identifier, args):
     figure["layout"] = go.Layout(
         height=args["height"],
         width=args["width"],
-        annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+        annotations=[
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         template="plotly_white",
     )
 
@@ -180,7 +182,9 @@ def get_distplot(data, identifier, args):
             height=600,
             width=1000,
             title="Distribution plot " + i,
-            annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
         graphs.append(dcc.Graph(id=identifier + "_" + i, figure=fig))
@@ -257,7 +261,9 @@ def get_boxplot_grid(data, identifier, args):
             )
         fig.update_xaxes(type="category")
         fig.update_layout(
-            annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
     else:
@@ -349,7 +355,9 @@ def get_barplot(data, identifier, args):
         yaxis={"title": args["y_title"]},
         height=args["height"],
         width=args["width"],
-        annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+        annotations=[
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         template="plotly_white",
     )
 
@@ -465,7 +473,9 @@ def get_facet_grid_plot(data, identifier, args):
         "title": args["title"].title(),
         "paper_bgcolor": None,
         "legend": None,
-        "annotations": [{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+        "annotations": [
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         "template": "plotly_white",
     }
 
@@ -639,10 +649,7 @@ def get_scatterplot_matrix(data, identifier, args):
         num_groups = len(data[group].unique())
         num_rows = math.ceil(num_groups / num_cols)
         if "colors" not in data.columns and "colors" in args:
-            data["colors"] = [
-                args["colors"].get(g, "#999999")
-                for g in data[group]
-            ]
+            data["colors"] = [args["colors"].get(g, "#999999") for g in data[group]]
 
         fig = tools.make_subplots(
             rows=num_rows, cols=num_cols, shared_yaxes=True, print_grid=False
@@ -892,18 +899,30 @@ def get_scatterplot(data, identifier, args):
         )
 
     figure.update_traces(
-        marker={"size": 14, "opacity": 0.7, "line": {"width": 0.5, "color": "DarkSlateGrey"}},
+        marker={
+            "size": 14,
+            "opacity": 0.7,
+            "line": {"width": 0.5, "color": "DarkSlateGrey"},
+        },
         selector={"mode": "markers"},
     )
     figure["layout"] = go.Layout(
         title=title,
         xaxis={"title": x_title},
         yaxis={"title": y_title},
-        legend={"orientation": "h", "yanchor": "bottom", "y": 1.0, "xanchor": "right", "x": 1},
+        legend={
+            "orientation": "h",
+            "yanchor": "bottom",
+            "y": 1.0,
+            "xanchor": "right",
+            "x": 1,
+        },
         hovermode="closest",
         height=height,
         width=width,
-        annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+        annotations=[
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         template="plotly_white",
     )
 
@@ -1082,7 +1101,17 @@ def run_volcano(
     """
     # Loop through signature
     if args is None:
-        args = {"alpha": 0.05, "fc": 2, "colorscale": "Blues", "showscale": False, "marker_size": 8, "x_title": "log2FC", "y_title": "-log10(pvalue)", "num_annotations": 10, "annotate_list": []}
+        args = {
+            "alpha": 0.05,
+            "fc": 2,
+            "colorscale": "Blues",
+            "showscale": False,
+            "marker_size": 8,
+            "x_title": "log2FC",
+            "y_title": "-log10(pvalue)",
+            "num_annotations": 10,
+            "annotate_list": [],
+        }
     volcano_plot_results = {}
     grouping = data.groupby(["group1", "group2"])
 
@@ -1271,7 +1300,9 @@ def get_heatmapplot(data, identifier, args):
         "title": args["title"],
         "height": 500,
         "width": 700,
-        "annotations": [{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+        "annotations": [
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         "template": "plotly_white",
     }
     figure["data"].append(
@@ -1387,7 +1418,9 @@ def get_complex_heatmapplot(data, identifier, args):
                 "showticklabels": False,
                 "ticks": "",
             },
-            "annotations": [{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+            "annotations": [
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
         }
     )
 
@@ -1633,160 +1666,157 @@ def get_network(data, identifier, args):
     if not data.empty and utils_old.check_columns(
         data, cols=[args["source"], args["target"]]
     ):
-            if "values" not in args:
-                args["values"] = "width"
-                data[args["values"]] = 1
+        if "values" not in args:
+            args["values"] = "width"
+            data[args["values"]] = 1
 
-            if "cutoff" in args:
-                if args["cutoff_abs"]:
-                    data = data[np.abs(data[args["values"]]) >= args["cutoff"]]
-                else:
-                    data = data[data[args["values"]] >= args["cutoff"]]
+        if "cutoff" in args:
+            if args["cutoff_abs"]:
+                data = data[np.abs(data[args["values"]]) >= args["cutoff"]]
+            else:
+                data = data[data[args["values"]] >= args["cutoff"]]
 
-            if not data.empty:
-                data[args["source"]] = [
-                    str(n).replace("'", "") for n in data[args["source"]]
+        if not data.empty:
+            data[args["source"]] = [
+                str(n).replace("'", "") for n in data[args["source"]]
+            ]
+            data[args["target"]] = [
+                str(n).replace("'", "") for n in data[args["target"]]
+            ]
+
+            data = data.rename(index=str, columns={args["values"]: "width"})
+            data["width"] = data["width"].fillna(1.0)
+            data = data.fillna("null")
+            data.columns = [c.replace("_", "") for c in data.columns]
+            data["edgewidth"] = data["width"].apply(np.abs)
+            min_edge_value = data["edgewidth"].min()
+            max_edge_value = data["edgewidth"].max()
+            if min_edge_value == max_edge_value:
+                min_edge_value = 0.0
+            graph = nx.from_pandas_edgelist(
+                data, args["source"], args["target"], edge_attr=True
+            )
+
+            degrees = dict(graph.degree())
+            nx.set_node_attributes(graph, degrees, "degree")
+            betweenness = None
+            ev_centrality = None
+            if data.shape[0] < 150 and data.shape[0] > 5:
+                try:
+                    betweenness = nx.betweenness_centrality(graph, weight="width")
+                    ev_centrality = nx.eigenvector_centrality_numpy(graph)
+                    ev_centrality = {
+                        k: f"{round(v, 3):.3f}" for k, v in ev_centrality.items()
+                    }
+                    nx.set_node_attributes(graph, betweenness, "betweenness")
+                    nx.set_node_attributes(graph, ev_centrality, "eigenvector")
+                except (nx.NetworkXException, ValueError) as e:
+                    print(f"There was an exception when calculating centralities: {e}")
+
+            min_node_size = 0
+            max_node_size = 0
+            if "node_size" not in args:
+                args["node_size"] = "degree"
+
+            if args["node_size"] == "betweenness" and betweenness is not None:
+                min_node_size = min(betweenness.values())
+                max_node_size = max(betweenness.values())
+                nx.set_node_attributes(graph, betweenness, "radius")
+            elif args["node_size"] == "ev_centrality" and ev_centrality is not None:
+                min_node_size = min(ev_centrality.values())
+                max_node_size = max(ev_centrality.values())
+                nx.set_node_attributes(graph, ev_centrality, "radius")
+            elif args["node_size"] == "degree" and len(degrees) > 0:
+                min_node_size = min(degrees.values())
+                max_node_size = max(degrees.values())
+                nx.set_node_attributes(graph, degrees, "radius")
+
+            clusters = network_analysis.get_network_communities(graph, args)
+            col = utils_old.get_hex_colors(len(set(clusters.values())))
+            colors = {n: col[clusters[n]] for n in clusters}
+            nx.set_node_attributes(graph, colors, "color")
+            nx.set_node_attributes(graph, clusters, "cluster")
+
+            vis_graph = graph
+            limit = 500
+            if "limit" in args:
+                limit = args["limit"]
+            if limit is not None and len(vis_graph.edges()) > 500:
+                max_nodes = 150
+                cluster_members = defaultdict(list)
+                cluster_nums = {}
+                for n in clusters:
+                    if clusters[n] not in cluster_nums:
+                        cluster_nums[clusters[n]] = 0
+                    cluster_members[clusters[n]].append(n)
+                    cluster_nums[clusters[n]] += 1
+                valid_clusters = [
+                    c for c, n in sorted(cluster_nums.items(), key=lambda x: x[1])
                 ]
-                data[args["target"]] = [
-                    str(n).replace("'", "") for n in data[args["target"]]
-                ]
+                valid_nodes = []
+                for c in valid_clusters:
+                    valid_nodes.extend(cluster_members[c])
+                    if len(valid_nodes) >= max_nodes:
+                        valid_nodes = valid_nodes[0:max_nodes]
+                        break
+                vis_graph = vis_graph.subgraph(valid_nodes)
 
-                data = data.rename(index=str, columns={args["values"]: "width"})
-                data["width"] = data["width"].fillna(1.0)
-                data = data.fillna("null")
-                data.columns = [c.replace("_", "") for c in data.columns]
-                data["edgewidth"] = data["width"].apply(np.abs)
-                min_edge_value = data["edgewidth"].min()
-                max_edge_value = data["edgewidth"].max()
-                if min_edge_value == max_edge_value:
-                    min_edge_value = 0.0
-                graph = nx.from_pandas_edgelist(
-                    data, args["source"], args["target"], edge_attr=True
+            nodes_table, edges_table = network_to_tables(
+                graph, source=args["source"], target=args["target"]
+            )
+            nodes_fig_table = get_table(
+                nodes_table,
+                identifier=identifier + "_nodes_table",
+                args={"title": args["title"] + " nodes table"},
+            )
+            edges_fig_table = get_table(
+                edges_table,
+                identifier=identifier + "_edges_table",
+                args={"title": args["title"] + " edges table"},
+            )
+
+            stylesheet, layout = get_network_style(colors, args["color_weight"])
+            stylesheet.append(
+                {
+                    "selector": "edge",
+                    "style": {
+                        "width": "mapData(edgewidth,"
+                        + str(min_edge_value)
+                        + ","
+                        + str(max_edge_value)
+                        + ", .5, 8)"
+                    },
+                }
+            )
+            if min_node_size > 0 and max_node_size > 0:
+                mapper = (
+                    "mapData(radius,"
+                    + str(min_node_size)
+                    + ","
+                    + str(max_node_size)
+                    + ", 15, 50)"
                 )
-
-                degrees = dict(graph.degree())
-                nx.set_node_attributes(graph, degrees, "degree")
-                betweenness = None
-                ev_centrality = None
-                if data.shape[0] < 150 and data.shape[0] > 5:
-                    try:
-                        betweenness = nx.betweenness_centrality(graph, weight="width")
-                        ev_centrality = nx.eigenvector_centrality_numpy(graph)
-                        ev_centrality = {
-                            k: f"{round(v, 3):.3f}" for k, v in ev_centrality.items()
-                        }
-                        nx.set_node_attributes(graph, betweenness, "betweenness")
-                        nx.set_node_attributes(graph, ev_centrality, "eigenvector")
-                    except (nx.NetworkXException, ValueError) as e:
-                        print(
-                            f"There was an exception when calculating centralities: {e}"
-                        )
-
-                min_node_size = 0
-                max_node_size = 0
-                if "node_size" not in args:
-                    args["node_size"] = "degree"
-
-                if args["node_size"] == "betweenness" and betweenness is not None:
-                    min_node_size = min(betweenness.values())
-                    max_node_size = max(betweenness.values())
-                    nx.set_node_attributes(graph, betweenness, "radius")
-                elif args["node_size"] == "ev_centrality" and ev_centrality is not None:
-                    min_node_size = min(ev_centrality.values())
-                    max_node_size = max(ev_centrality.values())
-                    nx.set_node_attributes(graph, ev_centrality, "radius")
-                elif args["node_size"] == "degree" and len(degrees) > 0:
-                    min_node_size = min(degrees.values())
-                    max_node_size = max(degrees.values())
-                    nx.set_node_attributes(graph, degrees, "radius")
-
-                clusters = network_analysis.get_network_communities(graph, args)
-                col = utils_old.get_hex_colors(len(set(clusters.values())))
-                colors = {n: col[clusters[n]] for n in clusters}
-                nx.set_node_attributes(graph, colors, "color")
-                nx.set_node_attributes(graph, clusters, "cluster")
-
-                vis_graph = graph
-                limit = 500
-                if "limit" in args:
-                    limit = args["limit"]
-                if limit is not None and len(vis_graph.edges()) > 500:
-                    max_nodes = 150
-                    cluster_members = defaultdict(list)
-                    cluster_nums = {}
-                    for n in clusters:
-                        if clusters[n] not in cluster_nums:
-                            cluster_nums[clusters[n]] = 0
-                        cluster_members[clusters[n]].append(n)
-                        cluster_nums[clusters[n]] += 1
-                    valid_clusters = [
-                        c
-                        for c, n in sorted(cluster_nums.items(), key=lambda x: x[1])
-                    ]
-                    valid_nodes = []
-                    for c in valid_clusters:
-                        valid_nodes.extend(cluster_members[c])
-                        if len(valid_nodes) >= max_nodes:
-                            valid_nodes = valid_nodes[0:max_nodes]
-                            break
-                    vis_graph = vis_graph.subgraph(valid_nodes)
-
-                nodes_table, edges_table = network_to_tables(
-                    graph, source=args["source"], target=args["target"]
-                )
-                nodes_fig_table = get_table(
-                    nodes_table,
-                    identifier=identifier + "_nodes_table",
-                    args={"title": args["title"] + " nodes table"},
-                )
-                edges_fig_table = get_table(
-                    edges_table,
-                    identifier=identifier + "_edges_table",
-                    args={"title": args["title"] + " edges table"},
-                )
-
-                stylesheet, layout = get_network_style(colors, args["color_weight"])
                 stylesheet.append(
                     {
-                        "selector": "edge",
-                        "style": {
-                            "width": "mapData(edgewidth,"
-                            + str(min_edge_value)
-                            + ","
-                            + str(max_edge_value)
-                            + ", .5, 8)"
-                        },
+                        "selector": "node",
+                        "style": {"width": mapper, "height": mapper},
                     }
                 )
-                if min_node_size > 0 and max_node_size > 0:
-                    mapper = (
-                        "mapData(radius,"
-                        + str(min_node_size)
-                        + ","
-                        + str(max_node_size)
-                        + ", 15, 50)"
-                    )
-                    stylesheet.append(
-                        {
-                            "selector": "node",
-                            "style": {"width": mapper, "height": mapper},
-                        }
-                    )
-                args["stylesheet"] = stylesheet
-                args["layout"] = layout
+            args["stylesheet"] = stylesheet
+            args["layout"] = layout
 
-                cy_elements, _mouseover_node = utils_old.networkx_to_cytoscape(vis_graph)
+            cy_elements, _mouseover_node = utils_old.networkx_to_cytoscape(vis_graph)
 
-                app_net = get_cytoscape_network(cy_elements, identifier, args)
-                # args['mouseover_node'] = mouseover_node
+            app_net = get_cytoscape_network(cy_elements, identifier, args)
+            # args['mouseover_node'] = mouseover_node
 
-                net = {
-                    "notebook": [cy_elements, stylesheet, layout],
-                    "app": app_net,
-                    "net_tables": (nodes_table, edges_table),
-                    "net_tables_viz": (nodes_fig_table, edges_fig_table),
-                    "net_json": json_graph.node_link_data(graph),
-                }
+            net = {
+                "notebook": [cy_elements, stylesheet, layout],
+                "app": app_net,
+                "net_tables": (nodes_table, edges_table),
+                "net_tables_viz": (nodes_fig_table, edges_fig_table),
+                "net_json": json_graph.node_link_data(graph),
+            }
     return net
 
 
@@ -2065,7 +2095,19 @@ def get_sankey_plot(
                                 )
     """
     if args is None:
-        args = {"source": "source", "target": "target", "weight": "weight", "source_colors": "source_colors", "target_colors": "target_colors", "orientation": "h", "valueformat": ".0f", "width": 800, "height": 800, "font": 12, "title": "Sankey plot"}
+        args = {
+            "source": "source",
+            "target": "target",
+            "weight": "weight",
+            "source_colors": "source_colors",
+            "target_colors": "target_colors",
+            "orientation": "h",
+            "valueformat": ".0f",
+            "width": 800,
+            "height": 800,
+            "font": 12,
+            "title": "Sankey plot",
+        }
     figure = {}
     if data is not None and not data.empty:
         nodes = list(set(data[args["source"]].tolist() + data[args["target"]].tolist()))
@@ -2125,7 +2167,9 @@ def get_sankey_plot(
             "width": args.get("width", 800),
             "height": args.get("height", 800),
             "title": args["title"],
-            "annotations": [{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+            "annotations": [
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             "font": {
                 "size": args.get("font", 12),
             },
@@ -2167,39 +2211,37 @@ def get_table(data, identifier, args):
             else:
                 cols.append(args["index"])
         if "cols" in args and args["cols"] is not None and len(args["cols"]) > 0:
-                selected_cols = list(set(args["cols"]).intersection(data.columns))
-                if len(selected_cols) > 0:
-                    data = data[selected_cols + cols]
-                else:
-                    data = pd.DataFrame()
-                    table.append(
-                        html.Div(
-                            children=[
-                                dcc.Markdown(
-                                    "### Columns not found: {}".format(
-                                        ",".join(args["cols"])
-                                    )
+            selected_cols = list(set(args["cols"]).intersection(data.columns))
+            if len(selected_cols) > 0:
+                data = data[selected_cols + cols]
+            else:
+                data = pd.DataFrame()
+                table.append(
+                    html.Div(
+                        children=[
+                            dcc.Markdown(
+                                "### Columns not found: {}".format(
+                                    ",".join(args["cols"])
                                 )
-                            ]
-                        )
+                            )
+                        ]
                     )
+                )
         if "rows" in args and args["rows"] is not None and len(args["rows"]) > 0:
-                selected_rows = list(set(args["rows"]).intersection(data.index))
-                if len(selected_rows) > 0:
-                    data = data.loc[selected_rows]
-                else:
-                    data = pd.DataFrame()
-                    table.append(
-                        html.Div(
-                            children=[
-                                dcc.Markdown(
-                                    "### Rows not found: {}".format(
-                                        ",".join(args["rows"])
-                                    )
-                                )
-                            ]
-                        )
+            selected_rows = list(set(args["rows"]).intersection(data.index))
+            if len(selected_rows) > 0:
+                data = data.loc[selected_rows]
+            else:
+                data = pd.DataFrame()
+                table.append(
+                    html.Div(
+                        children=[
+                            dcc.Markdown(
+                                "### Rows not found: {}".format(",".join(args["rows"]))
+                            )
+                        ]
                     )
+                )
         if "head" in args and len(args["head"]) > 1:
             data = data.iloc[: args["head"][0], : args["head"][1]]
         list_cols = data.applymap(lambda x: isinstance(x, list)).all()
@@ -2441,7 +2483,9 @@ def get_parallel_plot(data, identifier, args):
         fig_data = [go.Parcoords(line={"color": color}, dimensions=dims)]
         layout = go.Layout(
             title=args["title"],
-            annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
 
@@ -2609,14 +2653,23 @@ def get_WGCNAPlots(data, identifier):
             figure["layout"].update(
                 {
                     "xaxis": {
-                        "domain": [0, 1], "ticks": "", "showticklabels": False, "anchor": "y"
+                        "domain": [0, 1],
+                        "ticks": "",
+                        "showticklabels": False,
+                        "anchor": "y",
                     },
                     "xaxis2": {
-                        "domain": [0, 1], "ticks": "", "showticklabels": True, "anchor": "y2"
+                        "domain": [0, 1],
+                        "ticks": "",
+                        "showticklabels": True,
+                        "anchor": "y2",
                     },
                     "yaxis": {"domain": [0.635, 1], "anchor": "x"},
                     "yaxis2": {
-                        "domain": [0.0, 0.635], "ticks": "", "showticklabels": True, "anchor": "x2"
+                        "domain": [0.0, 0.635],
+                        "ticks": "",
+                        "showticklabels": True,
+                        "anchor": "x2",
                     },
                 }
             )
@@ -2868,7 +2921,14 @@ def get_wordcloud(
                                 )
     """
     if args is None:
-        args = {"stopwords": [], "max_words": 400, "max_font_size": 100, "width": 700, "height": 700, "margin": 1}
+        args = {
+            "stopwords": [],
+            "max_words": 400,
+            "max_font_size": 100,
+            "width": 700,
+            "height": 700,
+            "margin": 1,
+        }
     figure = None
     if data is not None:
         nltk.download("stopwords")
@@ -3060,24 +3120,30 @@ def get_wordcloud(
             y=y,
             textfont={"size": new_freq_list, "color": color_list},
             hoverinfo="text",
-            hovertext=[
-                f"{w} freq: {f}" for w, f in zip(word_list, freq_list)
-            ],
+            hovertext=[f"{w} freq: {f}" for w, f in zip(word_list, freq_list)],
             mode="text",
             text=word_list,
         )
 
         layout = go.Layout(
             xaxis={
-                "showgrid": False, "showticklabels": False, "zeroline": False, "automargin": True
+                "showgrid": False,
+                "showticklabels": False,
+                "zeroline": False,
+                "automargin": True,
             },
             yaxis={
-                "showgrid": False, "showticklabels": False, "zeroline": False, "automargin": True
+                "showgrid": False,
+                "showticklabels": False,
+                "zeroline": False,
+                "automargin": True,
             },
             width=args["width"],
             height=args["height"],
             title=args["title"],
-            annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+            annotations=[
+                {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+            ],
             template="plotly_white",
         )
 
@@ -3319,31 +3385,34 @@ def get_polar_plot(df, identifier, args):
             ptype = args["type"]
 
         figure = go.Figure()
-        if value is not None and group is not None and colors is not None and not df.empty:
-                min_value = df[value].min()
-                max_value = df[value].max()
-                if ptype == "line":
-                    for color in df[colors].unique():
-                        cdf = df[df[colors] == color]
-                        figure.add_trace(
-                            go.Scatterpolar(
-                                r=cdf[value],
-                                theta=cdf[group],
-                                mode="lines",
-                                name=color,
-                                fill="toself",
-                            )
+        if (
+            value is not None
+            and group is not None
+            and colors is not None
+            and not df.empty
+        ):
+            min_value = df[value].min()
+            max_value = df[value].max()
+            if ptype == "line":
+                for color in df[colors].unique():
+                    cdf = df[df[colors] == color]
+                    figure.add_trace(
+                        go.Scatterpolar(
+                            r=cdf[value],
+                            theta=cdf[group],
+                            mode="lines",
+                            name=color,
+                            fill="toself",
                         )
-                else:
-                    print(
-                        f"Type {ptype} not available. Try with 'line' or 'bar' types."
                     )
+            else:
+                print(f"Type {ptype} not available. Try with 'line' or 'bar' types.")
 
-                figure.update_layout(
-                    width=width,
-                    height=height,
-                    polar={"radialaxis": {"range": [min_value, max_value]}},
-                )
+            figure.update_layout(
+                width=width,
+                height=height,
+                polar={"radialaxis": {"range": [min_value, max_value]}},
+            )
 
     return dcc.Graph(id=identifier, figure=figure)
 

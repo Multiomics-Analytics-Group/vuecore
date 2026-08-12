@@ -33,9 +33,7 @@ class LineConfig(PlotlyBaseConfig):
     line_dash: str | None = Field(
         None, description="Column to assign dash styles to lines."
     )
-    symbol: str | None = Field(
-        None, description="Column to assign symbols to markers."
-    )
+    symbol: str | None = Field(None, description="Column to assign symbols to markers.")
     text: str | None = Field(None, description="Column for text labels on markers.")
     error_x: str | None = Field(None, description="Column for x-axis error bars.")
     error_y: str | None = Field(None, description="Column for y-axis error bars.")
