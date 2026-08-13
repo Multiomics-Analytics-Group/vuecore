@@ -92,18 +92,30 @@ def get_enrichment_plot_plotly(
     )
 
     figure.update_traces(
-        marker={"size": 14, "opacity": 0.7, "line": {"width": 0.5, "color": "DarkSlateGrey"}},
+        marker={
+            "size": 14,
+            "opacity": 0.7,
+            "line": {"width": 0.5, "color": "DarkSlateGrey"},
+        },
         selector={"mode": "markers"},
     )
     figure["layout"] = go.Layout(
         title=title,
         xaxis={"title": x_title},
         yaxis={"title": y_title},
-        legend={"orientation": "h", "yanchor": "bottom", "y": 1.0, "xanchor": "right", "x": 1},
+        legend={
+            "orientation": "h",
+            "yanchor": "bottom",
+            "y": 1.0,
+            "xanchor": "right",
+            "x": 1,
+        },
         hovermode="closest",
         height=height,
         width=width,
-        annotations=[{"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}],
+        annotations=[
+            {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
+        ],
         template="plotly_white",
     )
 
