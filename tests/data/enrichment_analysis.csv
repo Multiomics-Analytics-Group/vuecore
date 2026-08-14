@@ -1,7 +1,7 @@
 ,terms,identifiers,foreground,background,foreground_pop,background_pop,pvalue,padj,rejected,direction,comparison
-0, citrate CoA-transferase activity [GO:0008814],P75726,1,0,1,1446,0.0006915629322268326,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
-1, citrate metabolic process [GO:0006101],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
-3,ATP-independent citrate lyase complex [GO:0009346],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+0, citrate CoA-transferase activity [GO:0008814],P75726,2,0,3,1446,0.0006915629322268326,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+1, citrate metabolic process [GO:0006101],P75726,2,1,5,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
+3,ATP-independent citrate lyase complex [GO:0009346],P75726,3,1,3,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
 4,acetyl-CoA metabolic process [GO:0006084],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
 5,citrate (pro-3S)-lyase activity [GO:0008815],P75726,1,1,1,1446,0.0013831258644536651,0.001659751037344398,True,upregulated in control,control~10 µm sulforaphane
 2, cytoplasm [GO:0005737],P75726,1,28,1,1446,0.020055325034578145,0.020055325034578145,True,upregulated in control,control~10 µm sulforaphane
