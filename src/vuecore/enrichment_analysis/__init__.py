@@ -1,5 +1,5 @@
 """
-Focus on returning a single comparsion using `get_enrichment_plot`.
+Focus on returning a single comparison using `get_enrichment_plot`.
 
 - should the vuecore interface be combined?
 
