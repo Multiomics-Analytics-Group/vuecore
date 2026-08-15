@@ -28,7 +28,10 @@ from vuecore.enrichment_analysis import (
 from vuecore.enrichment_analysis.interactive import get_enrichment_plot_plotly
 
 # DEFAULT_DPI should move
-from vuecore.enrichment_analysis.static import DEFAULT_DPI, get_enrichment_plot_mpl
+from vuecore.enrichment_analysis.static import (
+    DEFAULT_DPI,
+    get_enrichment_plot_mpl,
+)
 
 # %% [markdown]
 # # Load example data
@@ -89,8 +92,10 @@ help(get_enrichment_plot_static)
 static_fig = get_enrichment_plot_static(
     enrichment_results,
 )
-print(f"Static figure size (inches): {static_fig.get_size_inches()}")
-
+print(
+    f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
+    f" {static_fig.get_size_inches()}"
+)
 # %% [markdown]
 # which can be adjusted.
 
@@ -100,7 +105,7 @@ static_fig = get_enrichment_plot_static(
     width=900,
     height=500,
 )
-static_fig.get_axes()[0].legend(title="Direction", loc="lower left")
+# re-creating the legend resets the marker sizes to the data-driven ones
 print(
     f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
     f" {static_fig.get_size_inches()}"
@@ -127,8 +132,10 @@ static_fig = get_enrichment_plot_mpl(
         "upregulated in 10 µm sulforaphane": "orange",
     },
 )
-static_fig.get_axes()[0].legend(title="Direction", loc="lower left")
-print(f"Static figure size (inches): {static_fig.get_size_inches()}")
+print(
+    f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
+    f" {static_fig.get_size_inches()}"
+)
 
 # %% [markdown]
 # # Scatter Plot (Interactive)

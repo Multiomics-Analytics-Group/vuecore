@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from logging import getLogger
 
+import matplotlib.axes
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,6 +33,29 @@ def _scale_marker_sizes(
     return (min_size + scaled * (max_size - min_size)).tolist()
 
 
+def set_legend_marker_size(ax: matplotlib.axes.Axes, size: float = 14) -> None:
+    """Pin the markers of the axes' legend to a fixed size.
+
+    Legend handles of a scatter plot inherit the data-driven marker areas, which
+    makes entries differ in size. Call this on any legend you (re-)create, e.g.
+    after ``ax.legend(title=...)``, as that discards the sizes set before.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        Axes whose current legend should be updated. Without a legend, nothing
+        happens.
+    size : float, optional
+        Marker size as a diameter in points, as in ``Line2D.markersize``.
+    """
+    legend = ax.get_legend()
+    if legend is None:
+        return
+    for handle in legend.legend_handles:
+        # `s` of `Axes.scatter` is an area in points squared
+        handle.set_sizes([size**2])
+
+
 def get_enrichment_plot_mpl(
     df: pd.DataFrame,
     comparison_key: str,
@@ -42,6 +66,7 @@ def get_enrichment_plot_mpl(
     colors: dict[str, str],
     col_x: str = "x",
     col_markersize: str = "foreground",
+    legend_marker_size: float = 14,
 ) -> matplotlib.figure.Figure:
     """Create one enrichment scatter plot as a matplotlib figure."""
     fig_width = max(width / DEFAULT_DPI, 4)
@@ -74,8 +99,8 @@ def get_enrichment_plot_mpl(
                 color=colors.get(group_value, "#4c78a8"),
                 label=group_value,
             )
-        ax.legend(loc="upper right", frameon=False)
-
+        ax.legend(loc="best", frameon=False)
+        set_legend_marker_size(ax, legend_marker_size)
     ax.set_yticks(y_positions)
     ax.set_yticklabels(df["terms"])
     ax.set_xlabel("-log10(padj)")
