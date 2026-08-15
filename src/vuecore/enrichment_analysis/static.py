@@ -67,7 +67,7 @@ def get_enrichment_plot_mpl(
             ax.scatter(
                 group_df[col_x],
                 group_positions,
-                s=_scale_marker_sizes(group_df[col_markersize]),
+                s=[marker_sizes[i] for i in group_positions],
                 alpha=0.7,
                 linewidths=0.5,
                 edgecolors="DarkSlateGrey",
