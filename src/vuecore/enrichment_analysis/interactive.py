@@ -28,6 +28,49 @@ ENRICHMENT_HOVERING_COLS = [
 ]
 
 
+def set_legend_marker_size(figure: go.Figure, size: float = 14) -> None:
+    """Show all legend entries with the same, fixed marker size.
+
+    Plotly derives the legend symbols from the trace markers, so scaling the
+    markers by a column (``size``) makes the legend entries differ in size. The
+    legend entries are therefore replaced by legend-only proxy traces, which
+    leaves the plotted markers untouched. Proxies share the ``legendgroup`` of
+    the trace they replace, so clicking an entry still toggles its group.
+
+    Parameters
+    ----------
+    figure : plotly.graph_objects.Figure
+        Figure to update in place.
+    size : float, optional
+        Marker size in pixels, as in ``marker.size``.
+    """
+    proxies = []
+    for trace in figure.data:
+        if trace.showlegend is False or not trace.name:
+            continue
+        legendgroup = trace.legendgroup or trace.name
+        trace.update(showlegend=False, legendgroup=legendgroup)
+        proxies.append(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="markers",
+                marker={
+                    "size": size,
+                    "color": trace.marker.color,
+                    "symbol": trace.marker.symbol,
+                    "opacity": trace.marker.opacity,
+                    "line": trace.marker.line,
+                },
+                name=trace.name,
+                legendgroup=legendgroup,
+                showlegend=True,
+                hoverinfo="skip",
+            )
+        )
+    figure.add_traces(proxies)
+
+
 def get_enrichment_plot_plotly(
     data,
     x="x",
@@ -44,6 +87,7 @@ def get_enrichment_plot_plotly(
     height=800,
     width=800,
     colors=None,
+    legend_marker_size=14,
 ):
     """
     This function plots a simple Scatterplot.
@@ -65,6 +109,10 @@ def get_enrichment_plot_plotly(
     :param int height: plot height.
     :param int width: plot width.
     :param dict colors: dictionary with colors to be used for each group
+    :param float legend_marker_size: fixed marker size (in pixels) for the legend
+                                     entries, independent of the marker sizes in the
+                                     plot. Pass ``None`` to let the legend follow the
+                                     plotted marker sizes.
     :return: scatterplot figure within the <div id="_dash-app-content">.
 
     Example::
@@ -117,6 +165,9 @@ def get_enrichment_plot_plotly(
         ],
         template="plotly_white",
     )
+
+    if group is not None and legend_marker_size is not None:
+        set_legend_marker_size(figure, legend_marker_size)
 
     return figure
 
