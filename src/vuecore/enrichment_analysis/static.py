@@ -122,6 +122,7 @@ def get_enrichment_plot(
     height: int = 500,
     title: str = "Enrichment",
     colors: dict[str, str] | list[str] | None = None,
+    legend_marker_size: float = 14,
     **kwargs,
 ) -> matplotlib.figure.Figure:
     """
@@ -146,6 +147,9 @@ def get_enrichment_plot(
         Color mapping by direction, or a palette to assign to directions in
         order. Defaults to a built-in palette, cycling if there are more
         unique directions than colors.
+    legend_marker_size : float, optional
+        Fixed marker size for the legend entries, given as a diameter in points
+        (as in `Line2D.markersize`), independent of the marker sizes in the plot.
     **kwargs : dict
         Additional keyword arguments for API parity with the interactive version. Static figures do
         not render hover tooltips.
@@ -192,6 +196,7 @@ def get_enrichment_plot(
         colors=colors,
         col_x="x",
         col_markersize="foreground",
+        legend_marker_size=legend_marker_size,
     )
 
 

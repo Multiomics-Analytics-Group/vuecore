@@ -182,6 +182,7 @@ def get_enrichment_plot(
     title: str = "Enrichment",
     colors: dict[str, str] | list[str] | None = None,
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
+    legend_marker_size: float | None = 14,
     **kwargs,
 ) -> go.Figure:
     """
@@ -207,6 +208,10 @@ def get_enrichment_plot(
         unique directions than colors.
     hovering_cols : list, optional
         Hover columns shown in tooltips.
+    legend_marker_size : float, optional
+        Fixed marker size (in pixels) for the legend entries, independent of the
+        marker sizes in the plot. Pass `None` to let the legend follow the
+        plotted marker sizes.
     **kwargs : dict
         Additional keyword arguments for API parity with the static version.
 
@@ -255,6 +260,7 @@ def get_enrichment_plot(
         width=width,
         height=height,
         colors=colors,
+        legend_marker_size=legend_marker_size,
     )
 
 
