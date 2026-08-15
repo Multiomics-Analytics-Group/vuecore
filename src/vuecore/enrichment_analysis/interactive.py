@@ -93,7 +93,6 @@ def get_enrichment_plot_plotly(
 
     figure.update_traces(
         marker={
-            "size": 14,
             "opacity": 0.7,
             "line": {"width": 0.5, "color": "DarkSlateGrey"},
         },
