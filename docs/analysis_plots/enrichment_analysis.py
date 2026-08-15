@@ -26,7 +26,9 @@ from vuecore.enrichment_analysis import (
     get_enrichment_plot_static,
 )
 from vuecore.enrichment_analysis.interactive import get_enrichment_plot_plotly
-from vuecore.enrichment_analysis.static import get_enrichment_plot_mpl
+
+# DEFAULT_DPI should move
+from vuecore.enrichment_analysis.static import DEFAULT_DPI, get_enrichment_plot_mpl
 
 # %% [markdown]
 # # Load example data
@@ -99,7 +101,10 @@ static_fig = get_enrichment_plot_static(
     height=500,
 )
 static_fig.get_axes()[0].legend(title="Direction", loc="lower left")
-print(f"Static figure size (inches): {static_fig.get_size_inches()}")
+print(
+    f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
+    f" {static_fig.get_size_inches()}"
+)
 
 # %% [markdown]
 # ## Manual calling of matplotlib (mpl) related function
