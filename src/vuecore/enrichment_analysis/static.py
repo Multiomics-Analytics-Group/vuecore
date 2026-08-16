@@ -131,7 +131,8 @@ def get_enrichment_plot_mpl(
     else:
         x_values = df[col_x].to_numpy()
         # positional indices, so that a non-unique index cannot mislabel rows
-        for group_value, positions in df.groupby(group, sort=False).indices.items():
+        grouped = df.groupby(group, sort=False, observed=True)
+        for group_value, positions in grouped.indices.items():
             ax.scatter(
                 x_values[positions],
                 y_positions[positions],
