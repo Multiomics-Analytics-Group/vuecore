@@ -68,7 +68,49 @@ def get_enrichment_plot_mpl(
     col_markersize: str = "foreground",
     legend_marker_size: float = 14,
 ) -> matplotlib.figure.Figure:
-    """Create one enrichment scatter plot as a matplotlib figure."""
+    """Create one enrichment scatter plot as a matplotlib figure.
+
+    Terms are drawn top to bottom in the order of `df`, so sort the rows before
+    calling. Marker areas are scaled linearly between a minimum and maximum from
+    the values in `col_markersize`.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Rows to plot, one per enriched term. Must contain the columns `col_x`,
+        `col_markersize`, 'terms' (used as y tick labels) and, if `group` is
+        given, the grouping column.
+    comparison_key : str
+        Comparison identifier of the form 'group1~group2', appended to `title`
+        as 'group1 vs group2'. A key without the separator is appended as is.
+    group : str, optional
+        Column to color and label the points by, e.g. 'direction'. One legend
+        entry is added per unique value. Pass None to draw all points in a
+        single color without a legend.
+    width : int
+        Plot width in pixels at 100 DPI, with a lower bound of 400.
+    height : int
+        Plot height in pixels at 100 DPI, with a lower bound of 300.
+    title : str
+        Base title, combined with `comparison_key` into the figure title.
+    colors : dict[str, str]
+        Color per value of the `group` column. Values missing from the mapping
+        fall back to a default blue. Ignored when `group` is None.
+    col_x : str, optional
+        Column with the x values, expected to be -log10 transformed adjusted
+        p-values.
+    col_markersize : str, optional
+        Column driving the marker sizes, typically the foreground counts.
+        Non-numeric and missing values are treated as 0.
+    legend_marker_size : float, optional
+        Fixed marker size for the legend entries, given as a diameter in points
+        (as in `Line2D.markersize`), independent of the marker sizes in the plot.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The scatter plot for the given comparison.
+    """
     fig_width = max(width / DEFAULT_DPI, 4)
     fig_height = max(height / DEFAULT_DPI, 3)
     fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=DEFAULT_DPI)
