@@ -88,9 +88,9 @@ def get_enrichment_plot_mpl(
         entry is added per unique value. Pass None to draw all points in a
         single color without a legend.
     width : int
-        Plot width in pixels at 100 DPI, with a lower bound of 400.
+        Plot width in pixels at 100 DPI.
     height : int
-        Plot height in pixels at 100 DPI, with a lower bound of 300.
+        Plot height in pixels at 100 DPI.
     title : str
         Base title, combined with `comparison_key` into the figure title.
     colors : dict[str, str]
@@ -111,8 +111,8 @@ def get_enrichment_plot_mpl(
     matplotlib.figure.Figure
         The scatter plot for the given comparison.
     """
-    fig_width = max(width / DEFAULT_DPI, 4)
-    fig_height = max(height / DEFAULT_DPI, 3)
+    fig_width = width / DEFAULT_DPI
+    fig_height = height / DEFAULT_DPI
     fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=DEFAULT_DPI)
 
     y_positions = np.arange(len(df))
