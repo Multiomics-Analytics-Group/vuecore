@@ -72,59 +72,79 @@ def set_legend_marker_size(figure: go.Figure, size: float = 14) -> None:
 
 
 def get_enrichment_plot_plotly(
-    data,
-    x="x",
-    y="y",
-    group=None,
-    hovering_cols=None,
-    size=None,
-    symbol=None,
-    trendline=None,
-    text=None,
-    title="Scatter plot",
-    x_title="x",
-    y_title="y",
-    height=800,
-    width=800,
-    colors=None,
-    legend_marker_size=14,
-):
+    data: pd.DataFrame,
+    x: str = "x",
+    y: str = "y",
+    group: str | None = None,
+    hovering_cols: list[str] | None = None,
+    size: str | None = None,
+    symbol: str | None = None,
+    trendline: str | None = None,
+    text: str | None = None,
+    title: str = "Scatter plot",
+    x_title: str = "x",
+    y_title: str = "y",
+    height: int = 800,
+    width: int = 800,
+    colors: dict[str, str] | None = None,
+    legend_marker_size: float | None = 14,
+) -> go.Figure:
     """
-    This function plots a simple Scatterplot.
+    Plot a simple scatter plot.
 
-    :param data: is a Pandas DataFrame with four columns: "name", x values and y values
-                 (provided as variables) to plot.
-    :param str x: column in dataframe with values for x
-    :param str y: column in dataframe with values for y
-    :param str group: column in dataframe with the groups - translates into colors
-    :param list hovering_cols: list of columns in dataframe that will be shown when
-                                hovering over a dot
-    :param str size: column in dataframe that contains the size of the dots
-    :param str symbol: column in dataframe that contains the symbol of the dots
-    :param bool trendline: whether or not to draw a trendline
-    :param str text: column in dataframe that contains the values shown for each dot
-    :param str title: title of the figure.
-    :param str x_title: plot x axis title.
-    :param str y_title: plot y axis title.
-    :param int height: plot height.
-    :param int width: plot width.
-    :param dict colors: dictionary with colors to be used for each group
-    :param float legend_marker_size: fixed marker size (in pixels) for the legend
-                                     entries, independent of the marker sizes in the
-                                     plot. Pass ``None`` to let the legend follow the
-                                     plotted marker sizes.
-    :return: scatterplot figure within the <div id="_dash-app-content">.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DataFrame with the columns referenced by the other arguments, at least the
+        x and y values to plot.
+    x : str, optional
+        Column in `data` with the values for x.
+    y : str, optional
+        Column in `data` with the values for y.
+    group : str, optional
+        Column in `data` with the groups - translates into colors.
+    hovering_cols : list[str], optional
+        Columns in `data` that will be shown when hovering over a dot.
+    size : str, optional
+        Column in `data` that contains the size of the dots.
+    symbol : str, optional
+        Column in `data` that contains the symbol of the dots.
+    trendline : str, optional
+        Trendline to draw, as in `plotly.express.scatter` (e.g. 'ols').
+    text : str, optional
+        Column in `data` that contains the values shown for each dot.
+    title : str, optional
+        Title of the figure.
+    x_title : str, optional
+        Plot x axis title.
+    y_title : str, optional
+        Plot y axis title.
+    height : int, optional
+        Plot height.
+    width : int, optional
+        Plot width.
+    colors : dict[str, str], optional
+        Mapping of group name to color, used for each group.
+    legend_marker_size : float, optional
+        Fixed marker size (in pixels) for the legend entries, independent of the
+        marker sizes in the plot. Pass `None` to let the legend follow the plotted
+        marker sizes.
 
-    Example::
+    Returns
+    -------
+    plotly.graph_objects.Figure
+        The scatter plot figure.
 
-        result = get_enrichment_plot_plotly(
-            data,
-            title="Scatter Plot",
-            x_title="x_axis",
-            y_title="y_axis",
-            height=100,
-            width=100,
-        )
+    Examples
+    --------
+    >>> result = get_enrichment_plot_plotly(
+    ...     data,
+    ...     title="Scatter Plot",
+    ...     x_title="x_axis",
+    ...     y_title="y_axis",
+    ...     height=100,
+    ...     width=100,
+    ... )
     """
     figure = px.scatter(
         data,
