@@ -115,8 +115,8 @@ def get_enrichment_plot_mpl(
     fig_height = max(height / DEFAULT_DPI, 3)
     fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=DEFAULT_DPI)
 
-    y_positions = list(range(len(df)))
-    marker_sizes = _scale_marker_sizes(df[col_markersize])
+    y_positions = np.arange(len(df))
+    marker_sizes = np.asarray(_scale_marker_sizes(df[col_markersize]), dtype=float)
 
     if group is None:
         ax.scatter(
@@ -129,12 +129,13 @@ def get_enrichment_plot_mpl(
             color="#4c78a8",
         )
     else:
-        for group_value, group_df in df.groupby(group, sort=False):
-            group_positions = [df.index.get_loc(idx) for idx in group_df.index]
+        x_values = df[col_x].to_numpy()
+        # positional indices, so that a non-unique index cannot mislabel rows
+        for group_value, positions in df.groupby(group, sort=False).indices.items():
             ax.scatter(
-                group_df[col_x],
-                group_positions,
-                s=[marker_sizes[i] for i in group_positions],
+                x_values[positions],
+                y_positions[positions],
+                s=marker_sizes[positions],
                 alpha=0.7,
                 linewidths=0.5,
                 edgecolors="DarkSlateGrey",
