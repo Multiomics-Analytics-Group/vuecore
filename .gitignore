@@ -166,3 +166,4 @@ cython_debug/
 test_results/
 docs/api_examples/outputs/
 docs/api_examples/iframe_figures/
+docs/sections_readme/

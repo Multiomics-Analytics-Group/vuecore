@@ -1,12 +1,13 @@
 # vuecore/utils/doc_utils.py
-from typing import Type, Dict, Any, get_origin, get_args, Optional, Union
-from pydantic import BaseModel, Field
-from functools import wraps
-import textwrap
 import re
+import textwrap
+from functools import wraps
+from typing import Any, Optional, Union, get_args, get_origin
+
+from pydantic import BaseModel, Field
 
 
-def get_all_model_fields(model: Type[BaseModel]) -> Dict[str, Field]:
+def get_all_model_fields(model: type[BaseModel]) -> dict[str, Field]:
     """
     Extract all fields from a Pydantic model, including inherited ones.
 
@@ -83,7 +84,7 @@ def get_type_string(annotation: Any) -> str:
     return str(annotation)
 
 
-def document_pydant_params(model: Type[BaseModel]):
+def document_pydant_params(model: type[BaseModel]):
     """
     Decorator to add Pydantic model parameters to a function's docstrings.
 

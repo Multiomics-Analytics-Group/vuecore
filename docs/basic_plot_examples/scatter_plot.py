@@ -65,7 +65,6 @@ import os
 
 IN_COLAB = "COLAB_GPU" in os.environ
 
-# %% tags=["hide-cell"]
 # Create a directory for outputs
 output_dir = "./outputs"
 os.makedirs(output_dir, exist_ok=True)
@@ -74,9 +73,9 @@ os.makedirs(output_dir, exist_ok=True)
 # ### 0.2. Importing libraries
 
 # %%
-# Imports
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 from vuecore.plots.basic.scatter import create_scatter_plot
 
@@ -84,7 +83,7 @@ from vuecore.plots.basic.scatter import create_scatter_plot
 # ### 0.3. Create sample data
 # We create a synthetic dataset that contains simulated gene expression values, p-values, regulation status, and significance scores for 8 genes across two cell types.
 
-# %%
+# %% tags=["hide-input"]
 sample_df = pd.DataFrame(
     {
         "gene_expression": [1.2, 2.5, 3.1, 4.5, 5.2, 6.8, 3.9, 2.1],
@@ -109,7 +108,9 @@ sample_df
 
 # %% [markdown]
 # ## 1. Basic Scatter Plot
-# A basic scatter plot can be created by providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
+# A basic scatter plot can be created by providing the `x` and `y` columns
+# from the DataFrame, along with style options like `title`
+# using [`create_scatter_plot`](vuecore.plots.basic.scatter.create_scatter_plot).
 
 # %%
 # Define output path for the basic png plot

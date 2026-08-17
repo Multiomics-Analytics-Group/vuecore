@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 from typing import Any
 
 import pandas as pd
 
 from vuecore import EngineType, PlotType
-from vuecore.schemas.basic.violin import ViolinConfig
 from vuecore.plots.plot_factory import create_plot
+from vuecore.schemas.basic.violin import ViolinConfig
 from vuecore.utils.docs_utils import document_pydant_params
 
 
@@ -12,7 +14,7 @@ from vuecore.utils.docs_utils import document_pydant_params
 def create_violin_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
-    file_path: str = None,
+    file_path: str | None = None,
     **kwargs,
 ) -> Any:
     """

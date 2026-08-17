@@ -1,7 +1,9 @@
 # vuecore/schemas/basic/histogram.py
 
-from typing import Dict, Optional
-from pydantic import Field, ConfigDict
+from __future__ import annotations
+
+from pydantic import ConfigDict, Field
+
 from vuecore.schemas.plotly_base import PlotlyBaseConfig
 
 
@@ -27,37 +29,37 @@ class HistogramConfig(PlotlyBaseConfig):
     model_config = ConfigDict(extra="allow")
 
     # Data Mapping
-    pattern_shape: Optional[str] = Field(
+    pattern_shape: str | None = Field(
         None, description="Column to assign pattern shapes to bars."
     )
-    pattern_shape_map: Optional[Dict[str, str]] = Field(
+    pattern_shape_map: dict[str, str] | None = Field(
         None, description="Map values to specific pattern shapes."
     )
 
     # Styling and Layout
-    marginal: Optional[str] = Field(
+    marginal: str | None = Field(
         None,
         description="Adds a marginal subplot ('rug', 'box', 'violin', 'histogram').",
     )
     opacity: float = Field(0.8, description="Overall opacity of the bars.")
-    orientation: Optional[str] = Field(
+    orientation: str | None = Field(
         None,
         description="Orientation of the bars ('v' for vertical, 'h' for horizontal).",
     )
     barmode: str = Field("relative", description="Mode for grouping bars.")
-    barnorm: Optional[str] = Field(
+    barnorm: str | None = Field(
         None, description="Normalization mode for stacked bars ('fraction', 'percent')."
     )
-    histnorm: Optional[str] = Field(
+    histnorm: str | None = Field(
         None,
         description="Normalization mode for the histogram ('percent', 'probability', 'density', 'probability density').",
     )
-    histfunc: Optional[str] = Field(
+    histfunc: str | None = Field(
         "count",
         description="Function used to aggregate values ('count', 'sum', 'avg', 'min', 'max').",
     )
     cumulative: bool = Field(
         False, description="If True, histogram values are cumulative."
     )
-    nbins: Optional[int] = Field(None, description="Sets the number of bins.")
+    nbins: int | None = Field(None, description="Sets the number of bins.")
     text_auto: bool = Field(False, description="If True, displays text labels on bars.")

@@ -62,7 +62,6 @@ import os
 
 IN_COLAB = "COLAB_GPU" in os.environ
 
-# %% tags=["hide-cell"]
 # Create a directory for outputs
 output_dir = "./outputs"
 os.makedirs(output_dir, exist_ok=True)
@@ -71,10 +70,10 @@ os.makedirs(output_dir, exist_ok=True)
 # ### 0.2. Importing libraries
 
 # %%
-# Imports
-import pandas as pd
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 from vuecore.plots.basic.bar import create_bar_plot
 
@@ -82,7 +81,7 @@ from vuecore.plots.basic.bar import create_bar_plot
 # ### 0.3. Create sample data
 # We create a synthetic dataset representing the relative abundances of common bacterial genera across various environmental samples.
 
-# %%
+# %% tags=["hide-input"]
 # Set a random seed for reproducibility of the synthetic data
 np.random.seed(42)
 
@@ -156,7 +155,9 @@ abund_df.head()
 
 # %% [markdown]
 # ## 1. Basic Bar Plot
-# A basic bar plot can be created by simply providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
+# A basic bar plot can be created by simply providing the `x` and `y` columns from the DataFrame,
+# along with style options like `title`
+# using [`create_bar_plot`](vuecore.plots.basic.bar.create_bar_plot).
 
 # %%
 # Create a df with unique samples and their genera counts

@@ -4,8 +4,9 @@ import plotly.graph_objects as go
 
 from vuecore.schemas.basic.scatter import ScatterConfig
 from vuecore.utils.statistics import get_density
-from .theming import apply_scatter_theme
+
 from .plot_builder import build_plot
+from .theming import apply_scatter_theme
 
 # Define parameters handled by the theme script
 THEMING_PARAMS = [

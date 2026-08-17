@@ -73,21 +73,19 @@ os.makedirs(output_dir, exist_ok=True)
 
 # %%
 # Imports
-import pandas as pd
-import numpy as np
 from pathlib import Path
-import plotly.io as pio
+
+import numpy as np
+import pandas as pd
 
 from vuecore.plots.basic.histogram import create_histogram_plot
 
-# Set the Plotly renderer based on the environment
-pio.renderers.default = "notebook"
-
 # %% [markdown]
 # ### 0.3. Create sample data
-# We create a synthetic dataset simulating gene expression data across two experimental conditions to demonstrate how histograms can visualize data distribution.
+# We create a synthetic dataset simulating gene expression data across two experimental
+# conditions to demonstrate how histograms can visualize data distribution.
 
-# %%
+# %% tags=["hide-input"]
 # Set a random seed for reproducibility of the synthetic data
 np.random.seed(42)
 
@@ -120,7 +118,9 @@ gene_exp_df.head()
 
 # %% [markdown]
 # ## 1. Basic Histogram Plot
-# A basic histogram plot can be created by simply providing the `x` and `y` columns from the DataFrame, along with style options like `title`.
+# A basic histogram plot can be created by simply providing the `x` and `y` columns from the DataFrame,
+# along with style options like `title`
+# using [`create_histogram_plot`](vuecore.plots.basic.histogram.create_histogram_plot) .
 
 # %%
 # Define output file path for the PNG basic histogram
