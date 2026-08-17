@@ -102,6 +102,7 @@ intersphinx_mapping = {
     # "scikit-learn": ("https://scikit-learn.org/stable/", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
+    "acore": ("https://acore.readthedocs.io/en/latest/", None),
 }
 
 # Options for the autodoc_pydantic extension

@@ -23,14 +23,17 @@ classifiers = [
 dependencies = [
   "numpy",
   "pandas",
-  # "dsp-pandas", # has only pandas related dependencies
+  # "acore[all]",   # network_analysis, wgcna_analysis imports
+  "python-louvain", # community detection for network analysis
+  "snfpy",          # similarity network fusion for network analysis
+  "networkx",
+  # "dsp-pandas",   # has only pandas related dependencies
   "scipy",
   "plotly",
   # "biopython",
   "beautifulsoup4",
   "requests",
-  "dash",            # from dash import html
-  "networkx",
+  "dash",                                          # from dash import html
   "matplotlib",
   "kaleido",
   "pyvis",
