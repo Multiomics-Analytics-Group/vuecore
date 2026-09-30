@@ -175,8 +175,8 @@ def get_differential_regulation_plot(
     title : str, optional
         Base title for the plot.
     colors : dict[str, str] or list[str], optional
-        Color mapping by regulation label, or two colors for 'in group1' and
-        'in group2'. Not regulated features are always light grey by default.
+        Color mapping by regulation label, or two colors for 'upregulated in group1' and
+        'upregulated in group2'. Not regulated features are always light grey by default.
     legend_marker_size : float, optional
         Fixed marker size for the legend entries, given as a diameter in points.
     **kwargs : dict

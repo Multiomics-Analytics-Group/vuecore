@@ -41,16 +41,16 @@ def assign_regulation(
     col_rejected: str = "rejected",
     col_log2fc: str = "log2FC",
 ) -> pd.Series:
-    """Label each row as regulated 'in <group>' or 'not regulated'.
+    """Label each row as 'upregulated in <group>' or 'not regulated'.
 
-    Rejected rows with a positive fold change are 'in group1', those with a
-    negative one 'in group2'; everything else is 'not regulated'.
+    Rejected rows with a positive fold change are 'upregulated in group1', those with a
+    negative one 'upregulated in group2'; everything else is 'not regulated'.
     """
     rejected = df[col_rejected].astype(bool)
     return pd.Series(
         np.select(
             [rejected & (df[col_log2fc] > 0), rejected & (df[col_log2fc] < 0)],
-            [f"in {group1}", f"in {group2}"],
+            [f"upregulated in {group1}", f"upregulated in {group2}"],
             default=NOT_REGULATED,
         ),
         index=df.index,
@@ -83,14 +83,14 @@ def build_color_map(
 ) -> dict[str, str]:
     """Map the regulation labels to colors.
 
-    A dict is returned as-is. A list of two colors is used for 'in group1' and
-    'in group2' (in that order); 'not regulated' is always light grey.
+    A dict is returned as-is. A list of two colors is used for 'upregulated in group1' and
+    'upregulated in group2' (in that order); 'not regulated' is always light grey.
     """
     if isinstance(colors, dict):
         return colors
     palette = colors if colors is not None else DEFAULT_GROUP_COLORS
     return {
         NOT_REGULATED: DEFAULT_NOT_REGULATED_COLOR,
-        f"in {group1}": palette[0],
-        f"in {group2}": palette[1],
+        f"upregulated in {group1}": palette[0],
+        f"upregulated in {group2}": palette[1],
     }

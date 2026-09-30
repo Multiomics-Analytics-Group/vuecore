@@ -150,6 +150,7 @@ def get_volcano_plot_plotly(
         xaxis={"title": x_title},
         yaxis={"title": y_title},
         legend={
+            "title": {"text": ""},  # px would use the name of the `group` column
             "orientation": "h",
             "yanchor": "bottom",
             "y": 1.0,
@@ -200,8 +201,8 @@ def get_differential_regulation_plot(
     title : str, optional
         Base title for the plot.
     colors : dict[str, str] or list[str], optional
-        Color mapping by regulation label, or two colors for 'in group1' and
-        'in group2'. Not regulated features are always light grey by default.
+        Color mapping by regulation label, or two colors for 'upregulated in group1' and
+        'upregulated in group2'. Not regulated features are always light grey by default.
     hovering_cols : list, optional
         Hover columns shown in tooltips.
     legend_marker_size : float, optional
