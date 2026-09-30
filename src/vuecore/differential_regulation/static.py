@@ -57,7 +57,7 @@ def get_volcano_plot_mpl(
     height: int = 500,
     width: int = 700,
     colors: dict[str, str] | None = None,
-    legend_marker_size: float | None = 14,
+    legend_marker_size: float | None = 10,
 ) -> matplotlib.figure.Figure:
     """
     Plot a volcano plot as a matplotlib scatter plot.
@@ -151,7 +151,7 @@ def get_differential_regulation_plot(
     height: int = 500,
     title: str = "Volcano plot",
     colors: dict[str, str] | list[str] | None = None,
-    legend_marker_size: float | None = 14,
+    legend_marker_size: float | None = 10,
     **kwargs,
 ) -> matplotlib.figure.Figure:
     """
@@ -244,6 +244,8 @@ if __name__ == "__main__":
     results = pd.read_csv(fname, index_col=0)
 
     figure = get_differential_regulation_plot(results, comparison="WT~rapZE227Stop")
-    figure = get_differential_regulation_plot(results, comparison="QC~rapZE227Stop")
+    figure = get_differential_regulation_plot(
+        results, comparison="QC~rapZE227Stop", legend_marker_size=8
+    )
 
 # %%
