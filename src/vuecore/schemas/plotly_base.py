@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
@@ -28,7 +30,7 @@ class PlotlyBaseConfig(BaseModel):
     hover_name: str | None = Field(
         None, description="Column to appear in bold in the hover tooltip."
     )
-    hover_data: list[str] = Field(
+    hover_data: list[str] | dict[str, Any] = Field(
         [], description="Additional columns for the hover tooltip."
     )
     facet_row: str | None = Field(
