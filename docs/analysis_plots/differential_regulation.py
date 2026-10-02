@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Differential Regulation Plots
 #
-# Loads an example file created using acore. Presents the current plotting functions for
+# Loads an example file created using acore `0.3.2`. Presents the current plotting functions for
 # a differential regulation (ANOVA) result as a volcano plot. The functions are available
 # in the [`vuecore.differential_regulation` module](vuecore.differential_regulation).
 #
@@ -19,7 +19,7 @@
 # %% tags=["hide-output"]
 # %pip install vuecore
 
-# %%
+# %% tags=["hide-input"]
 from pathlib import Path
 
 import pandas as pd
@@ -43,7 +43,7 @@ from vuecore.differential_regulation.static import (
 # - feature identifiers are in the index
 # - several comparisons are in the table (`group1` and `group2` columns)
 
-# %%
+# %% tags=["hide-input"]
 fname = "../../tests/data/differential_analysis.csv"
 fname_url = (
     "https://raw.githubusercontent.com/Multiomics-Analytics-Group/"
@@ -58,7 +58,7 @@ diff_results
 # %% [markdown]
 # Available comparisons:
 
-# %%
+# %% tags=["hide-input"]
 diff_results[["group1", "group2"]].drop_duplicates().reset_index(drop=True)
 
 # %% [markdown]
@@ -69,7 +69,7 @@ diff_results[["group1", "group2"]].drop_duplicates().reset_index(drop=True)
 # - the `label` column holds the text shown next to the dots, here for the features with
 #   the smallest p-values.
 
-# %%
+# %% tags=["hide-input"]
 group1, group2 = "WT", "rapZE227Stop"
 selected_comparison = f"{group1}~{group2}"
 df = diff_results.query("group1 == @group1 and group2 == @group2")[
@@ -122,7 +122,7 @@ print(
 
 # %% [markdown]
 # ## Manual calling of matplotlib (mpl) related function
-# - data has to make sense for the plot
+# - data has to make sense for the plot, uses the manually curated view `df`
 # - size and other details can be adjusted
 
 # %%
@@ -166,7 +166,7 @@ interactive_fig
 
 # %% [markdown]
 # ## Manual calling of plotly related function
-# - data has to make sense for the plot
+# - data has to make sense for the plot, uses the manually curated view `df`
 # - the index is shown when hovering, additional columns can be added using
 #   `hovering_cols`
 
