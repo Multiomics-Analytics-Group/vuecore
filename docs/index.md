@@ -23,6 +23,7 @@ sections_readme/license
 :caption: Analysis Plots
 
 analysis_plots/enrichment_analysis
+analysis_plots/differential_regulation
 ```
 
 ```{toctree}
