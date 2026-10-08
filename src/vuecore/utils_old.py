@@ -6,12 +6,8 @@ import bs4 as bs
 import networkx as nx
 import pandas as pd
 import requests
-from Bio import Entrez, Medline
 from dash import html
 from networkx.readwrite import json_graph
-
-# TODO: This should probably be changed to the email of the person installing ckg?
-Entrez.email = "alberto.santos@cpr.ku.dk"
 
 
 def check_columns(df, cols):
@@ -297,7 +293,7 @@ def get_hex_colors(n):
     return colors
 
 
-def getMedlineAbstracts(idList):
+def getMedlineAbstracts(idList, email_entrez: str):
     fields = {
         "TI": "title",
         "AU": "authors",
@@ -308,6 +304,17 @@ def getMedlineAbstracts(idList):
         "PMID": "PMID",
     }
     pubmedUrl = "https://www.ncbi.nlm.nih.gov/pubmed/"
+    try:
+        # dependency in acore?
+        from Bio import Entrez, Medline
+    except ImportError:
+        raise ImportError(
+            "Biopython is required to use this function. Please install it using 'pip install biopython'."
+        )
+
+    # TODO: This should probably be changed to the email of the person installing ckg?
+    Entrez.email = email_entrez
+
     abstracts = pd.DataFrame()
     try:
         handle = Entrez.efetch(
