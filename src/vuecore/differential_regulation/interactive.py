@@ -222,7 +222,10 @@ def get_differential_regulation_plot(
     ...     results, comparison="WT~rapZE227Stop", top_n=10
     ... )
     """
-    df = add_comparison_column(validate_differential_regulation(data))
+    df, col_comparison = add_comparison_column(validate_differential_regulation(data))
+    col_rejected = (
+        "posthoc rejected" if "posthoc rejected" in df.columns else "rejected"
+    )
 
     if kwargs:
         logger.info(
@@ -230,7 +233,7 @@ def get_differential_regulation_plot(
             f"{kwargs}"
         )
 
-    available = sorted(df["comparison"].unique())
+    available = sorted(df[col_comparison].unique())
     if comparison is None:
         if len(available) > 1:
             raise ValueError(
@@ -244,10 +247,17 @@ def get_differential_regulation_plot(
             f"{', '.join(available)}."
         )
 
-    df = df.query("comparison == @comparison").copy()
+    df = df.loc[df[col_comparison] == comparison].copy()
     group1, group2 = df["group1"].iloc[0], df["group2"].iloc[0]
-    df["regulation"] = assign_regulation(df, group1, group2)
-    df["label"] = label_top_n(df, "pvalue", top_n)
+    df["regulation"] = assign_regulation(
+        df,
+        group1,
+        group2,
+        col_rejected=col_rejected,
+        # col_log2fc="log2FC",
+    )
+    col_sort = "posthoc pvalue" if "posthoc pvalue" in df.columns else "pvalue"
+    df["label"] = label_top_n(df=df, col_sort=col_sort, top_n=top_n)
 
     return get_volcano_plot_plotly(
         df,

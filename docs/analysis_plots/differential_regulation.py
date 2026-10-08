@@ -52,14 +52,24 @@ fname_url = (
 
 if not Path(fname).exists():
     fname = fname_url
-diff_results = pd.read_csv(fname, index_col=0)
-diff_results
+diff_reg = pd.read_csv(fname, index_col=0).sort_index()
+diff_reg
 
 # %% [markdown]
 # Available comparisons:
 
 # %% tags=["hide-input"]
-diff_results[["group1", "group2"]].drop_duplicates().reset_index(drop=True)
+diff_reg[["group1", "group2", "posthoc comparison"]].drop_duplicates().reset_index(
+    drop=True
+)
+
+# %%
+view = diff_reg.filter(like="posthoc").head().T
+view
+
+# %%
+# columns not in view
+diff_reg[diff_reg.columns.difference(view.index)].head().T
 
 # %% [markdown]
 # ## Reduced dataset for manual plotting function calling
@@ -72,15 +82,16 @@ diff_results[["group1", "group2"]].drop_duplicates().reset_index(drop=True)
 # %% tags=["hide-input"]
 group1, group2 = "WT", "rapZE227Stop"
 selected_comparison = f"{group1}~{group2}"
-df = diff_results.query("group1 == @group1 and group2 == @group2")[
-    ["log2FC", "-log10 pvalue", "padj", "FC", "rejected"]
+df = diff_reg.query("group1 == @group1 and group2 == @group2")[
+    ["log2FC", "FC", "-log10 posthoc pvalue", "posthoc pvalue adj", "posthoc rejected"]
 ].copy()
 df["regulation"] = assign_regulation(
-    diff_results.loc[df.index].query("group1 == @group1 and group2 == @group2"),
+    diff_reg.loc[df.index].query("group1 == @group1 and group2 == @group2"),
     group1,
     group2,
+    col_rejected="posthoc rejected",
 )
-df["label"] = label_top_n(df, "padj", top_n=5)
+df["label"] = label_top_n(df, "posthoc pvalue adj", top_n=5)
 df
 
 # %% [markdown]
@@ -96,7 +107,7 @@ help(get_differential_regulation_plot_static)
 
 # %%
 static_fig = get_differential_regulation_plot_static(
-    diff_results, comparison=selected_comparison
+    diff_reg, comparison=selected_comparison
 )
 print(
     f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
@@ -108,7 +119,7 @@ print(
 
 # %%
 static_fig = get_differential_regulation_plot_static(
-    diff_results,
+    diff_reg,
     comparison=selected_comparison,
     top_n=5,
     width=900,
@@ -132,7 +143,7 @@ help(get_volcano_plot_mpl)
 static_fig = get_volcano_plot_mpl(
     data=df,
     x="log2FC",
-    y="-log10 pvalue",
+    y="-log10 posthoc pvalue",
     group="regulation",
     text="label",
     width=900,
@@ -160,7 +171,7 @@ help(get_differential_regulation_plot_interactive)
 
 # %%
 interactive_fig = get_differential_regulation_plot_interactive(
-    diff_results, comparison=selected_comparison, width=790, height=500
+    diff_reg, comparison=selected_comparison, width=790, height=500
 )
 interactive_fig
 
@@ -177,10 +188,10 @@ help(get_volcano_plot_plotly)
 interactive_fig = get_volcano_plot_plotly(
     df,
     x="log2FC",
-    y="-log10 pvalue",
+    y="-log10 posthoc pvalue",
     group="regulation",
     text="label",
-    hovering_cols=["padj", "FC"],
+    hovering_cols=["posthoc pvalue adj", "FC"],
     title="Volcano manual",
     x_title="log2 fold change",
     y_title="-log10(p-value)",

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from logging import getLogger
+
 import numpy as np
 import pandas as pd
 from acore.types.differential_analysis import AnovaSchema, AnovaSchemaMultiGroup
@@ -9,6 +11,8 @@ DEFAULT_COMPARISON_SEPARATOR = "~"
 NOT_REGULATED = "not regulated"
 DEFAULT_NOT_REGULATED_COLOR = "lightgrey"
 DEFAULT_GROUP_COLORS = ["#3288bd", "#cb181d"]
+
+logger = getLogger(__name__)
 
 
 def validate_differential_regulation(
@@ -27,11 +31,21 @@ def validate_differential_regulation(
 
 def add_comparison_column(
     df: pd.DataFrame, separator: str = DEFAULT_COMPARISON_SEPARATOR
-) -> pd.DataFrame:
-    """Return a copy with a 'comparison' column of the form 'group1~group2'."""
+) -> tuple[pd.DataFrame, str]:
+    """Return a copy and the column containing comparison identifiers."""
+    if "comparison" in df.columns:
+        logger.warning(
+            "The input DataFrame already has a 'comparison' column, so none is added."
+        )
+        return df, "comparison"
+    if "posthoc comparison" in df.columns:
+        logger.warning(
+            "The input DataFrame has a 'posthoc comparison' column; adding a "
+            "standardized 'comparison' column from 'group1' and 'group2'."
+        )
     df = df.copy()
     df["comparison"] = df["group1"] + separator + df["group2"]
-    return df
+    return df, "comparison"
 
 
 def assign_regulation(
