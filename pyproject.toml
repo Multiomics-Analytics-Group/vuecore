@@ -41,7 +41,7 @@ dependencies = [
   "cyjupyter",
   "nltk",
   "webweb",
-  "acore",
+  "acore>=0.3.3",
   "dash-cytoscape",
   "pydantic",
   "strenum>=0.4.15,<0.5; python_version < '3.11'",

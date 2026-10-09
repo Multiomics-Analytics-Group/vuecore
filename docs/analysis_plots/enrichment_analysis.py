@@ -18,6 +18,8 @@
 # %pip install vuecore
 
 # %%
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -39,6 +41,13 @@ from vuecore.enrichment_analysis.static import (
 
 # %%
 fname = "../../tests/data/enrichment_analysis.csv"
+fname_url = (
+    "https://raw.githubusercontent.com/Multiomics-Analytics-Group/"
+    "vuecore/refs/heads/main/tests/data/enrichment_analysis.csv"
+)
+
+if not Path(fname).exists():
+    fname = fname_url
 enrichment_results = pd.read_csv(fname, index_col=0).reset_index(drop=True)
 enrichment_results
 
