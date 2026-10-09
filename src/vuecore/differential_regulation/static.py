@@ -7,7 +7,11 @@ import matplotlib.axes
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import pandas as pd
-from acore.types.differential_analysis import AnovaSchema, AnovaSchemaMultiGroup
+from acore.types.differential_analysis import (
+    AncovaSchema,
+    AnovaSchema,
+    AnovaSchemaMultiGroup,
+)
 from pandera.typing.pandas import DataFrame
 
 from vuecore.differential_regulation.common import (
@@ -141,7 +145,11 @@ def get_volcano_plot_mpl(
 
 # acore related plotting function using a defined type in acore.types
 def get_differential_regulation_plot(
-    data: pd.DataFrame | DataFrame[AnovaSchema] | DataFrame[AnovaSchemaMultiGroup],
+    data: (
+        DataFrame[AnovaSchema]
+        | DataFrame[AnovaSchemaMultiGroup]
+        | DataFrame[AncovaSchema]
+    ),
     comparison: str | None = None,
     top_n: int = 20,
     width: int = 700,
@@ -156,7 +164,7 @@ def get_differential_regulation_plot(
 
     Parameters
     ----------
-    data : pd.DataFrame or DataFrame[AnovaSchema] or DataFrame[AnovaSchemaMultiGroup]
+    data : DataFrame[AnovaSchema], DataFrame[AnovaSchemaMultiGroup] or DataFrame[AncovaSchema]
         Differential regulation results validated against `AnovaSchema` (two
         groups) or `AnovaSchemaMultiGroup`, with the feature identifiers in the
         index. Comparisons are given by the 'group1' and 'group2' columns.
