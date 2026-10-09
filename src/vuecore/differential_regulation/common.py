@@ -4,7 +4,11 @@ from logging import getLogger
 
 import numpy as np
 import pandas as pd
-from acore.types.differential_analysis import AnovaSchema, AnovaSchemaMultiGroup
+from acore.types.differential_analysis import (
+    AncovaSchema,
+    AnovaSchema,
+    AnovaSchemaMultiGroup,
+)
 from pandera.typing.pandas import DataFrame
 
 DEFAULT_COMPARISON_SEPARATOR = "~"
@@ -16,7 +20,11 @@ logger = getLogger(__name__)
 
 
 def validate_differential_regulation(
-    data: pd.DataFrame | DataFrame[AnovaSchema] | DataFrame[AnovaSchemaMultiGroup],
+    data: (
+        DataFrame[AnovaSchema]
+        | DataFrame[AnovaSchemaMultiGroup]
+        | DataFrame[AncovaSchema]
+    ),
 ) -> pd.DataFrame:
     """Validate against the two- or multi-group schema, depending on the columns.
 
@@ -24,8 +32,10 @@ def validate_differential_regulation(
     and are validated against `AnovaSchemaMultiGroup`, all others against
     `AnovaSchema`. Feature identifiers are expected in the index.
     """
-    if "posthoc pvalue" in data.columns:
+    if "posthoc Paired" in data.columns:
         return AnovaSchemaMultiGroup.validate(data)
+    elif "coef" in data.columns:
+        return AncovaSchema.validate(data)
     return AnovaSchema.validate(data)
 
 
