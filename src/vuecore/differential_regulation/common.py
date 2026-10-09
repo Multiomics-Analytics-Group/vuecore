@@ -118,3 +118,60 @@ def build_color_map(
         f"upregulated in {group1}": palette[0],
         f"upregulated in {group2}": palette[1],
     }
+
+
+def prepare_comparison_data(
+    data: pd.DataFrame, comparison: str | None = None, top_n: int = 20
+) -> tuple[pd.DataFrame, str, str, str]:
+    """Validate results and select one comparison, annotated for plotting.
+
+    Adds a 'regulation' column (see `assign_regulation`) and a 'label' column with the
+    feature names of the `top_n` smallest p-values (see `label_top_n`). Post-hoc
+    columns are used when present, i.e. for results of an ANOVA with more than two
+    groups.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Differential regulation results, with the feature identifiers in the index.
+    comparison : str, optional
+        Comparison to select as 'group1~group2'. Required when more than one
+        comparison is present; inferred automatically when there is only one.
+    top_n : int, optional
+        Number of features with the smallest p-values to label.
+
+    Returns
+    -------
+    tuple[pd.DataFrame, str, str, str]
+        Rows of the selected comparison, 'group1', 'group2' and the comparison key.
+
+    Raises
+    ------
+    ValueError
+        If `comparison` is missing although several are available, or is unknown.
+    """
+    df, col_comparison = add_comparison_column(validate_differential_regulation(data))
+    col_rejected = (
+        "posthoc rejected" if "posthoc rejected" in df.columns else "rejected"
+    )
+    col_sort = "posthoc pvalue" if "posthoc pvalue" in df.columns else "pvalue"
+
+    available = sorted(df[col_comparison].unique())
+    if comparison is None:
+        if len(available) > 1:
+            raise ValueError(
+                "Multiple comparisons are available: "
+                f"{', '.join(available)}. Pass `comparison` to select one."
+            )
+        comparison = available[0]
+    elif comparison not in available:
+        raise ValueError(
+            f"Comparison '{comparison}' not found. Available comparisons: "
+            f"{', '.join(available)}."
+        )
+
+    df = df.loc[df[col_comparison] == comparison].copy()
+    group1, group2 = df["group1"].iloc[0], df["group2"].iloc[0]
+    df["regulation"] = assign_regulation(df, group1, group2, col_rejected=col_rejected)
+    df["label"] = label_top_n(df=df, col_sort=col_sort, top_n=top_n)
+    return df, group1, group2, comparison

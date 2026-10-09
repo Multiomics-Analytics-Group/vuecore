@@ -11,12 +11,9 @@ from acore.types.differential_analysis import AnovaSchema, AnovaSchemaMultiGroup
 from pandera.typing.pandas import DataFrame
 
 from vuecore.differential_regulation.common import (
-    add_comparison_column,
-    assign_regulation,
     build_color_map,
     format_comparison_title,
-    label_top_n,
-    validate_differential_regulation,
+    prepare_comparison_data,
 )
 
 DEFAULT_DPI = 100
@@ -194,42 +191,15 @@ def get_differential_regulation_plot(
     ...     results, comparison="WT~rapZE227Stop", top_n=10
     ... )
     """
-    df, col_comparison = add_comparison_column(validate_differential_regulation(data))
-    col_rejected = (
-        "posthoc rejected" if "posthoc rejected" in df.columns else "rejected"
-    )
-
     if kwargs:
         logger.info(
             f"Additional unused kwargs passed to get_differential_regulation_plot: "
             f"{kwargs}"
         )
 
-    available = sorted(df[col_comparison].unique())
-    if comparison is None:
-        if len(available) > 1:
-            raise ValueError(
-                "Multiple comparisons are available: "
-                f"{', '.join(available)}. Pass `comparison` to select one."
-            )
-        comparison = available[0]
-    elif comparison not in available:
-        raise ValueError(
-            f"Comparison '{comparison}' not found. Available comparisons: "
-            f"{', '.join(available)}."
-        )
-
-    df = df.loc[df[col_comparison] == comparison].copy()
-    group1, group2 = df["group1"].iloc[0], df["group2"].iloc[0]
-    df["regulation"] = assign_regulation(
-        df,
-        group1,
-        group2,
-        col_rejected=col_rejected,
-        # col_log2fc="log2FC",
+    df, group1, group2, comparison = prepare_comparison_data(
+        data, comparison=comparison, top_n=top_n
     )
-    col_sort = "posthoc pvalue" if "posthoc pvalue" in df.columns else "pvalue"
-    df["label"] = label_top_n(df=df, col_sort=col_sort, top_n=top_n)
 
     return get_volcano_plot_mpl(
         df,
