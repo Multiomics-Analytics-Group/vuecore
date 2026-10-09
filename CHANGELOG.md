@@ -3,6 +3,22 @@
 All notable changes to this project are documented in this file. It was automatically generated with
 the [changelog-from-release](https://github.com/rhysd/changelog-from-release) tool.
 
+<a id="v0.3.0"></a>
+# [v0.3.0](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.3.0) - 2026-10-09
+
+Add first version of differential regulation plotting functionality
+
+## What's Changed
+* :bug: allow dictionary to specify hover_data by [@enryH](https://github.com/enryH) in [#48](https://github.com/Multiomics-Analytics-Group/vuecore/pull/48)
+* :bug: biopython is not a direct dependency for now, rm albertos cpr email by [@enryH](https://github.com/enryH) in [#50](https://github.com/Multiomics-Analytics-Group/vuecore/pull/50)
+* Add regulation anlaysis plots (Volcano plots) by [@enryH](https://github.com/enryH) in [#49](https://github.com/Multiomics-Analytics-Group/vuecore/pull/49)
+
+
+**Full Changelog**: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.2.0...v0.2.1
+
+[Changes][v0.3.0]
+
+
 <a id="v0.2.0"></a>
 # [v0.2.0](https://github.com/Multiomics-Analytics-Group/vuecore/releases/tag/v0.2.0) - 2026-08-18
 
@@ -119,6 +135,7 @@ First release to have a development version on PyPI. All plots and their depende
 [Changes][v0.0.1]
 
 
+[v0.3.0]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.1.1...v0.2.0
 [v0.1.1]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.1.0...v0.1.1
 [v0.1.0]: https://github.com/Multiomics-Analytics-Group/vuecore/compare/v0.0.5...v0.1.0
