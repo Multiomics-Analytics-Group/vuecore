@@ -1,0 +1,185 @@
+# %% [markdown]
+# # Dimensionality Reduction Plots
+#
+# Runs a PCA and a UMAP on the iris dataset using acore and presents the current plotting
+# functions for a 2D embedding. The functions are available in the
+# [`vuecore.dimensionality_reduction` module](vuecore.dimensionality_reduction).
+#
+# ## Overview
+# For both static and interactive versions of the plots:
+# - show acore related function that checks the input for compatibility
+#   ([`TwoComponentSchema`](acore.types.exploratory_analysis.TwoComponentSchema) and,
+#   for PCA, [`TwoLoadingsSchema`](acore.types.exploratory_analysis.TwoLoadingsSchema))
+#   and calls the backend specific plotting function with the required parameters.
+#   The same function is used for PCA, t-SNE and UMAP results.
+# - show manually calling the backend specific plotting function with the required
+#   parameters. For these, the setup of the data is the responsibility of the user. The
+#   function will not check for compatibility and accepts [`DataFrame`s](pandas.DataFrame)
+#   with only the required columns for that plot.
+
+# %% tags=["hide-output"]
+# %pip install vuecore
+
+# %% tags=["hide-input"]
+from acore.exploratory_analysis import run_pca, run_umap
+from sklearn.datasets import load_iris
+
+from vuecore.dimensionality_reduction import (
+    get_embedding_plot_interactive,
+    get_embedding_plot_static,
+)
+from vuecore.dimensionality_reduction.interactive import get_embedding_plot_plotly
+from vuecore.dimensionality_reduction.static import (
+    DEFAULT_DPI,
+    get_embedding_plot_mpl,
+)
+
+# %% [markdown]
+# # Load example data
+# - the iris dataset: four measured features for 150 flowers of three species
+# - samples are rows, features are columns, with the additional columns `group`
+#   (the species) and `sample` (an identifier) as expected by acore
+
+# %% tags=["hide-input"]
+iris = load_iris(as_frame=True)
+data = iris.data.copy()
+data["group"] = iris.target.map(dict(enumerate(iris.target_names)))
+data["sample"] = [f"S{i:03d}" for i in range(len(data))]
+data
+
+# %% [markdown]
+# ## Run PCA and UMAP using acore
+# Both return the sample coordinates in the columns `x` and `y`, together with `group` and
+# the annotation columns. The PCA additionally returns the loadings of each feature and
+# the explained variance, and both return axis titles in `args`.
+
+# %%
+(components, loadings, explained_variance), pca_args = run_pca(
+    data, group="group", annotation_cols=["sample"]
+)
+pca_args
+
+# %%
+components
+
+# %%
+loadings
+
+# %%
+umap_result, umap_args = run_umap(data, group="group", annotation_cols=["sample"])
+umap_components = umap_result["umap"]
+umap_components
+
+# %% [markdown]
+# # Embedding Plot (Static)
+
+# %% [markdown]
+# Acore function has defaults for the result type
+# - the default size reflects in the width and height standards of journals
+# - the axis titles and the group column returned by acore can be passed on directly
+# - the loadings are optional and drawn as arrows (a biplot). Their length is scaled to the
+#   range of the samples, which can be changed using `loading_factor`.
+
+# %%
+help(get_embedding_plot_static)
+
+# %%
+static_fig = get_embedding_plot_static(components, loadings, title="PCA", **pca_args)
+print(
+    f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
+    f" {static_fig.get_size_inches()}"
+)
+
+# %% [markdown]
+# The same function plots the UMAP embedding, here with custom colors.
+
+# %%
+static_fig = get_embedding_plot_static(
+    umap_components,
+    title="UMAP",
+    colors=["pink", "orange", "teal"],
+    **umap_args,
+)
+
+# %% [markdown]
+# ## Manual calling of matplotlib (mpl) related function
+# - data has to make sense for the plot, here the acore output is used as it is
+# - loadings are not scaled, so they are multiplied by hand to be visible
+
+# %%
+help(get_embedding_plot_mpl)
+
+# %%
+static_fig = get_embedding_plot_mpl(
+    data=components,
+    x="x",
+    y="y",
+    group="group",
+    loadings=loadings.assign(x=loadings["x"] * 3, y=loadings["y"] * 3),
+    title="PCA manual",
+    x_title="PC1",
+    y_title="PC2",
+    width=700,
+    height=500,
+    colors={"setosa": "pink", "versicolor": "orange", "virginica": "teal"},
+)
+print(
+    f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
+    f" {static_fig.get_size_inches()}"
+)
+
+# %% [markdown]
+# # Embedding Plot (Interactive)
+
+# %% [markdown]
+# Acore function has defaults for the result type
+# - all columns besides `x`, `y` and `group` are shown when hovering, here `sample`
+# - hovering over a loading shows its value
+
+# %%
+help(get_embedding_plot_interactive)
+
+# %%
+interactive_fig = get_embedding_plot_interactive(
+    components,
+    loadings,
+    title="PCA",
+    width=790,
+    height=600,
+    **pca_args,
+)
+interactive_fig
+
+# %%
+interactive_fig = get_embedding_plot_interactive(
+    umap_components, title="UMAP", width=790, height=600, **umap_args
+)
+interactive_fig
+
+# %% [markdown]
+# ## Manual calling of plotly related function
+# - data has to make sense for the plot, here the acore output is used as it is
+# - additional columns can be added when hovering using `hovering_cols`
+
+# %%
+help(get_embedding_plot_plotly)
+
+# %%
+interactive_fig = get_embedding_plot_plotly(
+    components,
+    x="x",
+    y="y",
+    group="group",
+    hovering_cols=["sample"],
+    loadings=loadings.assign(x=loadings["x"] * 3, y=loadings["y"] * 3),
+    title="PCA manual",
+    x_title="PC1",
+    y_title="PC2",
+    width=790,
+    height=500,
+    colors={"setosa": "pink", "versicolor": "orange", "virginica": "teal"},
+)
+print(
+    f"Interactive figure size (pixels): {interactive_fig.layout.width} x {interactive_fig.layout.height}"
+)
+interactive_fig
