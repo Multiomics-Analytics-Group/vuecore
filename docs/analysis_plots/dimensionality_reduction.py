@@ -20,9 +20,11 @@
 # %% tags=["hide-output"]
 # %pip install vuecore
 
+
 # %% tags=["hide-input"]
+import numpy as np
+import pandas as pd
 from acore.exploratory_analysis import run_pca, run_umap
-from sklearn.datasets import load_iris
 
 from vuecore.dimensionality_reduction import (
     get_embedding_plot_interactive,
@@ -41,11 +43,24 @@ from vuecore.dimensionality_reduction.static import (
 #   (the species) and `sample` (an identifier) as expected by acore
 
 # %% tags=["hide-input"]
-iris = load_iris(as_frame=True)
-data = iris.data.copy()
-data["group"] = iris.target.map(dict(enumerate(iris.target_names)))
-data["sample"] = [f"S{i:03d}" for i in range(len(data))]
-data
+BASE = (
+    "https://raw.githubusercontent.com/RasmussenLab/njab/"
+    "HEAD/docs/tutorial/data/alzheimer/"
+)
+META: str = "meta.csv"  # clincial data
+CLINIC_ML: str = "clinic_ml.csv"  # clinical data
+OMICS: str = "proteome.csv"  # omics data
+data = pd.read_csv(f"{BASE}{OMICS}", sep=",", header=0, index_col=0).convert_dtypes()
+data = np.log2(data + 1)  # log2 transform the data
+group = pd.read_csv(
+    f"{BASE}{META}",
+    sep=",",
+    header=0,
+    index_col=0,
+    usecols=["Sample ID", "_collection site"],
+).convert_dtypes()
+data = group.dropna().rename(columns={"_collection site": "group"}).join(data)
+data.head()
 
 # %% [markdown]
 # ## Run PCA and UMAP using acore
@@ -55,7 +70,9 @@ data
 
 # %%
 (components, loadings, explained_variance), pca_args = run_pca(
-    data, group="group", annotation_cols=["sample"]
+    data,
+    group="group",
+    annotation_cols=[],
 )
 pca_args
 
@@ -66,7 +83,7 @@ components
 loadings
 
 # %%
-umap_result, umap_args = run_umap(data, group="group", annotation_cols=["sample"])
+umap_result, umap_args = run_umap(data, group="group", annotation_cols=[])
 umap_components = umap_result["umap"]
 umap_components
 
@@ -84,7 +101,9 @@ umap_components
 help(get_embedding_plot_static)
 
 # %%
-static_fig = get_embedding_plot_static(components, loadings, title="PCA", **pca_args)
+static_fig = get_embedding_plot_static(
+    components, top_n_loadings=3, loadings=loadings, title="PCA", **pca_args
+)
 print(
     f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
     f" {static_fig.get_size_inches()}"
@@ -110,18 +129,20 @@ static_fig = get_embedding_plot_static(
 help(get_embedding_plot_mpl)
 
 # %%
+_loadings = loadings.assign(x=loadings["x"] * 25, y=loadings["y"] * 25)
 static_fig = get_embedding_plot_mpl(
     data=components,
     x="x",
     y="y",
     group="group",
-    loadings=loadings.assign(x=loadings["x"] * 3, y=loadings["y"] * 3),
+    loadings=_loadings.head(3),
     title="PCA manual",
     x_title="PC1",
     y_title="PC2",
     width=700,
     height=500,
-    colors={"setosa": "pink", "versicolor": "orange", "virginica": "teal"},
+    # colors of colormap
+    colors={"Sweden": "C0", "Magdeburg": "C1", "Kiel": "C2", "Berlin": "C3"},
 )
 print(
     f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
@@ -142,7 +163,8 @@ help(get_embedding_plot_interactive)
 # %%
 interactive_fig = get_embedding_plot_interactive(
     components,
-    loadings,
+    top_n_loadings=3,
+    loadings=loadings,
     title="PCA",
     width=790,
     height=600,
@@ -170,16 +192,22 @@ interactive_fig = get_embedding_plot_plotly(
     x="x",
     y="y",
     group="group",
-    hovering_cols=["sample"],
-    loadings=loadings.assign(x=loadings["x"] * 3, y=loadings["y"] * 3),
+    loadings=loadings.assign(x=loadings["x"] * 25, y=loadings["y"] * 25).head(3),
     title="PCA manual",
     x_title="PC1",
     y_title="PC2",
     width=790,
     height=500,
-    colors={"setosa": "pink", "versicolor": "orange", "virginica": "teal"},
+    colors={
+        "Sweden": "pink",
+        "Magdeburg": "orange",
+        "Kiel": "teal",
+        "Berlin": "purple",
+    },
 )
 print(
     f"Interactive figure size (pixels): {interactive_fig.layout.width} x {interactive_fig.layout.height}"
 )
 interactive_fig
+
+# %%
