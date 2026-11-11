@@ -177,7 +177,7 @@ def add_text_to_barplot(
     ax: matplotlib.axes.Axes, text: Iterable[str], size=15
 ) -> matplotlib.axes.Axes:
     """Add custom text from Iterable to each bar in a barplot."""
-    for bar, text_bar in zip(ax.patches, text):
+    for bar, text_bar in zip(ax.patches, text, strict=False):
         msg = f"{bar = }, {text = }, {bar.get_height() = }"
         logger.debug(msg)
         ax.annotate(

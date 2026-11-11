@@ -99,7 +99,7 @@ def neo4j_schema_to_networkx(schema):
             rels.add((source, target, rel))
     G = nx.Graph()
     G.add_nodes_from(nodes)
-    colors = dict(zip(nodes, get_hex_colors(len(nodes))))
+    colors = dict(zip(nodes, get_hex_colors(len(nodes)), strict=False))
     nx.set_node_attributes(G, colors, "color")
     for s, t, label in rels:
         G.add_edge(s, t, label=label)
@@ -271,7 +271,7 @@ def get_rgb_colors(n):
     g = int(random.random() * 256)
     b = int(random.random() * 256)
     step = 256 / n
-    for i in range(n):
+    for _ in range(n):
         r += step
         g += step
         b += step
@@ -309,8 +309,9 @@ def getMedlineAbstracts(idList, email_entrez: str):
         from Bio import Entrez, Medline
     except ImportError:
         raise ImportError(
-            "Biopython is required to use this function. Please install it using 'pip install biopython'."
-        )
+            "Biopython is required to use this function. Please install it using "
+            "'pip install biopython'."
+        ) from None
 
     # TODO: This should probably be changed to the email of the person installing ckg?
     Entrez.email = email_entrez

@@ -22,7 +22,8 @@ def get_all_model_fields(model: type[BaseModel]) -> dict[str, Field]:
         A dictionary with field names as keys and field information as values.
     """
     fields = {}
-    # Iterate through the method resolution order (mro) in reverse to start from the base classes
+    # Iterate through the method resolution order (mro) in reverse to start
+    # from the base classes
     for cls in reversed(model.__mro__):
         if issubclass(cls, BaseModel) and hasattr(cls, "model_fields"):
             for field_name, field in cls.model_fields.items():
@@ -146,8 +147,14 @@ def document_pydant_params(model: type[BaseModel]):
         # Create the kwargs documentation as a list of lines
         new_kwargs_lines = [
             "    **kwargs",
-            "         Keyword arguments for plot configuration. These arguments are validated against",
-            f"        the ``{model.__name__}`` Pydantic model and the engine specific parameters.\n",
+            (
+                "         Keyword arguments for plot configuration. These arguments "
+                "are validated against"
+            ),
+            (
+                f"        the ``{model.__name__}`` Pydantic model and the engine "
+                "specific parameters.\n"
+            ),
             "        The following parameters are supported:\n",
         ]
 

@@ -195,8 +195,8 @@ def get_enrichment_plot(
         Fixed marker size for the legend entries, given as a diameter in points
         (as in `Line2D.markersize`), independent of the marker sizes in the plot.
     **kwargs : dict
-        Additional keyword arguments for API parity with the interactive version. Static figures do
-        not render hover tooltips.
+        Additional keyword arguments for API parity with the interactive
+        version. Static figures do not render hover tooltips.
 
     Returns
     -------

@@ -124,7 +124,7 @@ def get_volcano_plot_mpl(
         if legend_marker_size is not None:
             set_legend_marker_size(ax, legend_marker_size)
     if text is not None:
-        for x_value, y_value, label in zip(data[x], data[y], data[text]):
+        for x_value, y_value, label in zip(data[x], data[y], data[text], strict=False):
             if label:
                 ax.annotate(
                     label,
@@ -164,7 +164,8 @@ def get_differential_regulation_plot(
 
     Parameters
     ----------
-    data : DataFrame[AnovaSchema], DataFrame[AnovaSchemaMultiGroup] or DataFrame[AncovaSchema]
+    data : DataFrame[AnovaSchema], DataFrame[AnovaSchemaMultiGroup] or
+        DataFrame[AncovaSchema]
         Differential regulation results validated against `AnovaSchema` (two
         groups) or `AnovaSchemaMultiGroup`, with the feature identifiers in the
         index. Comparisons are given by the 'group1' and 'group2' columns.
@@ -181,7 +182,8 @@ def get_differential_regulation_plot(
         Base title for the plot.
     colors : dict[str, str] or list[str], optional
         Color mapping by regulation label, or two colors for 'upregulated in group1' and
-        'upregulated in group2'. Not regulated features are always light grey by default.
+        'upregulated in group2'. Not regulated features are always light grey
+        by default.
     legend_marker_size : float, optional
         Fixed marker size for the legend entries, given as a diameter in points.
     **kwargs : dict

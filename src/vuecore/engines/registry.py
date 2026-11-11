@@ -78,8 +78,10 @@ def get_builder(plot_type: PlotType, engine: EngineType) -> Callable:
     """
     try:
         return PLOT_BUILDERS[engine][plot_type]
-    except KeyError:
-        raise ValueError(f"No '{plot_type}' builder found for engine '{engine}'")
+    except KeyError as err:
+        raise ValueError(
+            f"No '{plot_type}' builder found for engine '{engine}'"
+        ) from err
 
 
 def get_saver(engine: EngineType) -> Callable:
@@ -105,5 +107,5 @@ def get_saver(engine: EngineType) -> Callable:
     """
     try:
         return PLOT_SAVERS[engine]
-    except KeyError:
-        raise ValueError(f"No saver found for engine '{engine}'")
+    except KeyError as err:
+        raise ValueError(f"No saver found for engine '{engine}'") from err

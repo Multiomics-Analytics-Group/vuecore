@@ -57,7 +57,7 @@ def pca_grid(
         meta_column.astype("category")
     )  # ! maybe add a check that it's not continous
     for k, (pos, ax) in enumerate(
-        zip(itertools.combinations(range(up_to), 2), axes.flatten())
+        zip(itertools.combinations(range(up_to), 2), axes.flatten(), strict=False)
     ):
         i, j = pos
         plot_heatmap = bool(k % 2)

@@ -52,11 +52,17 @@ class HistogramConfig(PlotlyBaseConfig):
     )
     histnorm: str | None = Field(
         None,
-        description="Normalization mode for the histogram ('percent', 'probability', 'density', 'probability density').",
+        description=(
+            "Normalization mode for the histogram ('percent', 'probability', "
+            "'density', 'probability density')."
+        ),
     )
     histfunc: str | None = Field(
         "count",
-        description="Function used to aggregate values ('count', 'sum', 'avg', 'min', 'max').",
+        description=(
+            "Function used to aggregate values ('count', 'sum', 'avg', 'min', "
+            "'max')."
+        ),
     )
     cumulative: bool = Field(
         False, description="If True, histogram values are cumulative."
