@@ -27,15 +27,23 @@ def save(fig: go.Figure, filepath: str) -> None:
 
     Raises
     ------
-    ValueError
-        If the file extension is not one of the supported formats.
-    ImportError
-        If required libraries for image export (e.g., kaleido) are not installed.
+    RuntimeError
+        If the figure cannot be saved, for example because the file extension is
+        not one of the supported formats or the destination is not writable. The
+        error that caused it is named in the message and chained as ``__cause__``.
     """
     path = Path(filepath)
     suffix = path.suffix.lower()
 
+    supported_suffixes = [f.value_with_dot for f in OutputFileFormat]
+
     try:
+        # Plotly does not create the folder, so a plot meant for a folder that
+        # does not exist yet would fail. Not done for an unsupported format,
+        # which is rejected below without writing anything.
+        if suffix in supported_suffixes:
+            path.parent.mkdir(parents=True, exist_ok=True)
+
         # Define static suffixes from the OutputFileFormat enum
         image_suffixes = [
             OutputFileFormat.PNG.value_with_dot,
@@ -74,15 +82,17 @@ def save(fig: go.Figure, filepath: str) -> None:
             )  # Added pretty=True for readable JSON output
         else:
             # Generate a dynamic list of supported formats for the error message
-            supported_suffixes = ", ".join(
-                [f"'{f.value_with_dot}'" for f in OutputFileFormat]
-            )
+            listed_suffixes = ", ".join(f"'{s}'" for s in supported_suffixes)
             raise ValueError(
                 f"Unsupported file format: '{suffix}'. "
-                f"Supported formats: {supported_suffixes}"
+                f"Supported formats: {listed_suffixes}"
             )
     except Exception as e:
-        # Catch any exceptions during the saving process and re-raise as a RuntimeError
-        raise RuntimeError(f"[VueCore] Failed to save plot: {filepath}") from e
+        # Catch any exceptions during the saving process and re-raise as a RuntimeError.
+        # The cause is in the message too, as a caller that prints only the message
+        # would otherwise not see why the file could not be written.
+        raise RuntimeError(
+            f"[VueCore] Failed to save plot: {filepath}. {type(e).__name__}: {e}"
+        ) from e
 
     print(f"[VueCore] Plot saved to {filepath}")
