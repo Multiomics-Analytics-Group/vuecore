@@ -29,8 +29,9 @@ def save(fig: go.Figure, filepath: str) -> None:
     ------
     RuntimeError
         If the figure cannot be saved, for example because the file extension is
-        not one of the supported formats or the destination is not writable. The
-        error that caused it is named in the message and chained as ``__cause__``.
+        not one of the supported formats, the destination folder does not exist or
+        the destination is not writable. The error that caused it is named in the
+        message and chained as ``__cause__``. No folder is created.
     """
     path = Path(filepath)
     suffix = path.suffix.lower()
@@ -38,11 +39,13 @@ def save(fig: go.Figure, filepath: str) -> None:
     supported_suffixes = [f.value_with_dot for f in OutputFileFormat]
 
     try:
-        # Plotly does not create the folder, so a plot meant for a folder that
-        # does not exist yet would fail. Not done for an unsupported format,
-        # which is rejected below without writing anything.
-        if suffix in supported_suffixes:
-            path.parent.mkdir(parents=True, exist_ok=True)
+        # Plotly does not create the folder, and its own error for a missing one
+        # names only the file. Not checked for an unsupported format, which is
+        # rejected below, and which is then the error that is described.
+        if suffix in supported_suffixes and not path.parent.is_dir():
+            raise FileNotFoundError(
+                f"The destination folder '{path.parent}' is not an existing folder."
+            )
 
         # Define static suffixes from the OutputFileFormat enum
         image_suffixes = [
