@@ -99,12 +99,14 @@ def getPlotTraces(
 
 def get_markdown(text, args=None):
     """
-    Converts a given text into a Dash Markdown component. It includes a syntax for things
-    like bold text and italics, links, inline code snippets, lists, quotes, and more.
+    Converts a given text into a Dash Markdown component. It includes syntax
+    for things like bold text and italics, links, inline code snippets, lists,
+    quotes, and more.
 
     For more information visit https://dash.plot.ly/dash-core-components/markdown.
 
-    :param str text: markdown string (or array of strings) that adhreres to the CommonMark spec.
+    :param str text: markdown string (or array of strings) that adhreres to
+        the CommonMark spec.
     :param dict args: dictionary with items from https://dash.plot.ly/dash-core-components/markdown.
     :return: dash Markdown component.
     """
@@ -120,7 +122,8 @@ def get_pieplot(data, identifier, args):
     This function plots a simple Pie plot.
 
     :param data: pandas DataFrame with values to plot as columns and labels as index.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **valueCol** (str) -- name of the column with the values to be plotted.
@@ -156,7 +159,8 @@ def get_distplot(data, identifier, args):
     """
 
     :param data:
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **group** (str) -- name of the column containing the group.
@@ -198,7 +202,8 @@ def get_boxplot_grid(data, identifier, args):
 
     :param data: pandas DataFrame with columns: 'x' values and 'y' values to plot,
                  'color' and 'facet' (color and facet can be the same).
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **title** (str) -- plot title.
@@ -278,7 +283,8 @@ def get_barplot(data, identifier, args):
 
     :param data: pandas DataFrame with three columns:
                  'name' of the bars, 'x' values and 'y' values to plot.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **title** (str) -- plot title.
@@ -290,7 +296,9 @@ def get_barplot(data, identifier, args):
 
     Example::
 
-        result = get_barplot(data, identifier='barplot', args={'title':'Figure with Barplot'})
+        result = get_barplot(
+            data, identifier='barplot', args={'title':'Figure with Barplot'}
+        )
     """
     figure = {}
     figure["data"] = []
@@ -369,14 +377,18 @@ def get_histogram(data, identifier, args):
     Basic histogram figure allows facets cols and rows
 
     :param data: pandas dataframe with at least values to be plotted.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **x** (str) -- name of the column containing values to plot in the x axis.
-        * **y** (str) -- name of the column containing values to plot in the y axis (if used).
-        * **color** (str) -- name of the column that defines how the histogram is colored (if used).
+        * **y** (str) -- name of the column containing values to plot in the y
+          axis (if used).
+        * **color** (str) -- name of the column that defines how the histogram
+          is colored (if used).
         * **facet_row** (str) -- name of the column to be used as 'facet' row (if used).
-        * **facet_col** (str) -- name of the column to be used as 'facet' column (if used).
+        * **facet_col** (str) -- name of the column to be used as 'facet'
+          column (if used).
         * **height** (int) -- height of the plot
         * **width** (int) -- width of the plot
         * **title** (str) -- plot title.
@@ -426,8 +438,9 @@ def get_histogram(data, identifier, args):
 # ToDo
 def get_facet_grid_plot(data, identifier, args):
     """
-    This function plots a scatterplot matrix where we can plot one variable against another
-    to form a regular scatter plot, and we can pick a third faceting variable
+    This function plots a scatterplot matrix where we can plot one variable
+    against another to form a regular scatter plot, and we can pick a third
+    faceting variable
     to form panels along the columns to segment the data even further,
     forming a bunch of vertical panels.
 
@@ -435,7 +448,8 @@ def get_facet_grid_plot(data, identifier, args):
 
     :param data: pandas dataframe with format:
                  'group', 'name', 'type', and 'x' and 'y' values to be plotted.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **x** (str) -- name of the column containing values to plot in the x axis.
@@ -488,7 +502,8 @@ def get_ranking_plot(data, identifier, args):
 
     :param data: long-format pandas dataframe with group as index,
                  'name' (protein identifiers) and 'y' (LFQ intensities) as columns.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below
     :Arguments:
         * **group** (str) -- name of the column containing the group.
@@ -609,11 +624,13 @@ def get_ranking_plot(data, identifier, args):
 
 def get_scatterplot_matrix(data, identifier, args):
     """
-    This function pltos a multi scatterplot (one for each unique element in args['group']).
+    This function pltos a multi scatterplot (one for each unique element in
+    args['group']).
 
     :param data: pandas dataframe with four columns: 'name' of the data points,
                  'x' and 'y' values to plot, and 'group' they belong to.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below
     :Arguments:
         * **group** (str) -- name of the column containing the group.
@@ -693,12 +710,15 @@ def get_scatterplot_matrix(data, identifier, args):
 
 def get_simple_scatterplot(data, identifier, args):
     """
-    Plots a simple scatterplot with the possibility of including in-plot annotations of data points.
+    Plots a simple scatterplot with the possibility of including in-plot
+    annotations of data points.
 
     :param data: long-format pandas dataframe with columns: 'x' (ranking position),
                  'group' (original dataframe position), 'name' (protein identifier),
-                 'y' (LFQ intensity), 'symbol' (data point shape) and 'size' (data point size).
-    :param str identifier: id used to identify the div where the figure will be generated.
+                 'y' (LFQ intensity), 'symbol' (data point shape) and 'size'
+                 (data point size).
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **annotations** (dict) -- dictionary where data points names are \
@@ -714,8 +734,9 @@ def get_simple_scatterplot(data, identifier, args):
 
         result = get_simple_scatterplot(data,
                                         identifier='scatter plot',
-                                        args={'annotations':{'GPT~P24298': 'liver disease',
-                                                             'CP~P00450': 'Wilson disease'}',
+                                        args={'annotations': {
+                                            'GPT~P24298': 'liver disease',
+                                            'CP~P00450': 'Wilson disease'}',
                                               'title':'Scatter Plot',
                                               'x_title':'x_axis',
                                               'y_title':'y_axis',
@@ -737,7 +758,7 @@ def get_simple_scatterplot(data, identifier, args):
 
     annots = []
     if "annotations" in args:
-        for index, row in data.iterrows():
+        for _, row in data.iterrows():
             name = str(row["name"]).split(" ")[0]
             if name in args["annotations"]:
                 annots.append(
@@ -788,19 +809,24 @@ def get_scatterplot(data, identifier, args):
 
     :param data: is a Pandas DataFrame with four columns: "name", x values and y values
                  (provided as variables) to plot.
-    :param str identifier: is the id used to identify the div where the figure will be generated.
+    :param str identifier: is the id used to identify the div where the
+        figure will be generated.
     :param dict args: see below.
     :Arguments:
         * **title** (str) -- title of the figure.
         * **x** (str) -- column in dataframe with values for x
         * **y** (str) -- column in dataframe with values for y
-        * **group** (str) -- column in dataframe with the groups - translates into colors \
+        * **group** (str) -- column in dataframe with the groups - translates
+            into colors \
                              (default None)
-        * **hovering_cols** (list) -- list of columns in dataframe that will be shown when \
+        * **hovering_cols** (list) -- list of columns in dataframe that will
+            be shown when \
                                       hovering over a dot
-        * **size**  (str) -- column in dataframe that contains the size of the dots (default None)
+        * **size**  (str) -- column in dataframe that contains the size of the
+            dots (default None)
         * **trendline** (bool) -- whether or not to draw a trendline
-        * **text** (str) -- column in dataframe that contains the values shown for each dot
+        * **text** (str) -- column in dataframe that contains the values shown
+            for each dot
         * **x_title** (str) -- plot x axis title.
         * **y_title** (str) -- plot y axis title.
         * **height** (int) -- plot height.
@@ -940,12 +966,13 @@ def get_density(x: np.ndarray, y: np.ndarray):
 
 def get_volcanoplot(results, args):
     """
-    This function plots volcano plots for each internal dictionary in a nested dictionary.
+    This function plots volcano plots for each internal dictionary in a nested
+    dictionary.
 
-    :param dict[dict] results: nested dictionary with pairwise group comparisons as keys and
-                                internal dictionaries containing 'x' (log2FC values),
-                                'y' (-log10 p-values), 'text', 'color',
-                                'pvalue' and 'annotations' (number of hits to be highlighted).
+    :param dict[dict] results: nested dictionary with pairwise group
+        comparisons as keys and internal dictionaries containing 'x' (log2FC
+        values), 'y' (-log10 p-values), 'text', 'color', 'pvalue' and
+        'annotations' (number of hits to be highlighted).
     :param dict args: see below.
     :Arguments:
         * **fc** (float) -- fold change threshold.
@@ -953,10 +980,12 @@ def get_volcanoplot(results, args):
         * **range_y** (list) -- list with minimum and maximum values for y axis.
         * **x_title** (str) -- plot x axis title.
         * **y_title** (str) -- plot y axis title.
-        * **colorscale** (str) -- string for predefined plotly colorscales or dict containing \
+        * **colorscale** (str) -- string for predefined plotly colorscales or
+            dict containing \
                                     one or more of the keys listed in \
                                     https://plot.ly/python/reference/#layout-colorscale.
-        * **showscale** (bool) -- determines whether or not a colorbar is displayed for a trace.
+        * **showscale** (bool) -- determines whether or not a colorbar is
+            displayed for a trace.
         * **marker_size** (int) -- sets the marker size (in px).
     :return: list of volcano plot figures within the <div id="_dash-app-content">.
 
@@ -1068,21 +1097,26 @@ def run_volcano(
                     'mean(group2)', 'log2FC', 'std_error', 'tail',
                     't-statistics', 'padj_THSD',
                     'effsize', 'efftype', 'FC', 'rejected',
-                    'F-statistics', 'pvalue', 'padj', 'correction', '-log10 pvalue' and 'Method'.
-    :param str identifier: id used to identify the div where the figure will be generated.
+                    'F-statistics', 'pvalue', 'padj', 'correction',
+                    '-log10 pvalue' and 'Method'.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **alpha** (float) -- adjusted p-value threshold for significant hits.
         * **fc** (float) -- fold change threshold.
-        * **colorscale** (str or dict) -- name of predefined plotly colorscale or dictionary \
+        * **colorscale** (str or dict) -- name of predefined plotly colorscale
+            or dictionary \
             containing one or more of the keys listed in \
             https://plot.ly/python/reference/#layout-colorscale.
-        * **showscale** (bool) -- determines whether or not a colorbar is displayed for a trace.
+        * **showscale** (bool) -- determines whether or not a colorbar is
+            displayed for a trace.
         * **marker_size** (int) -- sets the marker size (in px).
         * **x_title** (str) -- plot x axis title.
         * **y_title** (str) -- plot y axis title.
-        * **num_annotations** (int) -- number of hits to be highlighted (if num_annotations = 10,\
-            highlights 10 hits with lowest significant adjusted p-value).
+        * **num_annotations** (int) -- number of hits to be highlighted (if
+            num_annotations = 10, highlights 10 hits with lowest significant
+            adjusted p-value).
     :return: list of volcano plot figures within the <div id="_dash-app-content">.
 
     Example::
@@ -1218,7 +1252,7 @@ def run_volcano(
             annotations = []
             hits = args["annotate_list"]
             selected = signature[signature["identifier"].isin(hits)]
-            for index, row in selected.iterrows():
+            for _, row in selected.iterrows():
                 annotations.append(
                     {
                         "x": row["log2FC"],
@@ -1261,10 +1295,12 @@ def get_heatmapplot(data, identifier, args):
     """
     This function plots a simple Heatmap.
 
-    :param data: is a Pandas DataFrame with the shape of the heatmap where index corresponds to rows
+    :param data: is a Pandas DataFrame with the shape of the heatmap where
+        index corresponds to rows
         and column names corresponds to columns,
         values in the heatmap corresponds to the row values.
-    :param str identifier: is the id used to identify the div where the figure will be generated.
+    :param str identifier: is the id used to identify the div where the
+        figure will be generated.
     :param dict args: see below.
     :Arguments:
         * **format** (str) -- defines the format of the input dataframe.
@@ -1432,7 +1468,8 @@ def get_complex_heatmapplot(data, identifier, args):
 
 def get_notebook_network_pyvis(graph, args=None):
     """
-    This function converts a Networkx graph into a PyVis graph supporting Jupyter notebook embedding.
+    This function converts a Networkx graph into a PyVis graph supporting
+    Jupyter notebook embedding.
 
     :param graph graph: networkX graph.
     :param dict args: see below.
@@ -1462,7 +1499,8 @@ def get_notebook_network_pyvis(graph, args=None):
 
 def get_notebook_network_web(graph, args):
     """
-    This function converts a networkX graph into a webweb interactive network in a browser.
+    This function converts a networkX graph into a webweb interactive network
+    in a browser.
 
     :param graph graph: networkX graph.
     :return: web network.
@@ -1475,7 +1513,8 @@ def get_notebook_network_web(graph, args):
 
 def network_to_tables(graph, source, target):
     """
-    Creates the graph edge list and node list and returns them as separate Pandas DataFrames.
+    Creates the graph edge list and node list and returns them as separate
+    Pandas DataFrames.
 
     :param graph: networkX graph used to construct the Pandas DataFrame.
     :return: two Pandas DataFrames.
@@ -1493,11 +1532,14 @@ def generate_configuration_tree(report_pipeline, dataset_type):
     This function retrieves the analysis pipeline from a dataset .yml file
     and creates a Cytoscape network, organized hierarchically.
 
-    :param dict report_pipeline: dictionary with dataset type analysis and visualization pipeline
+    :param dict report_pipeline: dictionary with dataset type analysis and
+        visualization pipeline
                                 (conversion of .yml files to python dictionary).
     :param str dataset_type: type of dataset
-                            ('clinical', 'proteomics', 'DNAseq', 'RNAseq', 'multiomics').
-    :return: new Dash div with title and Cytoscape network, summarizing analysis pipeline.
+                            ('clinical', 'proteomics', 'DNAseq', 'RNAseq',
+                            'multiomics').
+    :return: new Dash div with title and Cytoscape network, summarizing
+        analysis pipeline.
     """
     nodes = []
     edges = []
@@ -1633,28 +1675,44 @@ def generate_configuration_tree(report_pipeline, dataset_type):
 
 def get_network(data, identifier, args):
     """
-    This function filters an input dataframe based on a threshold score and builds a cytoscape network. For more information on \
-    'node_size' parameter, visit https://networkx.github.io/documentation/networkx-1.10/reference/generated/networkx.algorithms.centrality.betweenness_centrality.html and \
-    https://networkx.github.io/documentation/networkx-1.10/reference/generated/networkx.algorithms.centrality.eigenvector_centrality_numpy.html.
+    This function filters an input dataframe based on a threshold score and
+    builds a cytoscape network. For more information on the 'node_size'
+    parameter, visit
+    https://networkx.github.io/documentation/networkx-1.10/reference/generated/networkx.algorithms.centrality/betweenness_centrality.html
+    and
+    https://networkx.github.io/documentation/networkx-1.10/reference/generated/networkx.algorithms.centrality/eigenvector_centrality_numpy.html.
 
-    :param data: long-format pandas dataframe with at least three columns: source node, target node and value (e.g. weight, score).
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param data: long-format pandas dataframe with at least three columns:
+        source node, target node and value (e.g. weight, score).
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **source** (str) -- name of the column containing the source.
         * **target** (str) -- name of the column containing the target.
         * **cutoff** (float) -- value threshold for network building.
-        * **cutoff_abs** (bool) -- if True will take both positive and negative sides of the cutoff value.
+        * **cutoff_abs** (bool) -- if True will take both positive and
+            negative sides of the cutoff value.
         * **values** (str) -- name of the column containing the values to be plotted.
-        * **node_size** (str) -- method used to determine node radius ('betweenness', 'ev_centrality', 'degree').
+        * **node_size** (str) -- method used to determine node radius
+            ('betweenness', 'ev_centrality', 'degree').
         * **title** (str) -- plot title.
-        * **color_weight** (bool) -- if True, edges in network are colored red if score > 0 and blue if score < 0.
-    :return: dictionary with the network in multiple formats: jupyetr-notebook compatible, web brower compatibles, data table, and json.
+        * **color_weight** (bool) -- if True, edges in network are colored red
+            if score > 0 and blue if score < 0.
+    :return: dictionary with the network in multiple formats:
+        jupyetr-notebook compatible, web brower compatibles, data table, and
+        json.
 
     Example::
 
-        result = get_network(data, identifier='network', args={'source':'node1', 'target':'node2', 'cutoff':0.5, 'cutoff_abs':True, 'values':'weight', \
-                            'node_size':'degree', 'title':'Network Figure', 'color_weight': True})
+        result = get_network(
+            data,
+            identifier='network',
+            args={'source':'node1', 'target':'node2', 'cutoff':0.5,
+                  'cutoff_abs':True, 'values':'weight',
+                  'node_size':'degree', 'title':'Network Figure',
+                  'color_weight': True}
+        )
     """
     net = None
     if "cutoff_abs" not in args:
@@ -1822,12 +1880,17 @@ def get_network(data, identifier, args):
 
 def get_network_style(node_colors, color_edges):
     """
-    This function uses a dictionary of nodes and colors and creates a stylesheet and layout for a network.
+    This function uses a dictionary of nodes and colors and creates a
+    stylesheet and layout for a network.
 
-    :param dict node_colors: dictionary with node names as keys and colors as values.
-    :param bool color_edges: if True, add edge coloring to stylesheet (red for positive width, blue for negative).
-    :return: stylesheet (list of dictionaries specifying the style for a group of elements, a class of elements, or a single element) and \
-                layout (dictionary specifying how the nodes should be positioned on the canvas).
+    :param dict node_colors: dictionary with node names as keys and colors as
+        values.
+    :param bool color_edges: if True, add edge coloring to stylesheet (red for
+        positive width, blue for negative).
+    :return: stylesheet (list of dictionaries specifying the style for a
+        group of elements, a class of elements, or a single element) and
+        layout (dictionary specifying how the nodes should be positioned on
+        the canvas).
     """
 
     color_selector = (
@@ -1896,18 +1959,28 @@ def visualize_notebook_network(network, notebook_type="jupyter", layout=None):
     """
     This function returns a Cytoscape network visualization for Jupyter notebooks
 
-    :param tuple network: tuple with two dictionaries: network data and stylesheet (see get_network(data, identifier, args)).
-    :param str notebook_type: the type of notebook where the network will be visualized (currently only jupyter notebook is supported)
+    :param tuple network: tuple with two dictionaries: network data and
+        stylesheet (see get_network(data, identifier, args)).
+    :param str notebook_type: the type of notebook where the network will be
+        visualized (currently only jupyter notebook is supported)
     :param dict layout: specific layout properties (see https://dash.plot.ly/cytoscape/layout)
     :return: cyjupyter.cytoscape.Cytoscape object
 
     Example::
 
-        net = get_network(clincorr.dropna(), identifier='corr', args={'source':'node1', 'target':'node2',
-                                                            'cutoff':0, 'cutoff_abs':True,
-                                                            'values':'weight','node_size':'degree',
-                                                            'title':'Network Figure', 'color_weight': True})
-        visualize_notebook_network(net['notebook'], notebook_type='jupyter', layout={'width':'100%', 'height':'700px'})
+        net = get_network(
+            clincorr.dropna(),
+            identifier='corr',
+            args={'source':'node1', 'target':'node2', 'cutoff':0,
+                  'cutoff_abs':True, 'values':'weight',
+                  'node_size':'degree', 'title':'Network Figure',
+                  'color_weight': True}
+        )
+        visualize_notebook_network(
+            net['notebook'],
+            notebook_type='jupyter',
+            layout={'width':'100%', 'height':'700px'}
+        )
     """
     if layout is None:
         layout = {}
@@ -1952,7 +2025,8 @@ def visualize_notebook_path(path, notebook_type="jupyter"):
 
     Example::
 
-        net = get_cytoscape_network(G, identifier='corr', args={'title':'Cytoscape path',
+        net = get_cytoscape_network(G, identifier='corr', args={
+                                                            'title':'Cytoscape path',
                                                             'stylesheet':stylesheet,
                                                             'layout': layout})
         visualize_notebook_path(net, notebook_type='jupyter')
@@ -1971,7 +2045,8 @@ def get_pca_plot(data, identifier, args):
     This function creates a pca plot with scores and top "args['loadings']" loadings.
 
     :param tuple data: tuple with two pandas dataframes: scores and loadings.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below
     :Arguments:
         * **loadings** (int) -- number of features with highest loading values \
@@ -2060,7 +2135,8 @@ def get_sankey_plot(
     This function generates a Sankey plot in Plotly.
 
     :param data: Pandas DataFrame with the format: source  target  weight.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below
     :Arguments:
         * **source** (str) -- name of the column containing the source
@@ -2112,10 +2188,12 @@ def get_sankey_plot(
     if data is not None and not data.empty:
         nodes = list(set(data[args["source"]].tolist() + data[args["target"]].tolist()))
         if "source_colors" in args:
-            node_colors = dict(zip(data[args["source"]], data[args["source_colors"]]))
+            node_colors = dict(
+                zip(data[args["source"]], data[args["source_colors"]], strict=False)
+            )
         else:
             scolors = ["#045a8d"] * len(data[args["source"]].tolist())
-            node_colors = dict(zip(data[args["source"]], scolors))
+            node_colors = dict(zip(data[args["source"]], scolors, strict=False))
             args["source_colors"] = "source_colors"
             data["source_colors"] = scolors
 
@@ -2125,11 +2203,17 @@ def get_sankey_plot(
 
         if "target_colors" in args:
             node_colors.update(
-                dict(zip(data[args["target"]], data[args["target_colors"]]))
+                dict(
+                    zip(
+                        data[args["target"]],
+                        data[args["target_colors"]],
+                        strict=False,
+                    )
+                )
             )
         else:
             scolors = ["#a6bddb"] * len(data[args["target"]].tolist())
-            node_colors.update(dict(zip(data[args["target"]], scolors)))
+            node_colors.update(dict(zip(data[args["target"]], scolors, strict=False)))
             args["target_colors"] = "target_colors"
             data["target_colors"] = scolors
 
@@ -2189,15 +2273,19 @@ def get_table(data, identifier, args):
     For more information visit https://dash.plot.ly/datatable.
 
     :param data: pandas dataframe.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param str title: table title.
-    :param subset: selects columns from dataframe to be used. If None, the entire dataframe is used.
+    :param subset: selects columns from dataframe to be used. If None, the
+        entire dataframe is used.
     :type subest: str, list or None
     :return: new Dash div containing title and interactive table.
 
     Example::
 
-        result = get_table(data, identifier='table', title='Table Figure', subset = None)
+        result = get_table(
+            data, identifier='table', title='Table Figure', subset=None
+        )
     """
     table = []
     if data is not None and isinstance(data, pd.DataFrame) and not data.empty:
@@ -2334,8 +2422,10 @@ def get_violinplot(data, identifier, args):
     """
     This function creates a violin plot for all columns in the input dataframe.
 
-    :param data: pandas dataframe with samples as rows and dependent variables as columns.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param data: pandas dataframe with samples as rows and dependent variables
+        as columns.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below
     :Arguments:
         * **drop_cols** (list) -- column labels to be dropped from the dataframe.
@@ -2389,7 +2479,9 @@ def create_violinplot(df, x, y, color, color_map=None):
 
     Example::
 
-        result = create_violinplot(df, x='group', y='protein a', color='group', color_map={})
+        result = create_violinplot(
+            df, x='group', y='protein a', color='group', color_map={}
+        )
     """
     # traces = [] # ! or is this some hack?
     if color_map is None:
@@ -2408,12 +2500,15 @@ def get_clustergrammer_plot(data, identifier, args):
 
     For more information visit https://github.com/MaayanLab/clustergrammer-py.
 
-    :param data: long-format pandas dataframe with columns 'node1' (source), 'node2' (target)
+    :param data: long-format pandas dataframe with columns 'node1' (source),
+        'node2' (target)
                  and 'weight'
-    :param str identifier: id used to identify the div where the figure will be generated
+    :param str identifier: id used to identify the div where the figure will
+        be generated
     :param dict args: see below
     :Arguments:
-        * **format** (str) -- defines if dataframe needs to be converted from 'edgelist' to matrix
+        * **format** (str) -- defines if dataframe needs to be converted from
+            'edgelist' to matrix
         * **title** (str) -- plot title
     :return: Dash Div with heatmap plot from Clustergrammer web-based tool
     """
@@ -2437,15 +2532,18 @@ def get_clustergrammer_plot(data, identifier, args):
 
 def get_parallel_plot(data, identifier, args):
     """
-    This function creates a parallel coordinates plot, with sample groups as the different
-    dimensions.
+    This function creates a parallel coordinates plot, with sample groups as
+    the different dimensions.
 
-    :param data: pandas dataframe with groups as rows and dependent variables as columns.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param data: pandas dataframe with groups as rows and dependent variables
+        as columns.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **group** (str) -- name of the column containing the groups.
-        * **zscore** (bool) -- if True, calculates the z score of each values in the row, \
+        * **zscore** (bool) -- if True, calculates the z score of each values
+            in the row, \
             relative to the row mean and standard deviation.
         * **color** (str) -- line color.
         * **title** (str) -- plot title.
@@ -2506,7 +2604,8 @@ def get_WGCNAPlots(data, identifier):
     Takes data from runWGCNA function and builds WGCNA plots.
 
     :param data: tuple with multiple pandas dataframes.
-    :param str identifier: is the id used to identify the div where the figure will be generated.
+    :param str identifier: is the id used to identify the div where the
+        figure will be generated.
     :return: list of dcc.Graph.
     """
     graphs = [html.H2("Weighted Gene Co-expression Network Analysis")]
@@ -2688,11 +2787,15 @@ def get_WGCNAPlots(data, identifier):
 
 def getMapperFigure(data, identifier, title):
     """
-    This function uses the KeplerMapper python package to visualize high-dimensional data and generate a FigureWidget that can be shown or editted.
-    This method is suitable for use in Jupyter notebooks. For more information visit https://kepler-mapper.scikit-tda.org/reference/stubs/kmapper.plotlyviz.plotlyviz.html.
+    This function uses the KeplerMapper python package to visualize
+    high-dimensional data and generate a FigureWidget that can be shown or
+    editted. This method is suitable for use in Jupyter notebooks. For more
+    information visit
+    https://kepler-mapper.scikit-tda.org/reference/stubs/kmapper.plotlyviz.plotlyviz.html.
 
     :param data: dictionary. Simplicial complex output from the KeplerMapper map method.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param str title: plot title.
     :return: plotly FigureWidget within <div id="_dash-app-content"> .
     """
@@ -2737,16 +2840,20 @@ def getMapperFigure(data, identifier, title):
 
 def get_2_venn_diagram(data, identifier, cond1, cond2, args):
     """
-    This function extracts the exlusive features in cond1 and cond2 and their common features,
+    This function extracts the exlusive features in cond1 and cond2 and their
+    common features,
     and build a two-circle venn diagram.
 
-    :param data: pandas dataframe with features as rows and group identifiers as columns.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param data: pandas dataframe with features as rows and group identifiers
+        as columns.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param str cond1: identifier of first group.
     :param str cond2: identifier of second group.
     :param dict args: see below.
     :Arguments:
-        * **colors** (dict) -- dictionary with cond1 and cond2 as keys, and color codes as values.
+        * **colors** (dict) -- dictionary with cond1 and cond2 as keys, and
+            color codes as values.
         * **title** (str) -- plot title.
     :return: two-circle venn diagram figure within <div id="_dash-app-content">.
 
@@ -2787,10 +2894,12 @@ def plot_2_venn_diagram(cond1, cond2, unique1, unique2, intersection, identifier
     :param int unique1: number of features exclusive to cond1.
     :param int unique2: number of features exclusive to cond2.
     :parm int intersection: number of features common to cond1 and cond2.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
-        * **colors** (dict) -- dictionary with cond1 and cond2 as keys, and color codes as values.
+        * **colors** (dict) -- dictionary with cond1 and cond2 as keys, and
+            color codes as values.
         * **title** (str) -- plot title.
     :return: two-circle venn diagram figure within <div id="_dash-app-content">.
 
@@ -2884,11 +2993,13 @@ def get_wordcloud(
     args=None,
 ):
     """
-    This function generates a Wordcloud based on the natural text in a pandas dataframe column.
+    This function generates a Wordcloud based on the natural text in a
+    pandas dataframe column.
 
-    :param data: pandas dataframe with columns: 'PMID', 'abstract', 'authors', 'date', 'journal',
-                 'keywords', 'title', 'url', 'Proteins', 'Diseases'.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    :param data: pandas dataframe with columns: 'PMID', 'abstract', 'authors',
+        'date', 'journal', 'keywords', 'title', 'url', 'Proteins', 'Diseases'.
+    :param str identifier: id used to identify the div where the figure will
+        be generated.
     :param dict args: see below.
     :Arguments:
         * **text_col** (str) -- name of column containing the natural text used to \
@@ -3120,7 +3231,9 @@ def get_wordcloud(
             y=y,
             textfont={"size": new_freq_list, "color": color_list},
             hoverinfo="text",
-            hovertext=[f"{w} freq: {f}" for w, f in zip(word_list, freq_list)],
+            hovertext=[
+                f"{w} freq: {f}" for w, f in zip(word_list, freq_list, strict=False)
+            ],
             mode="text",
             text=word_list,
         )
@@ -3158,15 +3271,19 @@ def get_cytoscape_network(net, identifier, args):
 
     For more information visit https://dash.plot.ly/cytoscape.
 
-    :param dict net: dictionary in which each element (key) is defined by a dictionary with 'id'
-                and 'label' (if it is a node) or 'source', 'target' and 'label' (if it is an edge).
-    :param str identifier: is the id used to identify the div where the figure will be generated.
+    :param dict net: dictionary in which each element (key) is defined by a
+        dictionary with 'id' and 'label' (if it is a node) or 'source',
+        'target' and 'label' (if it is an edge).
+    :param str identifier: is the id used to identify the div where the
+        figure will be generated.
     :param dict args: see below.
     :Arguments:
         * **title** (str) -- title of the figure.
-        * **stylesheet** (list[dict]) -- specifies the style for a group of elements, \
-            a class of elements, or a single element (accepts two keys 'selector' and 'style').
-        * **layout** (dict) -- specifies how the nodes should be positioned on the screen.
+        * **stylesheet** (list[dict]) -- specifies the style for a group of
+            elements, a class of elements, or a single element (accepts two
+            keys 'selector' and 'style').
+        * **layout** (dict) -- specifies how the nodes should be positioned
+            on the screen.
     :return: network figure within <div id="_dash-app-content">.
     """
     height = "700px"
@@ -3192,11 +3309,13 @@ def get_cytoscape_network(net, identifier, args):
 
 def save_DASH_plot(plot, name, plot_format="svg", directory=".", width=800, height=700):
     """
-    This function saves a plotly figure to a specified directory, in a determined format.
+    This function saves a plotly figure to a specified directory, in a
+    determined format.
 
     :param plot: plotly figure (dictionary with data and layout)
     :param str name: name of the figure
-    :param str plot_format: suffix of the saved file ('svg', 'pdf', 'png', 'jpeg', 'jpg')
+    :param str plot_format: suffix of the saved file ('svg', 'pdf', 'png',
+        'jpeg', 'jpg')
     :param str directory: folder where figure is to be saved
     :return: figure saved in directory
 
@@ -3351,7 +3470,8 @@ def get_polar_plot(df, identifier, args):
     :param pandas.DataFrame df: dataframe with the data to plot
     :param str identifier: identifier to be used in the app
     :param dict args: dictionary containing the arguments needed to plot the figure (
-                      value_col (value to aggregate), group_col (group by), color_col (color by))
+                      value_col (value to aggregate), group_col (group by),
+                      color_col (color by))
     :return: Dash Graph
 
     Example::

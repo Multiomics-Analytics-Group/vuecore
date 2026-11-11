@@ -28,11 +28,16 @@ class BoxConfig(PlotlyBaseConfig):
     # Styling and Layout
     orientation: str | None = Field(
         None,
-        description="Orientation of the box plots ('v' for vertical, 'h' for horizontal).",
+        description=(
+            "Orientation of the box plots ('v' for vertical, 'h' for horizontal)."
+        ),
     )
     boxmode: str = Field("group", description="Mode for grouping boxes.")
     notched: bool = Field(False, description="If True, boxes are drawn with notches.")
     points: str = Field(
         "outliers",
-        description="Method to display sample points ('outliers', 'all', 'suspectedoutliers', False).",
+        description=(
+            "Method to display sample points ('outliers', 'all', "
+            "'suspectedoutliers', False)."
+        ),
     )

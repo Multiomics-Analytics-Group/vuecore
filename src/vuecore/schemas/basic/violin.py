@@ -28,13 +28,18 @@ class ViolinConfig(PlotlyBaseConfig):
     # Styling and Layout
     orientation: str | None = Field(
         None,
-        description="Orientation of the violin plots ('v' for vertical, 'h' for horizontal).",
+        description=(
+            "Orientation of the violin plots ('v' for vertical, 'h' for horizontal)."
+        ),
     )
     violinmode: str = Field(
         "group", description="Mode for grouping violins ('group' or 'overlay')."
     )
     points: str | bool = Field(
         "outliers",
-        description="Method to display sample points ('outliers', 'all', 'suspectedoutliers', False).",
+        description=(
+            "Method to display sample points ('outliers', 'all', "
+            "'suspectedoutliers', False)."
+        ),
     )
     box: bool = Field(False, description="If True, boxes are drawn inside the violins.")

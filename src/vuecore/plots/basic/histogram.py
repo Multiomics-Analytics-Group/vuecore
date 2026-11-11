@@ -49,7 +49,8 @@ def create_histogram_plot(
     Raises
     ------
     pydantic.ValidationError
-        If the provided keyword arguments do not conform to the `HistogramConfig` schema.
+        If the provided keyword arguments do not conform to the
+        `HistogramConfig` schema.
         e.g., a required parameter is missing or a value has an incorrect type.
     ValueError
         Raised by the plotting engine (e.g., Plotly Express) if a

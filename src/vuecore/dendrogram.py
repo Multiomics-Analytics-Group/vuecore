@@ -273,9 +273,9 @@ class Dendrogram:
         :return (tuple): Contains all the traces in the following order:
 
                 a. trace_list: List of Plotly trace objects for dendrogram tree
-                b. icoord: All X points of the dendrogram tree as array of arrays with length 4
-                c. dcoord: All Y points of the dendrogram tree as array of arrays with length 4
-                d. ordered_labels: leaf labels in the order they are going to appear on the plot
+                b. icoord: All X points of the dendrogram tree as arrays of length 4
+                c. dcoord: All Y points of the dendrogram tree as arrays of length 4
+                d. ordered_labels: leaf labels in the order they appear on the plot
                 e. Z_dendrogram['leaves']: left-to-right traversal of the leaves
         """
         icoord = scp.array(Z_dendrogram["icoord"])
@@ -301,15 +301,15 @@ class Dendrogram:
             if hovertext:
                 hovertext_label = hovertext[i]
 
-            coord = [list(a) for a in zip(xs, ys)]
+            coord = [list(a) for a in zip(xs, ys, strict=False)]
             x_coord = []
             y_coord = []
             y_at_x = {}
-            for n, seg in enumerate(coord):
+            for seg in coord:
                 x, y = seg
                 if y > 0 and y < y_at_x.get(x, np.inf):
                     y_at_x[x] = y
-            for n, seg in enumerate(coord):
+            for seg in coord:
                 x, y = seg
                 if y == 0:
                     y = max(0, y_at_x.get(x, 0) - hang)

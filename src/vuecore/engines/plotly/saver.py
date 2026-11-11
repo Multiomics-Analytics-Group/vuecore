@@ -53,7 +53,8 @@ def save(fig: go.Figure, filepath: str) -> None:
                 # Handle specific Kaleido errors for Chrome installation
                 if "Kaleido requires Google Chrome" in str(e):
                     print(
-                        "[VueCore] Chrome not found. Attempting automatic install using `kaleido.get_chrome_sync()`..."
+                        "[VueCore] Chrome not found. Attempting automatic install "
+                        "using `kaleido.get_chrome_sync()`..."
                     )
                     try:
                         kaleido.get_chrome_sync()

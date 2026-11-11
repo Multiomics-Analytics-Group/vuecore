@@ -107,7 +107,8 @@ def build_color_map(
 ) -> dict[str, str]:
     """Map the regulation labels to colors.
 
-    A dict is returned as-is. A list of two colors is used for 'upregulated in group1' and
+    A dict is returned as-is. A list of two colors is used for
+    'upregulated in group1' and
     'upregulated in group2' (in that order); 'not regulated' is always light grey.
     """
     if isinstance(colors, dict):
