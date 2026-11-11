@@ -27,26 +27,24 @@ def save(fig: go.Figure, filepath: str) -> None:
 
     Raises
     ------
-    RuntimeError
-        If the figure cannot be saved, for example because the file extension is
-        not one of the supported formats, the destination folder does not exist or
-        the destination is not writable. The error that caused it is named in the
-        message and chained as ``__cause__``. No folder is created.
+    FileNotFoundError
+        If the folder of ``filepath`` is not an existing folder. It is not created.
+    ValueError
+        If the file extension is not one of the supported formats.
+    ImportError
+        If required libraries for image export (e.g., kaleido) are not installed.
     """
     path = Path(filepath)
     suffix = path.suffix.lower()
 
-    supported_suffixes = [f.value_with_dot for f in OutputFileFormat]
+    # Plotly's own error for a missing folder names only the file, and the
+    # wrapper below drops its message, so it is checked before the try.
+    if not path.parent.is_dir():
+        raise FileNotFoundError(
+            f"The destination folder '{path.parent}' is not an existing folder."
+        )
 
     try:
-        # Plotly does not create the folder, and its own error for a missing one
-        # names only the file. Not checked for an unsupported format, which is
-        # rejected below, and which is then the error that is described.
-        if suffix in supported_suffixes and not path.parent.is_dir():
-            raise FileNotFoundError(
-                f"The destination folder '{path.parent}' is not an existing folder."
-            )
-
         # Define static suffixes from the OutputFileFormat enum
         image_suffixes = [
             OutputFileFormat.PNG.value_with_dot,
@@ -85,17 +83,15 @@ def save(fig: go.Figure, filepath: str) -> None:
             )  # Added pretty=True for readable JSON output
         else:
             # Generate a dynamic list of supported formats for the error message
-            listed_suffixes = ", ".join(f"'{s}'" for s in supported_suffixes)
+            supported_suffixes = ", ".join(
+                [f"'{f.value_with_dot}'" for f in OutputFileFormat]
+            )
             raise ValueError(
                 f"Unsupported file format: '{suffix}'. "
-                f"Supported formats: {listed_suffixes}"
+                f"Supported formats: {supported_suffixes}"
             )
     except Exception as e:
-        # Catch any exceptions during the saving process and re-raise as a RuntimeError.
-        # The cause is in the message too, as a caller that prints only the message
-        # would otherwise not see why the file could not be written.
-        raise RuntimeError(
-            f"[VueCore] Failed to save plot: {filepath}. {type(e).__name__}: {e}"
-        ) from e
+        # Catch any exceptions during the saving process and re-raise as a RuntimeError
+        raise RuntimeError(f"[VueCore] Failed to save plot: {filepath}") from e
 
     print(f"[VueCore] Plot saved to {filepath}")
