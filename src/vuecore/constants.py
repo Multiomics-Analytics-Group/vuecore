@@ -1,10 +1,4 @@
-from enum import auto
-
-try:
-    from enum import StrEnum
-except ImportError:
-    # Fallback for Python versions < 3.11 that don't have StrEnum built-in
-    from strenum import StrEnum
+from enum import StrEnum, auto
 
 
 class PlotType(StrEnum):

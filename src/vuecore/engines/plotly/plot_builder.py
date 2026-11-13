@@ -1,7 +1,8 @@
 # vuecore/engines/plotly/plot_builder.py
 from __future__ import annotations
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import pandas as pd
 import plotly.graph_objects as go
