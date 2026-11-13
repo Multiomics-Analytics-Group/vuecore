@@ -4,6 +4,7 @@ import ast
 import json
 import math
 import os
+import warnings
 from collections import defaultdict
 
 import dash_cytoscape as cyto
@@ -32,6 +33,7 @@ from webweb import Web
 from wordcloud import STOPWORDS, WordCloud
 
 from . import dendrogram, utils_old, wgcna
+from .dimensionality_reduction import get_embedding_plot_interactive
 from .linkers import get_clustergrammer_link
 from .translate import hex2rgb, mpl_to_html_image
 
@@ -1970,85 +1972,49 @@ def get_pca_plot(data, identifier, args):
     """
     This function creates a pca plot with scores and top "args['loadings']" loadings.
 
-    :param tuple data: tuple with two pandas dataframes: scores and loadings.
-    :param str identifier: id used to identify the div where the figure will be generated.
+    .. deprecated::
+        Use :func:`vuecore.dimensionality_reduction.get_embedding_plot_interactive`
+        (or ``get_embedding_plot_static``) instead.
+
+    :param tuple data: tuple with three pandas objects: scores, loadings and variance.
+    :param str identifier: unused, kept for backwards compatibility.
     :param dict args: see below
     :Arguments:
         * **loadings** (int) -- number of features with highest loading values \
                                 to be displayed in the pca plot
+        * **factor** (float) -- factor the loadings are multiplied with \
+                                (default: scaled to the range of the scores)
         * **title** (str) -- title of the figure
         * **x_title** (str) -- plot x axis title
         * **y_title** (str) -- plot y axis title
+        * **group** (str) -- column in scores with the groups
+        * **hovering_cols** (list) -- columns in scores shown when hovering
+        * **colors** (dict) -- dictionary with colors to be used for each group
         * **height** (int) -- plot height
         * **width** (int) -- plot width
-    :return: PCA figure within the <div id="_dash-app-content">.
-
-    Example::
-
-        result = get_pca_plot(data,
-                              identifier='pca',
-                              args={'loadings':15,
-                                    'title':'PCA Plot',
-                                    'x_title':'PC1',
-                                    'y_title':'PC2',
-                                    'height':100,
-                                    'width':100}
-                            )
+    :return: PCA figure.
     """
+    warnings.warn(
+        "get_pca_plot is deprecated, use "
+        "vuecore.dimensionality_reduction.get_embedding_plot_interactive instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     pca_data, loadings, _variance = data
-    figure = {}
-    traces = []
-    annotations = []
-    sct = get_scatterplot(pca_data, identifier, args)
-    traces.extend(sct["data"])
-    figure["layout"] = sct["layout"]
-    factor = 50
-    num_loadings = 15
-    if "factor" in args:
-        factor = args["factor"]
-    if "loadings" in args:
-        num_loadings = args["loadings"]
-
-    for index in list(loadings.index)[0:num_loadings]:
-        x = loadings.loc[index, "x"] * factor
-        y = loadings.loc[index, "y"] * factor
-        value = loadings.loc[index, "value"]
-
-        trace = go.Scattergl(
-            x=[0, x],
-            y=[0, y],
-            mode="markers+lines",
-            text=str(index) + f" loading: {value:.2f}",
-            name=index,
-            marker={
-                "size": 3,
-                "symbol": 1,
-                "color": "darkgrey",  # set color equal to a variable
-                "showscale": False,
-                "opacity": 0.9,
-            },
-            showlegend=False,
-        )
-        annotation = {
-            "x": x * 1.15,
-            "y": y * 1.15,
-            "xref": "x",
-            "yref": "y",
-            "text": index,
-            "showarrow": False,
-            "font": {"size": 12, "color": "darkgrey"},
-            "align": "center",
-            "ax": 20,
-            "ay": -30,
-        }
-        annotations.append(annotation)
-        traces.append(trace)
-
-    figure["data"] = traces
-    figure["layout"].annotations = annotations
-    figure["layout"]["template"] = "plotly_white"
-
-    return figure
+    return get_embedding_plot_interactive(
+        pca_data,
+        loadings=loadings,
+        group=args.get("group", "group"),
+        top_n_loadings=args.get("loadings", 15),
+        loading_factor=args.get("factor"),
+        title=args.get("title", "PCA"),
+        x_title=args.get("x_title", "PC1"),
+        y_title=args.get("y_title", "PC2"),
+        height=args.get("height", 800),
+        width=args.get("width", 800),
+        colors=args.get("colors"),
+        hovering_cols=args.get("hovering_cols"),
+    )
 
 
 def get_sankey_plot(
