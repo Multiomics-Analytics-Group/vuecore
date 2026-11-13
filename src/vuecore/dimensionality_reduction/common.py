@@ -164,13 +164,26 @@ def get_axis_titles(
     return x_title or names.get(x, x), y_title or names.get(y, y)
 
 
-def _check_columns(df: pd.DataFrame, columns: list[str], name: str) -> None:
-    missing = [col for col in columns if col not in df.columns]
-    if missing:
+def as_column_name(column: str | int) -> str:
+    """Components beyond the third are named '3', '4', ..., so accept 3 for '3'."""
+    return str(column) if isinstance(column, int) else column
+
+
+def resolve_column(df: pd.DataFrame, column: str | int, name: str = "data") -> str:
+    """Find a dimension in `df`, accepting `3` for the column '3'.
+
+    Only 'x', 'y' (and 'z') are validated by the schemas, so the plotted column
+    is checked to exist and to be numeric here.
+    """
+    column = as_column_name(column)
+    if column not in df.columns:
         raise ValueError(
-            f"Column(s) {missing} not found in {name}. Available columns: "
+            f"Column '{column}' not found in {name}. Available columns: "
             f"{', '.join(map(str, df.columns))}."
         )
+    if not pd.api.types.is_numeric_dtype(df[column]):
+        raise ValueError(f"Column '{column}' in {name} is not numeric.")
+    return column
 
 
 def prepare_embedding_data(
@@ -203,7 +216,7 @@ def prepare_embedding_data(
         the longest arrow reaches 80% of the components' range.
     x, y : str, optional
         Columns of the dimensions to plot, e.g. 'x' and 'z' for the first and
-        third component.
+        third component. They must be numeric columns of `components`.
 
     Returns
     -------
@@ -218,7 +231,7 @@ def prepare_embedding_data(
         If `group`, `x` or `y` is not a column of `components` (or `loadings`).
     """
     df: pd.DataFrame = TwoComponentSchema.validate(components)
-    _check_columns(df, [x, y], "components")
+    x, y = resolve_column(df, x, "components"), resolve_column(df, y, "components")
     if group is not None and group not in df.columns:
         raise ValueError(
             f"Group column '{group}' not found. Available columns: "
@@ -229,7 +242,8 @@ def prepare_embedding_data(
         return df, None
 
     loadings = TwoLoadingsSchema.validate(loadings)
-    _check_columns(loadings, [x, y], "loadings")
+    resolve_column(loadings, x, "loadings")
+    resolve_column(loadings, y, "loadings")
     loadings = select_top_loadings(loadings, top_n_loadings, x=x, y=y)
     if loading_factor is None:
         loading_factor = get_loading_scale_factor(df, loadings, x=x, y=y)

@@ -191,3 +191,19 @@ def test_scaling_uses_plotted_dimensions(three_components):
     max_component = components[["x", "z"]].abs().to_numpy().max()
     max_arrow = (scaled["x"] ** 2 + scaled["z"] ** 2).pow(0.5).max()
     assert max_arrow == pytest.approx(0.8 * max_component)
+
+
+@pytest.mark.parametrize("plot_func, figure_type", PLOT_FUNCTIONS)
+@pytest.mark.parametrize("dimension", ["z", "3", 3])
+def test_plot_further_components(plot_func, figure_type, three_components, dimension):
+    components, loadings, annotation = three_components
+    components = components.assign(**{"3": components["z"] * 2})
+    loadings = loadings.assign(**{"3": loadings["z"] * 2})
+    figure = plot_func((components, loadings, None), annotation, y=dimension)
+    assert isinstance(figure, figure_type)
+
+
+def test_non_numeric_dimension_raises(three_components):
+    components, _, _ = three_components
+    with pytest.raises(ValueError, match="not numeric"):
+        get_embedding_plot_static(components.assign(z="a"), y="z")

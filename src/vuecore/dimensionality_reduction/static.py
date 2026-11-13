@@ -16,6 +16,7 @@ from pandera.typing.pandas import DataFrame
 
 from vuecore.dimensionality_reduction.common import (
     DEFAULT_LOADING_COLOR,
+    as_column_name,
     build_color_map,
     get_axis_titles,
     prepare_embedding_data,
@@ -184,8 +185,8 @@ def get_embedding_plot(
     annotation: AnnotationResult | dict | None = None,
     loadings: pd.DataFrame | DataFrame[TwoLoadingsSchema] | None = None,
     group: str | None = "group",
-    x: str = "x",
-    y: str = "y",
+    x: str | int = "x",
+    y: str | int = "y",
     top_n_loadings: int = 15,
     loading_factor: float | None = None,
     title: str = "Embedding",
@@ -223,7 +224,8 @@ def get_embedding_plot(
         all samples in one color.
     x, y : str, optional
         Columns of the dimensions to plot, e.g. `y="z"` to plot the first against
-        the third component. The loadings are ranked by their 'value' over all
+        the third component. Further components are named '3', '4', ... (the
+        fourth is `y=3` or `y="3"`). The loadings are ranked by their 'value' over all
         components.
     top_n_loadings : int, optional
         Number of features with the highest loading 'value' to draw.
@@ -264,6 +266,7 @@ def get_embedding_plot(
         logger.info(f"Additional unused kwargs passed to get_embedding_plot: {kwargs}")
 
     components, loadings = unpack_results(results, loadings)
+    x, y = as_column_name(x), as_column_name(y)
     df, loadings = prepare_embedding_data(
         components,
         loadings,
