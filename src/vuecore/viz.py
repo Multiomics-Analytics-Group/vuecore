@@ -2003,7 +2003,7 @@ def get_pca_plot(data, identifier, args):
     pca_data, loadings, _variance = data
     return get_embedding_plot_interactive(
         pca_data,
-        loadings,
+        loadings=loadings,
         group=args.get("group", "group"),
         top_n_loadings=args.get("loadings", 15),
         loading_factor=args.get("factor"),

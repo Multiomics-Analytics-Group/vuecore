@@ -7,13 +7,19 @@ import matplotlib.axes
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import pandas as pd
-from acore.types.exploratory_analysis import TwoComponentSchema, TwoLoadingsSchema
+from acore.types.exploratory_analysis import (
+    AnnotationResult,
+    TwoComponentSchema,
+    TwoLoadingsSchema,
+)
 from pandera.typing.pandas import DataFrame
 
 from vuecore.dimensionality_reduction.common import (
     DEFAULT_LOADING_COLOR,
     build_color_map,
+    get_axis_titles,
     prepare_embedding_data,
+    unpack_results,
 )
 
 DEFAULT_DPI = 100
@@ -174,14 +180,17 @@ def get_embedding_plot_mpl(
 
 # acore related plotting function using a defined type in acore.types
 def get_embedding_plot(
-    components: pd.DataFrame | DataFrame[TwoComponentSchema],
+    results: pd.DataFrame | DataFrame[TwoComponentSchema] | tuple | list | dict,
+    annotation: AnnotationResult | dict | None = None,
     loadings: pd.DataFrame | DataFrame[TwoLoadingsSchema] | None = None,
     group: str | None = "group",
+    x: str = "x",
+    y: str = "y",
     top_n_loadings: int = 15,
     loading_factor: float | None = None,
     title: str = "Embedding",
-    x_title: str = "C1",
-    y_title: str = "C2",
+    x_title: str | None = None,
+    y_title: str | None = None,
     width: int = 600,
     height: int = 500,
     colors: dict[str, str] | list[str] | None = None,
@@ -196,14 +205,26 @@ def get_embedding_plot(
 
     Parameters
     ----------
-    components : DataFrame[TwoComponentSchema]
-        Sample coordinates in the columns 'x' and 'y', and the groups in `group`.
+    results : DataFrame[TwoComponentSchema], tuple or dict
+        The first return value of `acore.exploratory_analysis.run_pca`,
+        `run_tsne` or `run_umap` as it is: the `(components, loadings, variance)`
+        tuple of PCA, or the one-entry dictionary of t-SNE and UMAP. A components
+        DataFrame with the sample coordinates in the columns 'x' and 'y' and the
+        groups in `group` works as well.
+    annotation : AnnotationResult or dict, optional
+        The second return value of the acore function. It names the axes, e.g.
+        'PC1 (0.92)', unless `x_title` or `y_title` are given.
     loadings : DataFrame[TwoLoadingsSchema], optional
         Feature loadings in the columns 'x' and 'y' with the feature names in the
-        index and the loading strength in 'value'. Only meaningful for PCA.
+        index and the loading strength in 'value'. Only meaningful for PCA, where
+        they are taken from `results`. Passing them here overrides those.
     group : str, optional
-        Column in `components` used to color the samples. Pass `None` to plot all
-        samples in one color.
+        Column in the components used to color the samples. Pass `None` to plot
+        all samples in one color.
+    x, y : str, optional
+        Columns of the dimensions to plot, e.g. `y="z"` to plot the first against
+        the third component. The loadings are ranked by their 'value' over all
+        components.
     top_n_loadings : int, optional
         Number of features with the highest loading 'value' to draw.
     loading_factor : float, optional
@@ -212,9 +233,9 @@ def get_embedding_plot(
     title : str, optional
         Title of the figure.
     x_title : str, optional
-        Plot x axis title, e.g. 'PC1 (0.92)' as returned by acore.
+        Plot x axis title. Defaults to the name in `annotation`, then to `x`.
     y_title : str, optional
-        Plot y axis title, e.g. 'PC2 (0.05)' as returned by acore.
+        Plot y axis title. Defaults to the name in `annotation`, then to `y`.
     width : int, optional
         Plot width in pixels at 100 DPI.
     height : int, optional
@@ -235,25 +256,29 @@ def get_embedding_plot(
 
     Examples
     --------
-    >>> from acore.exploratory_analysis import run_pca
-    >>> (components, loadings, _variance), args = run_pca(data, group="group")
-    >>> figure = get_embedding_plot(components, loadings, **args)
+    >>> from acore.exploratory_analysis import run_pca, run_umap
+    >>> figure = get_embedding_plot(*run_pca(data, group="group"))
+    >>> figure = get_embedding_plot(*run_umap(data, group="group"))
     """
     if kwargs:
         logger.info(f"Additional unused kwargs passed to get_embedding_plot: {kwargs}")
 
+    components, loadings = unpack_results(results, loadings)
     df, loadings = prepare_embedding_data(
         components,
         loadings,
         group=group,
         top_n_loadings=top_n_loadings,
         loading_factor=loading_factor,
+        x=x,
+        y=y,
     )
+    x_title, y_title = get_axis_titles(annotation, x, y, x_title, y_title)
 
     return get_embedding_plot_mpl(
         df,
-        x="x",
-        y="y",
+        x=x,
+        y=y,
         group=group,
         loadings=loadings,
         title=title,
