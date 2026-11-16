@@ -1,3 +1,6 @@
+import inspect
+import typing
+
 import pytest
 import textwrap
 from pydantic import BaseModel, Field
@@ -73,40 +76,115 @@ def test_get_type_string(annotation, expected_string):
     assert get_type_string(annotation) == expected_string
 
 
-# --- Test for the Decorator ---
-def test_decorator_modifies_docstring():
-    """Verify the decorator correctly adds model parameters to the docstring."""
+# --- Tests for the Decorator ---
+def test_decorator_keeps_the_original_docstring_sections():
+    """The summary, the function's own parameters and Returns are kept."""
+    docstring = dummy_plot_function.__doc__
 
-    # Get the decorated function's docstring
-    decorated_docstring = dummy_plot_function.__doc__
+    assert "This is the original docstring." in docstring
+    assert "data : dict" in docstring
+    assert "A dictionary of sample data." in docstring
+    assert "Returns" in docstring
+    assert "Does not return anything." in docstring
 
-    # Assert that the core parts of the original and generated docstrings are present
-    assert "This is the original docstring." in decorated_docstring
-    assert "Parameters" in decorated_docstring
-    assert "data : dict" in decorated_docstring
-    assert "Returns" in decorated_docstring
-    assert "Does not return anything." in decorated_docstring
 
-    # Assert that the kwargs section and its description are present
-    assert "**kwargs" in decorated_docstring
-    assert "Keyword arguments for plot configuration." in decorated_docstring
-    assert "``TestModel`` Pydantic model" in decorated_docstring
+def test_decorator_documents_each_field_as_a_parameter_entry():
+    """Each field is a numpydoc entry in the Parameters section, before Returns."""
+    docstring = dummy_plot_function.__doc__
 
-    # Assert that each parameter is present with its correct type and default value
-    assert "* **param_str** (str) – A string parameter." in decorated_docstring
+    assert "param_str : str\n    A string parameter." in docstring
     assert (
-        "* **param_int** (int) – An integer parameter with a default. (default: ``5``)"
-        in decorated_docstring
+        "param_int : int, optional\n"
+        "    An integer parameter with a default. Defaults to ``5``." in docstring
     )
     assert (
-        "* **param_list** (list of str) – An optional list of strings."
-        in decorated_docstring
+        "param_list : list of str, optional\n    An optional list of strings."
+        in docstring
     )
     assert (
-        "* **param_dict** (dict) – A generic dictionary parameter. (default: ``{}``)"
-        in decorated_docstring
+        "param_dict : dict, optional\n"
+        "    A generic dictionary parameter. Defaults to ``{}``." in docstring
     )
-    assert (
-        "* **param_bare_list** (list) – A bare list parameter. (default: ``[]``)"
-        in decorated_docstring
-    )
+    assert docstring.index("param_bare_list : list") < docstring.index("Returns")
+    assert "**kwargs\n    Further keyword arguments" in docstring
+
+
+def test_decorator_adds_a_parameters_section_when_there_is_none():
+    """A docstring without a Parameters section gets one."""
+
+    @document_pydant_params(TestModel)
+    def plot_without_parameters_section():
+        """Summary line."""
+
+    docstring = plot_without_parameters_section.__doc__
+
+    assert docstring.startswith("Summary line.\n\nParameters\n----------\n")
+    assert "param_int : int, optional" in docstring
+
+
+def test_decorator_lists_the_fields_as_keyword_only_signature_parameters():
+    """The signature shows every field, with its default, before **kwargs."""
+    signature = inspect.signature(dummy_plot_function)
+    parameters = signature.parameters
+
+    assert list(parameters) == [
+        "data",
+        "param_str",
+        "param_int",
+        "param_list",
+        "param_dict",
+        "param_bare_list",
+    ]
+    assert parameters["param_str"].kind is inspect.Parameter.KEYWORD_ONLY
+    assert parameters["param_str"].default is inspect.Parameter.empty
+    assert parameters["param_int"].default == 5
+    assert parameters["param_list"].default is None
+
+
+def test_decorator_keeps_var_keyword_last_when_the_function_has_one():
+    """A function taking **kwargs still accepts the model's extra arguments."""
+
+    @document_pydant_params(TestModel)
+    def plot_with_kwargs(data: dict, **kwargs):
+        """Summary line."""
+
+    parameters = list(inspect.signature(plot_with_kwargs).parameters.values())
+
+    assert parameters[-1].name == "kwargs"
+    assert parameters[-1].kind is inspect.Parameter.VAR_KEYWORD
+    assert parameters[1].name == "param_str"
+
+
+def test_decorator_exposes_the_field_types_to_get_type_hints():
+    """Tools that read type hints see the fields' real types."""
+
+    hints = typing.get_type_hints(dummy_plot_function)
+
+    assert hints["param_int"] is int
+    assert hints["param_list"] == Optional[List[str]]
+
+
+def test_decorator_leaves_the_undecorated_function_alone():
+    """The wrapped function keeps its own annotations and still runs."""
+
+    def undecorated(data: dict, **kwargs):
+        """Summary line."""
+        return kwargs
+
+    decorated = document_pydant_params(TestModel)(undecorated)
+
+    assert "param_int" not in undecorated.__annotations__
+    assert decorated({}, param_int=3) == {"param_int": 3}
+
+
+def test_decorator_skips_a_field_the_function_already_has():
+    """A field named like an existing parameter does not replace it."""
+
+    @document_pydant_params(TestModel)
+    def plot_with_same_name(data: dict, param_int: str = "own", **kwargs):
+        """Summary line."""
+
+    parameter = inspect.signature(plot_with_same_name).parameters["param_int"]
+
+    assert parameter.default == "own"
+    assert parameter.annotation is str

@@ -1,4 +1,5 @@
 # vuecore/utils/doc_utils.py
+import inspect
 import re
 import textwrap
 from functools import wraps
@@ -84,19 +85,153 @@ def get_type_string(annotation: Any) -> str:
     return str(annotation)
 
 
-def document_pydant_params(model: type[BaseModel]):
+def _config_parameters(
+    model: type[BaseModel], taken_names: set[str]
+) -> list[inspect.Parameter]:
     """
-    Decorator to add Pydantic model parameters to a function's docstrings.
+    Build one keyword-only parameter for each field of the model.
+
+    Fields named like a parameter the function already has are skipped, so the
+    function's own parameters keep their meaning.
 
     Parameters
     ----------
     model : Type[BaseModel]
-        The Pydantic model class whose fields should be documented.
+        The Pydantic model whose fields become parameters.
+    taken_names : set of str
+        Names of the parameters the function already has.
+
+    Returns
+    -------
+    list of inspect.Parameter
+        The keyword-only parameters, each with the field's type and default.
+    """
+    parameters = []
+    for field_name, field in get_all_model_fields(model).items():
+        if field_name in taken_names:
+            continue
+        if field.is_required():
+            default = inspect.Parameter.empty
+        else:
+            default = field.get_default(call_default_factory=True)
+        parameters.append(
+            inspect.Parameter(
+                field_name,
+                inspect.Parameter.KEYWORD_ONLY,
+                default=default,
+                annotation=field.annotation,
+            )
+        )
+    return parameters
+
+
+def _parameter_docs(model: type[BaseModel], taken_names: set[str]) -> list[str]:
+    """
+    Write the numpydoc entries for the model's fields, one per parameter.
+
+    Parameters
+    ----------
+    model : Type[BaseModel]
+        The Pydantic model whose fields are documented.
+    taken_names : set of str
+        Names of the parameters the function already documents.
+
+    Returns
+    -------
+    list of str
+        The entries, ending with one for the remaining ``**kwargs``.
+    """
+    entries = []
+    for field_name, field in get_all_model_fields(model).items():
+        if field_name in taken_names:
+            continue
+        type_str = get_type_string(field.annotation)
+        optional = "" if field.is_required() else ", optional"
+        description = field.description or "No description available."
+        default_value = field.get_default(call_default_factory=True)
+        has_shown_default = not field.is_required() and default_value is not None
+        if has_shown_default:
+            description = f"{description} Defaults to ``{default_value}``."
+        entries.append(f"{field_name} : {type_str}{optional}")
+        entries.extend(textwrap.indent(description, "    ").splitlines())
+    entries.append("**kwargs")
+    entries.append("    Further keyword arguments, passed on to the plotting engine.")
+    return entries
+
+
+def _insert_into_parameters_section(doc_lines: list[str], entries: list[str]):
+    """
+    Put the entries at the end of the docstring's Parameters section.
+
+    A docstring without a Parameters section gets one, placed before the first
+    section that follows the summary (Returns, Raises, Examples, See Also) or at
+    the end.
+
+    Parameters
+    ----------
+    doc_lines : list of str
+        The docstring, dedented and split into lines.
+    entries : list of str
+        The entries to add.
+
+    Returns
+    -------
+    list of str
+        The docstring lines with the entries added.
+    """
+    section_header = re.compile(r"^[A-Z][A-Za-z ]*$")
+
+    def is_header(index: int) -> bool:
+        has_underline = index + 1 < len(doc_lines) and re.fullmatch(
+            r"-{3,}", doc_lines[index + 1].strip()
+        )
+        return bool(has_underline and section_header.match(doc_lines[index]))
+
+    parameters_start = next(
+        (
+            i
+            for i in range(len(doc_lines))
+            if doc_lines[i] == "Parameters" and is_header(i)
+        ),
+        None,
+    )
+    if parameters_start is None:
+        end = next((i for i in range(len(doc_lines)) if is_header(i)), len(doc_lines))
+        while end > 0 and not doc_lines[end - 1].strip():
+            end -= 1
+        new_section = ["", "Parameters", "----------", *entries]
+        return doc_lines[:end] + new_section + [""] + doc_lines[end:]
+
+    end = next(
+        (i for i in range(parameters_start + 2, len(doc_lines)) if is_header(i)),
+        len(doc_lines),
+    )
+    while end > 0 and not doc_lines[end - 1].strip():
+        end -= 1
+    return doc_lines[:end] + entries + doc_lines[end:]
+
+
+def document_pydant_params(model: type[BaseModel]):
+    """
+    Decorator that exposes a Pydantic model's fields as the function's parameters.
+
+    The function keeps accepting ``**kwargs``, which the plotting code validates
+    against the model. The decorator makes that visible to tools that read
+    the function instead of running it: ``inspect.signature`` and
+    ``typing.get_type_hints`` list every model field as a keyword-only
+    parameter with its type and default, and the docstring documents each field
+    in its Parameters section.
+
+    Parameters
+    ----------
+    model : Type[BaseModel]
+        The Pydantic model class whose fields should be exposed.
 
     Returns
     -------
     function
-        A decorator function that modifies the docstring of the target function.
+        A decorator function that modifies the signature and docstring of the
+        target function.
     """
 
     def decorator(func):
@@ -104,59 +239,34 @@ def document_pydant_params(model: type[BaseModel]):
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
 
-        original_doc = wrapper.__doc__ or ""
-        lines = original_doc.splitlines()
+        signature = inspect.signature(func)
+        taken_names = set(signature.parameters)
+        config_parameters = _config_parameters(model, taken_names)
 
-        # Find the end of the "Parameters" section
-        insert_index = -1
-        # Find the line that marks the end of the Parameters section
-        # or the beginning of a new section like Returns or Raises
-        for i, line in enumerate(lines):
-            if re.match(r"^\s*(Returns|Raises|Examples|See Also)", line):
-                insert_index = i
-                break
-
-        # If no other section is found, assume the end of the docstring
-        if insert_index == -1:
-            insert_index = len(lines)
-
-        # Generate the new, detailed parameter list in NumPydocs style
-        fields = get_all_model_fields(model)
-        params_doc_lines = []
-        for field_name, field in fields.items():
-            type_str = get_type_string(field.annotation)
-            description = field.description or "No description available."
-            default_value = field.get_default(call_default_factory=True)
-            default_str = (
-                f" (default: ``{default_value}``)"
-                if default_value is not None and default_value is not ...
-                else ""
-            )
-
-            # Format as a single line for the NumPy-style bulleted list
-            params_doc_lines.append(
-                f"* **{field_name}** ({type_str}) – {description}{default_str}"
-            )
-
-            # Indent all lines in the parameter list correctly
-            indented_params_lines = textwrap.indent(
-                "\n".join(params_doc_lines), prefix="        "
-            ).splitlines()
-
-        # Create the kwargs documentation as a list of lines
-        new_kwargs_lines = [
-            "    **kwargs",
-            "         Keyword arguments for plot configuration. These arguments are validated against",
-            f"        the ``{model.__name__}`` Pydantic model and the engine specific parameters.\n",
-            "        The following parameters are supported:\n",
+        # The extra keyword arguments the model allows stay at the end.
+        own_parameters = [
+            parameter
+            for parameter in signature.parameters.values()
+            if parameter.kind != inspect.Parameter.VAR_KEYWORD
         ]
+        var_keyword = [
+            parameter
+            for parameter in signature.parameters.values()
+            if parameter.kind == inspect.Parameter.VAR_KEYWORD
+        ]
+        wrapper.__signature__ = signature.replace(
+            parameters=own_parameters + config_parameters + var_keyword
+        )
 
-        # Add all parameter lines
-        new_kwargs_lines.extend(indented_params_lines)
+        # A copy, so the undecorated function's annotations stay as they are.
+        annotations = dict(getattr(func, "__annotations__", {}))
+        for parameter in config_parameters:
+            annotations[parameter.name] = parameter.annotation
+        wrapper.__annotations__ = annotations
 
-        # Reconstruct the docstring by inserting the new lines
-        new_doc_lines = lines[:insert_index] + new_kwargs_lines + lines[insert_index:]
-        wrapper.__doc__ = "\n".join(new_doc_lines)
+        doc_lines = inspect.cleandoc(func.__doc__ or "").splitlines()
+        entries = _parameter_docs(model, taken_names)
+        wrapper.__doc__ = "\n".join(_insert_into_parameters_section(doc_lines, entries))
         return wrapper
 
     return decorator
