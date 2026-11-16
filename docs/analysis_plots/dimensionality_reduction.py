@@ -172,7 +172,7 @@ interactive_fig = get_embedding_plot_interactive(
     loadings=loadings,
     title="PCA",
     width=790,
-    height=600
+    height=600,
 )
 interactive_fig
 
