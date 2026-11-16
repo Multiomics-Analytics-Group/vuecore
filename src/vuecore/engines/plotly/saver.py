@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from vuecore.constants import OutputFileFormat
 
 
-def save(fig: go.Figure, filepath: str) -> None:
+def save(fig: go.Figure, filepath: str, create_dir: bool = True) -> None:
     """
     Saves a Plotly figure to a file, inferring the format from the extension.
 
@@ -20,6 +20,9 @@ def save(fig: go.Figure, filepath: str) -> None:
     filepath : str
         The destination path for the file (e.g., 'my_plot.png', 'figure.html').
         The format is determined by the file extension.
+    create_dir : bool, optional
+        If True (default), the parent folder(s) of ``filepath`` are created
+        when they do not exist. If False, a missing folder raises an error.
 
     Returns
     -------
@@ -28,7 +31,8 @@ def save(fig: go.Figure, filepath: str) -> None:
     Raises
     ------
     FileNotFoundError
-        If the folder of ``filepath`` is not an existing folder. It is not created.
+        If the folder of ``filepath`` is not an existing folder (and ``create_dir``
+        is False, or a file is in the way).
     ValueError
         If the file extension is not one of the supported formats.
     ImportError
@@ -36,6 +40,9 @@ def save(fig: go.Figure, filepath: str) -> None:
     """
     path = Path(filepath)
     suffix = path.suffix.lower()
+
+    if create_dir and not path.parent.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
 
     # Plotly's own error for a missing folder names only the file, and the
     # wrapper below drops its message, so it is checked before the try.
