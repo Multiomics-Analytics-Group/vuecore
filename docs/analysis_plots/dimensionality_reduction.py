@@ -24,7 +24,7 @@
 # %% tags=["hide-input"]
 import numpy as np
 import pandas as pd
-from acore.exploratory_analysis import run_pca, run_umap
+from acore.exploratory_analysis.decomposition import run_pca, run_umap
 
 from vuecore.dimensionality_reduction import (
     get_embedding_plot_interactive,
@@ -66,15 +66,15 @@ data.head()
 # ## Run PCA and UMAP using acore
 # Both return the sample coordinates in the columns `x` and `y`, together with `group` and
 # the annotation columns. The PCA additionally returns the loadings of each feature and
-# the explained variance, and both return axis titles in `args`.
+# the explained variance, and both return an `annotation` with the axis titles.
 
 # %%
-(components, loadings, explained_variance), pca_args = run_pca(
+(components, loadings, explained_variance), pca_annotation = run_pca(
     data,
     group="group",
     annotation_cols=[],
 )
-pca_args
+pca_annotation
 
 # %%
 components
@@ -83,7 +83,7 @@ components
 loadings
 
 # %%
-umap_result, umap_args = run_umap(data, group="group", annotation_cols=[])
+umap_result, umap_annotation = run_umap(data, group="group", annotation_cols=[])
 umap_components = umap_result["umap"]
 umap_components
 
@@ -93,7 +93,7 @@ umap_components
 # %% [markdown]
 # Acore function has defaults for the result type
 # - the default size reflects in the width and height standards of journals
-# - the axis titles and the group column returned by acore can be passed on directly
+# - the `annotation` returned by acore sets the axis titles (without it, they are labeled `x` and `y`)
 # - the loadings are optional and drawn as arrows (a biplot). Their length is scaled to the
 #   range of the samples, which can be changed using `loading_factor`.
 
@@ -102,7 +102,11 @@ help(get_embedding_plot_static)
 
 # %%
 static_fig = get_embedding_plot_static(
-    components, top_n_loadings=3, loadings=loadings, title="PCA", **pca_args
+    components,
+    annotation=pca_annotation,
+    top_n_loadings=3,
+    loadings=loadings,
+    title="PCA",
 )
 print(
     f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
@@ -115,9 +119,9 @@ print(
 # %%
 static_fig = get_embedding_plot_static(
     umap_components,
+    annotation=umap_annotation,
     title="UMAP",
     colors=["pink", "orange", "teal"],
-    **umap_args,
 )
 
 # %% [markdown]
@@ -163,18 +167,22 @@ help(get_embedding_plot_interactive)
 # %%
 interactive_fig = get_embedding_plot_interactive(
     components,
+    annotation=pca_annotation,
     top_n_loadings=3,
     loadings=loadings,
     title="PCA",
     width=790,
-    height=600,
-    **pca_args,
+    height=600
 )
 interactive_fig
 
 # %%
 interactive_fig = get_embedding_plot_interactive(
-    umap_components, title="UMAP", width=790, height=600, **umap_args
+    umap_components,
+    annotation=umap_annotation,
+    title="UMAP",
+    width=790,
+    height=600,
 )
 interactive_fig
 

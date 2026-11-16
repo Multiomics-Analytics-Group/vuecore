@@ -240,13 +240,13 @@ def get_embedding_plot(
     """
     Create an interactive 2D plot of a dimensionality reduction.
 
-    Works for PCA, t-SNE and UMAP results of `acore.exploratory_analysis`. For PCA,
+    Works for PCA, t-SNE and UMAP results of `acore.exploratory_analysis.decomposition`. For PCA,
     the loadings of the features can be added as arrows (a biplot).
 
     Parameters
     ----------
     results : DataFrame[TwoComponentSchema], tuple or dict
-        The first return value of `acore.exploratory_analysis.run_pca`,
+        The first return value of `acore.exploratory_analysis.decomposition.run_pca`,
         `run_tsne` or `run_umap` as it is: the `(components, loadings, variance)`
         tuple of PCA, or the one-entry dictionary of t-SNE and UMAP. A components
         DataFrame with the sample coordinates in the columns 'x' and 'y' and the
@@ -300,10 +300,11 @@ def get_embedding_plot(
 
     Examples
     --------
-    >>> from acore.exploratory_analysis import run_pca, run_umap
+    >>> from acore.exploratory_analysis.decomposition import run_pca, run_umap
     >>> figure = get_embedding_plot(*run_pca(data, group="group"))
     >>> figure = get_embedding_plot(*run_umap(data, group="group"))
     """
+
     if kwargs:
         logger.info(f"Additional unused kwargs passed to get_embedding_plot: {kwargs}")
 

@@ -58,7 +58,7 @@ def select_top_loadings(
     """Select the `top_n` features with the highest loading 'value'.
 
     If 'value' is missing, it is computed as the length of the loading vector in
-    the dimensions `x` and `y`. `acore.exploratory_analysis.run_pca` computes
+    the dimensions `x` and `y`. `acore.exploratory_analysis.decomposition.run_pca` computes
     'value' over all components instead.
     """
     if "value" not in loadings.columns:
@@ -114,7 +114,7 @@ def unpack_results(
 
         - the components DataFrame itself,
         - the `(components, loadings, variance)` tuple of
-          `acore.exploratory_analysis.run_pca`,
+          `acore.exploratory_analysis.decomposition.run_pca`,
         - the dictionary with one DataFrame of `run_tsne` or `run_umap`, e.g.
           `{"umap": components}`.
     loadings : pd.DataFrame, optional
@@ -130,6 +130,7 @@ def unpack_results(
     ValueError
         If `results` is none of the supported structures.
     """
+
     if isinstance(results, pd.DataFrame):
         components, found = results, None
     elif isinstance(results, dict) and len(results) == 1:
@@ -201,7 +202,7 @@ def prepare_embedding_data(
     ----------
     components : DataFrame[TwoComponentSchema]
         Sample coordinates in the columns 'x' and 'y', e.g. the first result of
-        `acore.exploratory_analysis.run_pca` or the result of `run_tsne` or
+        `acore.exploratory_analysis.decomposition.run_pca` or the result of `run_tsne` or
         `run_umap`.
     loadings : DataFrame[TwoLoadingsSchema], optional
         Feature loadings in the columns 'x' and 'y' with the feature names in the
@@ -230,6 +231,7 @@ def prepare_embedding_data(
     ValueError
         If `group`, `x` or `y` is not a column of `components` (or `loadings`).
     """
+
     df: pd.DataFrame = TwoComponentSchema.validate(components)
     x, y = resolve_column(df, x, "components"), resolve_column(df, y, "components")
     if group is not None and group not in df.columns:

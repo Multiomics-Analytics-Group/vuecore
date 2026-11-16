@@ -44,7 +44,7 @@ def test_with_loadings_and_acore_args(
     components: pd.DataFrame,
     loadings: pd.DataFrame,
 ):
-    # the args dictionary returned by acore.exploratory_analysis.run_pca
+    # the args dictionary returned by acore.exploratory_analysis.decomposition.run_pca
     args = {"x_title": "PC1 (0.92)", "y_title": "PC2 (0.05)", "group": "group"}
     assert isinstance(plot_func(components, loadings=loadings, **args), figure_type)
 
