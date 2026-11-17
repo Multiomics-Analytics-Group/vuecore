@@ -16,6 +16,8 @@ from vuecore.utils.docs_utils import (
 class TestModel(BaseModel):
     """A test model for decorator documentation."""
 
+    __test__ = False
+
     param_str: str = Field(..., description="A string parameter.")
     param_int: int = Field(5, description="An integer parameter with a default.")
     param_list: Optional[List[str]] = Field(
