@@ -1,5 +1,6 @@
 import plotly.graph_objects as go
 import pytest
+
 from vuecore.engines.plotly.saver import save
 
 

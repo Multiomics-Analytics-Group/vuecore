@@ -1,7 +1,8 @@
-import pandas as pd
-import numpy as np
-import pytest
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pytest
 
 from vuecore.plots.basic.bar import create_bar_plot
 

@@ -1,13 +1,13 @@
+from typing import Optional
+
 import pytest
-import textwrap
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict
 
 # Import the decorator and helper functions from your module
 from vuecore.utils.docs_utils import (
     document_pydant_params,
-    get_type_string,
     get_all_model_fields,
+    get_type_string,
 )
 
 
@@ -16,12 +16,14 @@ from vuecore.utils.docs_utils import (
 class TestModel(BaseModel):
     """A test model for decorator documentation."""
 
+    __test__ = False
+
     param_str: str = Field(..., description="A string parameter.")
     param_int: int = Field(5, description="An integer parameter with a default.")
-    param_list: Optional[List[str]] = Field(
+    param_list: list[str] | None = Field(
         None, description="An optional list of strings."
     )
-    param_dict: Dict = Field({}, description="A generic dictionary parameter.")
+    param_dict: dict = Field({}, description="A generic dictionary parameter.")
     param_bare_list: list = Field([], description="A bare list parameter.")
 
 
@@ -41,7 +43,6 @@ def dummy_plot_function(data: dict):
     None
         Does not return anything.
     """
-    pass
 
 
 # --- Tests for Helper Functions ---
@@ -61,11 +62,11 @@ def test_get_all_model_fields():
     [
         (str, "str"),
         (int, "int"),
-        (Optional[str], "str"),
-        (List[str], "list of str"),
-        (Dict, "dict"),
+        (str | None, "str"),
+        (list[str], "list of str"),
+        (dict, "dict"),
         (list, "list"),
-        (Dict[str, int], "Dict[str, int]"),
+        (dict[str, int], "Dict[str, int]"),
     ],
 )
 def test_get_type_string(annotation, expected_string):
