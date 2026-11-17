@@ -52,7 +52,7 @@ fname_url = (
 
 if not Path(fname).exists():
     fname = fname_url
-diff_reg = pd.read_csv(fname, index_col=0).sort_index()
+diff_reg = pd.read_csv(fname).sort_values(by="identifier")
 diff_reg
 
 # %% [markdown]
@@ -208,4 +208,5 @@ print(
 )
 interactive_fig
 
-# %%
+# %% [markdown]
+# Done.
