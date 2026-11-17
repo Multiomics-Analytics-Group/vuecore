@@ -24,6 +24,7 @@ sections_readme/license
 
 analysis_plots/enrichment_analysis
 analysis_plots/differential_regulation
+analysis_plots/dimensionality_reduction
 ```
 
 ```{toctree}
