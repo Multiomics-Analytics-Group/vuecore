@@ -2004,7 +2004,7 @@ def get_pca_plot(data, identifier, args):
     return get_embedding_plot_interactive(
         pca_data,
         loadings=loadings,
-        group=args.get("group", "group"),
+        group=args.get("group", None),
         top_n_loadings=args.get("loadings", 15),
         loading_factor=args.get("factor"),
         title=args.get("title", "PCA"),
