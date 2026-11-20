@@ -34,7 +34,7 @@ dependencies = [
   # "biopython",
   "beautifulsoup4",
   "requests",
-  "dash",                                          # from dash import html
+  "dash",            # from dash import html
   "matplotlib",
   "kaleido",
   "pyvis",
