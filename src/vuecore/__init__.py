@@ -17,6 +17,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from . import (
+    differential_regulation,
+    dimensionality_reduction,
+    enrichment_analysis,
+    interactive,
+    static,
+)
 from .constants import EngineType, PlotType
 
 __all__ = ["EngineType", "PlotType"]

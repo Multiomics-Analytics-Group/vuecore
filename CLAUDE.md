@@ -28,3 +28,9 @@ Ask me if I want to stage the files and provide the command to do so.
 Use the default format for type annotated functions is numpy style.
 
 https://numpydoc.readthedocs.io/en/latest/format.html#parameters
+
+## Module functions
+
+`static.py` import the matplotlib related functions and `interactive.py` import the
+plotly related functions. The main module `vuecore.py` imports all functions from the two
+submodules and provides a unified interface for the user.
