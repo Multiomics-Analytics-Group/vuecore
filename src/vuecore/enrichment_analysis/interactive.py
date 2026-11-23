@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from logging import getLogger
 
-import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -11,13 +10,18 @@ from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
 from pandera.typing.pandas import DataFrame
 
 from vuecore.enrichment_analysis.common import (
-    build_color_map,
+    ODDS_RATIO_LABEL,
+    PVALUE_LABEL,
     format_comparison_title,
+    prepare_enrichment_data,
+    select_comparison,
 )
 
 logger = getLogger(__name__)
 
 ENRICHMENT_HOVERING_COLS = [
+    "odds_ratio",
+    "odds_ratio_lower",
     "foreground",
     "foreground_pop",
     "background",
@@ -49,6 +53,9 @@ def set_legend_marker_size(figure: go.Figure, size: float = 14) -> None:
         if trace.showlegend is False or not trace.name:
             continue
         legendgroup = trace.legendgroup or trace.name
+        color = trace.marker.color
+        if color is not None and not isinstance(color, str):
+            color = "lightgrey"  # data-driven colors (color bar) have no legend color
         trace.update(showlegend=False, legendgroup=legendgroup)
         proxies.append(
             go.Scatter(
@@ -57,7 +64,7 @@ def set_legend_marker_size(figure: go.Figure, size: float = 14) -> None:
                 mode="markers",
                 marker={
                     "size": size,
-                    "color": trace.marker.color,
+                    "color": color,
                     "symbol": trace.marker.symbol,
                     "opacity": trace.marker.opacity,
                     "line": trace.marker.line,
@@ -87,6 +94,10 @@ def get_enrichment_plot_plotly(
     height: int = 800,
     width: int = 800,
     colors: dict[str, str] | None = None,
+    color_continuous: str | None = None,
+    color_continuous_scale: str | None = None,
+    color_title: str | None = None,
+    log_x: bool = False,
     legend_marker_size: float | None = 14,
 ) -> go.Figure:
     """
@@ -125,6 +136,15 @@ def get_enrichment_plot_plotly(
         Plot width.
     colors : dict[str, str], optional
         Mapping of group name to color, used for each group.
+    color_continuous : str, optional
+        Column in `data` with numeric values mapped to a color bar. Takes
+        precedence over `group` for the color; `group` can still set `symbol`.
+    color_continuous_scale : str, optional
+        Name of the plotly color scale used for `color_continuous`.
+    color_title : str, optional
+        Title of the color bar.
+    log_x : bool, optional
+        Use a log10 scale for the x-axis.
     legend_marker_size : float, optional
         Fixed marker size (in pixels) for the legend entries, independent of the
         marker sizes in the plot. Pass `None` to let the legend follow the plotted
@@ -150,8 +170,9 @@ def get_enrichment_plot_plotly(
         data,
         x=x,
         y=y,
-        color=group,
-        color_discrete_map=colors,
+        color=color_continuous or group,
+        color_discrete_map=None if color_continuous else colors,
+        color_continuous_scale=color_continuous_scale,
         hover_data=hovering_cols,
         size=size,
         symbol=symbol,
@@ -168,8 +189,9 @@ def get_enrichment_plot_plotly(
     )
     figure["layout"] = go.Layout(
         title=title,
-        xaxis={"title": x_title},
-        yaxis={"title": y_title},
+        xaxis={"title": x_title, "type": "log" if log_x else "linear"},
+        # first row on top, as in the static plot
+        yaxis={"title": y_title, "autorange": "reversed"},
         legend={
             "orientation": "h",
             "yanchor": "bottom",
@@ -184,7 +206,17 @@ def get_enrichment_plot_plotly(
             {"xref": "paper", "yref": "paper", "showarrow": False, "text": ""}
         ],
         template="plotly_white",
+        coloraxis=(
+            {
+                "colorbar": {"title": color_title},
+                "colorscale": color_continuous_scale,
+            }
+            if color_continuous
+            else None
+        ),
     )
+    if log_x:
+        figure.add_vline(x=1, line={"color": "grey", "dash": "dot", "width": 1})
 
     if group is not None and legend_marker_size is not None:
         set_legend_marker_size(figure, legend_marker_size)
@@ -200,7 +232,8 @@ def get_enrichment_plot(
     width: int = 900,
     height: int = 800,
     title: str = "Enrichment",
-    colors: dict[str, str] | list[str] | None = None,
+    x: str | None = None,
+    color_continuous_scale: str = "Viridis_r",
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
     legend_marker_size: float | None = 14,
     **kwargs,
@@ -222,10 +255,13 @@ def get_enrichment_plot(
         Plot height.
     title : str, optional
         Base title for the plot.
-    colors : dict[str, str] or list[str], optional
-        Color mapping by direction, or a palette to assign to directions in
-        order. Defaults to a built-in palette, cycling if there are more
-        unique directions than colors.
+    x : {'odds_ratio_lower', 'padj'}, optional
+        Value on the x-axis. 'odds_ratio_lower' shows the lower bound of the
+        odds ratio on a log10 scale and ranks the terms by it (rows with a
+        missing or zero lower bound are dropped with a warning). 'padj' shows
+        -log10(padj). By default 'odds_ratio_lower' is used if available.
+    color_continuous_scale : str, optional
+        Plotly color scale name for the color bar of -log10(padj).
     hovering_cols : list, optional
         Hover columns shown in tooltips.
     legend_marker_size : float, optional
@@ -245,26 +281,9 @@ def get_enrichment_plot(
     if kwargs:
         logger.info(f"Additional unused kwargs passed to get_enrichment_plot: {kwargs}")
 
-    available = sorted(df["comparison"].unique())
-    if comparison is None:
-        if len(available) > 1:
-            raise ValueError(
-                "Multiple comparisons are available: "
-                f"{', '.join(available)}. Pass `comparison` to select one."
-            )
-        comparison = available[0]
-    elif comparison not in available:
-        raise ValueError(
-            f"Comparison '{comparison}' not found. Available comparisons: "
-            f"{', '.join(available)}."
-        )
-
-    df = df.query("comparison == @comparison and rejected").copy()
-    df = df.sort_values(by=["direction", "padj"], ascending=False).reset_index(
-        drop=True
-    )
-    df["x"] = -np.log10(df["padj"])
-    colors = build_color_map(df["direction"], colors)
+    comparison = select_comparison(df, comparison)
+    df, x = prepare_enrichment_data(df, comparison, x=x)
+    use_odds_ratio = x == "odds_ratio_lower"
 
     return get_enrichment_plot_plotly(
         df,
@@ -274,12 +293,15 @@ def get_enrichment_plot(
         symbol="direction",
         size="foreground",  # column foreground in enrichment_result
         hovering_cols=hovering_cols,
+        color_continuous="neg_log10_padj",
+        color_continuous_scale=color_continuous_scale,
+        color_title=PVALUE_LABEL,
+        log_x=use_odds_ratio,
         title=format_comparison_title(title, comparison),
-        x_title="-log10(padj)",
+        x_title=ODDS_RATIO_LABEL if use_odds_ratio else PVALUE_LABEL,
         y_title="Enriched terms",
         width=width,
         height=height,
-        colors=colors,
         legend_marker_size=legend_marker_size,
     )
 
