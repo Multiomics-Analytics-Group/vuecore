@@ -10,6 +10,7 @@ Distributed under the GNU General Public License at gnu.org/licenses/gpl.html.
 """
 
 import re
+from collections.abc import ItemsView
 
 # the following is the contents of /etc/X11/rgb.txt
 
@@ -53,7 +54,7 @@ COLORS = """
 """
 
 
-def make_color_dict(colors=COLORS):
+def make_color_dict(colors: str = COLORS) -> dict[str, str]:
     """Returns a dictionary that maps color names to RGB strings.
 
     The format of RGB strings is '#RRGGBB'.
@@ -77,7 +78,7 @@ def make_color_dict(colors=COLORS):
     return d
 
 
-def read_colors():
+def read_colors() -> tuple[dict[str, str], ItemsView[str, list[str]]]:
     """Returns color information in two data structures.
 
     The format of RGB strings is '#RRGGBB'.
@@ -92,7 +93,7 @@ def read_colors():
     return color_dict, rgbs
 
 
-def invert_dict(d):
+def invert_dict(d: dict[str, str]) -> dict[str, list[str]]:
     """Returns a dictionary that maps from values to lists of keys.
 
     d: dict

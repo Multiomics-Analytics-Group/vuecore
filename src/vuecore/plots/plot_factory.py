@@ -15,7 +15,7 @@ def create_plot(
     plot_type: PlotType,
     engine: EngineType = EngineType.PLOTLY,
     file_path: str | None = None,
-    **kwargs,
+    **kwargs: object,
 ) -> Any:
     """
     Factory function to create, style, and optionally save plots.

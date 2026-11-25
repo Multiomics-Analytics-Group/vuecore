@@ -7,7 +7,7 @@ PLOT_BUILDERS = {}
 PLOT_SAVERS = {}
 
 
-def register_builder(plot_type: PlotType, engine: EngineType, func: Callable):
+def register_builder(plot_type: PlotType, engine: EngineType, func: Callable) -> None:
     """
     Registers a plot builder function for a given plot type and engine.
 
@@ -32,7 +32,7 @@ def register_builder(plot_type: PlotType, engine: EngineType, func: Callable):
     PLOT_BUILDERS[engine][plot_type] = func
 
 
-def register_saver(engine: EngineType, func: Callable):
+def register_saver(engine: EngineType, func: Callable) -> None:
     """
     Registers a save function for a given engine.
 

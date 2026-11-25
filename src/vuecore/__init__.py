@@ -36,10 +36,10 @@ def savefig(
     fig: matplotlib.figure.Figure,
     name: str,
     folder: pathlib.Path = ".",
-    pdf=True,
-    tight_layout=True,
-    dpi=300,
-):
+    pdf: bool = True,
+    tight_layout: bool = True,
+    dpi: int = 300,
+) -> None:
     """Save matplotlib Figure (having method `savefig`) as pdf and png."""
     folder = pathlib.Path(folder)
     fname = folder / name
@@ -76,7 +76,7 @@ def select_xticks(ax: matplotlib.axes.Axes, max_ticks: int = 50) -> list:
     return x_ticks
 
 
-def select_dates(date_series: pd.Series, max_ticks=30) -> np.array:
+def select_dates(date_series: pd.Series, max_ticks: int = 30) -> np.array:
     """Get unique dates (single days) for selection in pd.plot.line
     with xticks argument.
 
@@ -100,7 +100,7 @@ def select_dates(date_series: pd.Series, max_ticks=30) -> np.array:
         return xticks
 
 
-def make_large_descriptors(size="xx-large"):
+def make_large_descriptors(size: str = "xx-large") -> None:
     """Helper function to have very large titles, labes and tick texts for
     matplotlib plots per default.
 
@@ -174,7 +174,7 @@ def add_height_to_barplot(
 
 
 def add_text_to_barplot(
-    ax: matplotlib.axes.Axes, text: Iterable[str], size=15
+    ax: matplotlib.axes.Axes, text: Iterable[str], size: int = 15
 ) -> matplotlib.axes.Axes:
     """Add custom text from Iterable to each bar in a barplot."""
     for bar, text_bar in zip(ax.patches, text):

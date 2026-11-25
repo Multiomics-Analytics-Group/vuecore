@@ -15,7 +15,7 @@ def create_line_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
     file_path: str | None = None,
-    **kwargs,
+    **kwargs: object,
 ) -> Any:
     """
     Creates, styles, and optionally saves a line plot using the specified engine.

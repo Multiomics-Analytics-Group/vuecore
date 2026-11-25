@@ -235,7 +235,7 @@ def get_embedding_plot(
     colors: dict[str, str] | list[str] | None = None,
     hovering_cols: list[str] | None = None,
     legend_marker_size: float | None = 14,
-    **kwargs,
+    **kwargs: object,
 ) -> go.Figure:
     """
     Create an interactive 2D plot of a dimensionality reduction.

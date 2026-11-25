@@ -203,7 +203,7 @@ def get_enrichment_plot(
     colors: dict[str, str] | list[str] | None = None,
     hovering_cols: list = ENRICHMENT_HOVERING_COLS,
     legend_marker_size: float | None = 14,
-    **kwargs,
+    **kwargs: object,
 ) -> go.Figure:
     """
     Create an interactive enrichment scatter plot for a single comparison.

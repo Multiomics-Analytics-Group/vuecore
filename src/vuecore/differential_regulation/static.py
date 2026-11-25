@@ -157,7 +157,7 @@ def get_differential_regulation_plot(
     title: str = "Volcano plot",
     colors: dict[str, str] | list[str] | None = None,
     legend_marker_size: float | None = 10,
-    **kwargs,
+    **kwargs: object,
 ) -> matplotlib.figure.Figure:
     """
     Create a static volcano plot for a single comparison using matplotlib.

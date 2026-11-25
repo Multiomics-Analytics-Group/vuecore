@@ -1,5 +1,7 @@
 import random
 from collections import defaultdict
+from collections.abc import Hashable, Iterable
+from typing import TYPE_CHECKING
 from urllib import error
 
 import bs4 as bs
@@ -7,17 +9,21 @@ import networkx as nx
 import pandas as pd
 import requests
 from dash import html
+from dash.development.base_component import Component
 from networkx.readwrite import json_graph
 
+if TYPE_CHECKING:
+    from pyvis.network import Network
 
-def check_columns(df, cols):
+
+def check_columns(df: pd.DataFrame, cols: list[str]) -> bool:
     for col in cols:
         if col not in df:
             return False
     return True
 
 
-def generate_html(network):
+def generate_html(network: "Network") -> None:
     """
     This method gets the data structures supporting the nodes, edges,
     and options and updates the pyvis html template holding the visualization.
@@ -54,14 +60,16 @@ def generate_html(network):
     )
 
 
-def append_to_list(mylist, myappend):
+def append_to_list(mylist: list[object], myappend: object) -> None:
     if isinstance(myappend, list):
         mylist.extend(myappend)
     else:
         mylist.append(myappend)
 
 
-def neo4j_path_to_networkx(paths, key="path"):
+def neo4j_path_to_networkx(
+    paths: list[dict[str, object]], key: str = "path"
+) -> nx.Graph:
     nodes = set()
     rels = set()
     for path in paths:
@@ -84,7 +92,7 @@ def neo4j_path_to_networkx(paths, key="path"):
     return G
 
 
-def neo4j_schema_to_networkx(schema):
+def neo4j_schema_to_networkx(schema: list[dict[str, object]]) -> nx.Graph:
     nodes = set()
     rels = set()
     if "relationships" in schema[0]:
@@ -107,7 +115,9 @@ def neo4j_schema_to_networkx(schema):
     return G
 
 
-def networkx_to_cytoscape(graph):
+def networkx_to_cytoscape(
+    graph: nx.Graph,
+) -> tuple[list[dict[str, object]], dict[Hashable, dict[str, object]]]:
     cy_graph = json_graph.cytoscape_data(graph)
     cy_nodes = cy_graph["elements"]["nodes"]
     cy_edges = cy_graph["elements"]["edges"]
@@ -118,11 +128,11 @@ def networkx_to_cytoscape(graph):
     return cy_elements, mouseover_node
 
 
-def networkx_to_gml(graph, path):
+def networkx_to_gml(graph: nx.Graph, path: str) -> None:
     nx.write_gml(graph, path)
 
 
-def networkx_to_neo4j_document(graph):
+def networkx_to_neo4j_document(graph: nx.Graph) -> list[dict[str, object]]:
     graph_json = []
     seen_rels = set()
     for n, attr in graph.nodes(data=True):
@@ -144,29 +154,29 @@ def networkx_to_neo4j_document(graph):
     return graph_json
 
 
-def json_network_to_gml(graph_json, path):
+def json_network_to_gml(graph_json: dict[str, object], path: str) -> None:
     graph = json_network_to_networkx(graph_json)
     with open(path, "wb") as out:
         nx.write_gml(graph, out)
 
 
-def networkx_to_graphml(graph, path):
+def networkx_to_graphml(graph: nx.Graph, path: str) -> None:
     nx.write_graphml(graph, path)
 
 
-def json_network_to_graphml(graph_json, path):
+def json_network_to_graphml(graph_json: dict[str, object], path: str) -> None:
     graph = json_network_to_networkx(graph_json)
     with open(path, "wb") as out:
         nx.write_graphml(graph, out)
 
 
-def json_network_to_networkx(graph_json):
+def json_network_to_networkx(graph_json: dict[str, object]) -> nx.Graph:
     graph = json_graph.node_link_graph(graph_json)
 
     return graph
 
 
-def get_clustergrammer_link(net, filename=None):
+def get_clustergrammer_link(net: object, filename: str | None = None) -> str:
     try:
         from StringIO import StringIO
     except ImportError:
@@ -187,7 +197,7 @@ def get_clustergrammer_link(net, filename=None):
     return link
 
 
-def generator_to_dict(genvar):
+def generator_to_dict(genvar: Iterable[Iterable[Hashable]]) -> dict[Hashable, int]:
     dictvar = {}
     for i, gen in enumerate(genvar):
         dictvar.update({n: i for n in gen})
@@ -195,13 +205,15 @@ def generator_to_dict(genvar):
     return dictvar
 
 
-def parse_html(html_snippet):
+def parse_html(html_snippet: str) -> bs.BeautifulSoup:
     html_parsed = bs.BeautifulSoup(html_snippet, "html.parser")
 
     return html_parsed
 
 
-def convert_html_to_dash(el, style=None):
+def convert_html_to_dash(
+    el: str | bs.element.PageElement, style: dict[str, str] | None = None
+) -> str | Component:
     ALLOWED_CST = {
         "div",
         "span",
@@ -243,7 +255,7 @@ def convert_html_to_dash(el, style=None):
         "option",
     }
 
-    def __extract_style(el):
+    def __extract_style(el: bs.element.Tag) -> dict[str, str] | None:
         if not el.attrs.get("style"):
             return None
 
@@ -265,7 +277,7 @@ def convert_html_to_dash(el, style=None):
         return getattr(html, name.title())(contents, style=style)
 
 
-def get_rgb_colors(n):
+def get_rgb_colors(n: int) -> list[tuple[int, int, int]]:
     colors = []
     r = int(random.random() * 256)
     g = int(random.random() * 256)
@@ -282,7 +294,7 @@ def get_rgb_colors(n):
     return colors
 
 
-def get_hex_colors(n):
+def get_hex_colors(n: int) -> list[str]:
     initial_seed = 123
     colors = []
     for i in range(n):
@@ -293,7 +305,7 @@ def get_hex_colors(n):
     return colors
 
 
-def getMedlineAbstracts(idList, email_entrez: str):
+def getMedlineAbstracts(idList: list[str], email_entrez: str) -> pd.DataFrame:
     fields = {
         "TI": "title",
         "AU": "authors",

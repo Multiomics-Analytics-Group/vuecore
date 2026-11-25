@@ -1,9 +1,18 @@
 from io import StringIO
+from typing import Protocol
 
 import requests
 
 
-def get_clustergrammer_link(net, filename=None):
+class Network(Protocol):
+    """The part of a clustergrammer network used to upload it."""
+
+    dat: dict[str, str | None]
+
+    def write_matrix_to_tsv(self) -> str: ...
+
+
+def get_clustergrammer_link(net: Network, filename: str | None = None) -> str:
     clustergrammer_url = "http://amp.pharm.mssm.edu/clustergrammer/matrix_upload/"
     if filename is None:
         file_string = net.write_matrix_to_tsv()

@@ -9,13 +9,13 @@ from . import color_list, dendrogram
 
 
 def get_module_color_annotation(
-    map_list,
-    col_annotation=False,
-    row_annotation=False,
-    bygene=False,
-    module_colors=None,
-    dendrogram=None,
-):
+    map_list: list[str],
+    col_annotation: bool = False,
+    row_annotation: bool = False,
+    bygene: bool = False,
+    module_colors: list[str] | None = None,
+    dendrogram: dict[str, object] | None = None,
+) -> tuple[go.Heatmap, go.Heatmap] | go.Heatmap | None:
     """
     This function takes a list of values, converts them into colors, and creates a new plotly object to be used as an annotation.
     Options module_colors and dendrogram only apply when map_list is a list of experimental features used in module eigenegenes calculation.
@@ -129,7 +129,11 @@ def get_module_color_annotation(
     return None
 
 
-def get_heatmap(df, colorscale=None, color_missing=True):
+def get_heatmap(
+    df: pd.DataFrame | None,
+    colorscale: list[list[float | str]] | None = None,
+    color_missing: bool = True,
+) -> dict[str, object]:
     """
     This function plots a simple Plotly heatmap.
 
@@ -180,15 +184,15 @@ def get_heatmap(df, colorscale=None, color_missing=True):
 
 
 def plot_labeled_heatmap(
-    df,
-    textmatrix,
-    title,
-    colorscale=None,
-    width=1200,
-    height=800,
-    row_annotation=False,
-    col_annotation=False,
-):
+    df: pd.DataFrame | None,
+    textmatrix: pd.DataFrame,
+    title: str,
+    colorscale: list[list[float | str]] | None = None,
+    width: int = 1200,
+    height: int = 800,
+    row_annotation: bool = False,
+    col_annotation: bool = False,
+) -> dict[str, object]:
     """
     This function plots a simple Plotly heatmap with column and/or row annotations and heatmap annotations.
 
@@ -290,7 +294,9 @@ def plot_labeled_heatmap(
     return figure
 
 
-def plot_dendrogram_guidelines(Z_tree, dendrogram):
+def plot_dendrogram_guidelines(
+    Z_tree: dict[str, object], dendrogram: dict[str, object] | None
+) -> list[dict[str, object]]:
     """
     This function takes a dendrogram tree dictionary and its plotly object and creates shapes to be plotted as vertical dashed lines in the dendrogram.
 
@@ -324,8 +330,13 @@ def plot_dendrogram_guidelines(Z_tree, dendrogram):
 
 
 def plot_intramodular_correlation(
-    MM, FS, feature_module_df, title, width=1000, height=800
-):
+    MM: pd.DataFrame | None,
+    FS: pd.DataFrame,
+    feature_module_df: pd.DataFrame,
+    title: str,
+    width: int = 1000,
+    height: int = 800,
+) -> go.Figure | dict[str, object]:
     """
     This function uses the Feature significance and Module Membership measures, and plots a multi-scatter plot of all modules against all clinical traits.
 
@@ -439,21 +450,21 @@ def plot_intramodular_correlation(
 
 
 def plot_complex_dendrogram(
-    dendro_df,
-    subplot_df,
-    title,
-    dendro_labels=None,
-    distfun="euclidean",
-    linkagefun="average",
-    hang=0.04,
-    subplot="module colors",
-    subplot_colorscale=None,
-    color_missingvals=True,
-    row_annotation=False,
-    col_annotation=False,
-    width=1000,
-    height=800,
-):
+    dendro_df: pd.DataFrame,
+    subplot_df: pd.DataFrame | list[str],
+    title: str,
+    dendro_labels: list[str] | None = None,
+    distfun: str = "euclidean",
+    linkagefun: str = "average",
+    hang: float = 0.04,
+    subplot: str = "module colors",
+    subplot_colorscale: list[list[float | str]] | None = None,
+    color_missingvals: bool = True,
+    row_annotation: bool = False,
+    col_annotation: bool = False,
+    width: int = 1000,
+    height: int = 800,
+) -> go.Figure | dict[str, object]:
     """
     This function plots a dendrogram with a subplot below that can be a heatmap (annotated or not) or module colors.
 

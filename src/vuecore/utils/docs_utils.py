@@ -2,10 +2,13 @@
 import inspect
 import re
 import textwrap
+from collections.abc import Callable
 from functools import wraps
-from typing import Any, Optional, Union, get_args, get_origin
+from typing import Any, Optional, TypeVar, Union, get_args, get_origin
 
 from pydantic import BaseModel, Field
+
+PlotFunction = TypeVar("PlotFunction", bound=Callable[..., object])
 
 
 def get_all_model_fields(model: type[BaseModel]) -> dict[str, Field]:
@@ -211,7 +214,9 @@ def _insert_into_parameters_section(doc_lines: list[str], entries: list[str]):
     return doc_lines[:end] + entries + doc_lines[end:]
 
 
-def document_pydant_params(model: type[BaseModel]):
+def document_pydant_params(
+    model: type[BaseModel],
+) -> Callable[[PlotFunction], PlotFunction]:
     """
     Decorator that exposes a Pydantic model's fields as the function's parameters.
 
@@ -234,9 +239,9 @@ def document_pydant_params(model: type[BaseModel]):
         target function.
     """
 
-    def decorator(func):
+    def decorator(func: PlotFunction) -> PlotFunction:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: object, **kwargs: object) -> object:
             return func(*args, **kwargs)
 
         signature = inspect.signature(func)

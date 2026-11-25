@@ -5,17 +5,17 @@ import scipy as scp
 
 
 def plot_dendrogram(
-    Z_dendrogram,
-    cutoff_line=True,
-    value=15,
-    orientation="bottom",
-    hang=30,
-    hide_labels=False,
-    labels=None,
-    colorscale=None,
-    hovertext=None,
-    color_threshold=None,
-):
+    Z_dendrogram: dict[str, object],
+    cutoff_line: bool = True,
+    value: float = 15,
+    orientation: str = "bottom",
+    hang: float = 30,
+    hide_labels: bool = False,
+    labels: list[str] | None = None,
+    colorscale: list[str] | None = None,
+    hovertext: list[list[str]] | None = None,
+    color_threshold: float | None = None,
+) -> dict[str, object]:
     """
     Modified version of Plotly _dendrogram.py that
     returns a dendrogram Plotly figure object with cutoff line.
@@ -88,19 +88,19 @@ class Dendrogram:
 
     def __init__(
         self,
-        Z_dendrogram,
-        orientation="bottom",
-        hang=1,
-        hide_labels=False,
-        labels=None,
-        colorscale=None,
-        hovertext=None,
-        color_threshold=None,
-        width=np.inf,
-        height=np.inf,
-        xaxis="xaxis",
-        yaxis="yaxis",
-    ):
+        Z_dendrogram: dict[str, object],
+        orientation: str = "bottom",
+        hang: float = 1,
+        hide_labels: bool = False,
+        labels: list[str] | None = None,
+        colorscale: list[str] | None = None,
+        hovertext: list[list[str]] | None = None,
+        color_threshold: float | None = None,
+        width: float = np.inf,
+        height: float = np.inf,
+        xaxis: str = "xaxis",
+        yaxis: str = "yaxis",
+    ) -> None:
         self.orientation = orientation
         self.labels = labels
         self.xaxis = xaxis
@@ -147,7 +147,7 @@ class Dendrogram:
         self.layout = self.set_figure_layout(width, height, hide_labels=hide_labels)
         self.data = dd_traces
 
-    def get_color_dict(self, colorscale):
+    def get_color_dict(self, colorscale: list[str] | None) -> OrderedDict[str, str]:
         """
         Returns colorscale used for dendrogram tree clusters.
 
@@ -189,7 +189,7 @@ class Dendrogram:
 
         return default_colors
 
-    def set_axis_layout(self, axis_key, hide_labels):
+    def set_axis_layout(self, axis_key: str, hide_labels: bool) -> dict[str, object]:
         """
         Sets and returns default axis object for dendrogram figure.
 
@@ -229,7 +229,9 @@ class Dendrogram:
 
         return self.layout[axis_key]
 
-    def set_figure_layout(self, width, height, hide_labels):
+    def set_figure_layout(
+        self, width: float, height: float, hide_labels: bool
+    ) -> dict[str, object]:
         """
         Sets and returns default layout object for dendrogram figure.
 
@@ -257,8 +259,13 @@ class Dendrogram:
         return self.layout
 
     def get_dendrogram_traces(
-        self, Z_dendrogram, hang, colorscale, hovertext, color_threshold
-    ):
+        self,
+        Z_dendrogram: dict[str, object],
+        hang: float,
+        colorscale: list[str] | None,
+        hovertext: list[list[str]] | None,
+        color_threshold: float | None,
+    ) -> tuple[list[dict[str, object]], np.ndarray, np.ndarray, np.ndarray, list[int]]:
         """
         Calculates all the elements needed for plotting a dendrogram.
 

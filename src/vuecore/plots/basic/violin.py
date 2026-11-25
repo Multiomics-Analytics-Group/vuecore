@@ -15,7 +15,7 @@ def create_violin_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
     file_path: str | None = None,
-    **kwargs,
+    **kwargs: object,
 ) -> Any:
     """
     Creates, styles, and optionally saves a violin plot using the specified engine.

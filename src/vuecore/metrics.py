@@ -33,9 +33,9 @@ def plot_split_auc(
 def plot_auc(
     results: Results,
     ax: matplotlib.axes.Axes = None,
-    label_train="train",
-    label_test="test",
-    **kwargs,
+    label_train: str = "train",
+    label_test: str = "test",
+    **kwargs: object,
 ) -> matplotlib.axes.Axes:
     """Plot ROC curve for train and test data."""
     if ax is None:
@@ -69,10 +69,10 @@ def plot_split_prc(
 def plot_prc(
     results: ResultsSplit,
     ax: matplotlib.axes.Axes = None,
-    label_train="train",
-    label_test="test",
-    **kwargs,
-):
+    label_train: str = "train",
+    label_test: str = "test",
+    **kwargs: object,
+) -> matplotlib.axes.Axes:
     """Plot precision recall curve for train and test data."""
     if ax is None:
         _fig, ax = plt.subplots(1, 1, **kwargs)

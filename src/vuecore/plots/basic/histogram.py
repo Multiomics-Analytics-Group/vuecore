@@ -15,7 +15,7 @@ def create_histogram_plot(
     data: pd.DataFrame,
     engine: EngineType = EngineType.PLOTLY,
     file_path: str | None = None,
-    **kwargs,
+    **kwargs: object,
 ) -> Any:
     """
     Creates, styles, and optionally saves a histogram using the specified engine.

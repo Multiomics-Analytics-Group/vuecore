@@ -28,7 +28,9 @@ THEMING_PARAMS = [
 ]
 
 
-def scatter_preprocess(data, plot_args, config):
+def scatter_preprocess(
+    data: pd.DataFrame, plot_args: dict[str, object], config: ScatterConfig
+) -> tuple[pd.DataFrame, dict[str, object]]:
     """
     Preprocess data and arguments for scatter plots with density coloring.
 

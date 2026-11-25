@@ -23,6 +23,8 @@ import plotly.tools as tls
 from acore import network_analysis, wgcna_analysis
 from cyjupyter import Cytoscape
 from dash import dash_table, dcc, html
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from networkx.readwrite import json_graph
 from nltk.corpus import stopwords
 from pyvis.network import Network as visnet
@@ -41,8 +43,12 @@ from .translate import hex2rgb, mpl_to_html_image
 
 
 def getPlotTraces(
-    data, key="full", type="lines", div_factor=float(10 ^ 10000), horizontal=False
-):
+    data: pd.DataFrame,
+    key: str = "full",
+    type: str = "lines",
+    div_factor: float = float(10 ^ 10000),
+    horizontal: bool = False,
+) -> list[go.Scattergl] | list[go.Bar] | str:
     """
     This function returns traces for different kinds of plots.
 
@@ -99,7 +105,9 @@ def getPlotTraces(
     return traces
 
 
-def get_markdown(text, args=None):
+def get_markdown(
+    text: str | list[str], args: dict[str, object] | None = None
+) -> dcc.Markdown:
     """
     Converts a given text into a Dash Markdown component. It includes a syntax for things
     like bold text and italics, links, inline code snippets, lists, quotes, and more.
@@ -117,7 +125,9 @@ def get_markdown(text, args=None):
     return mkdown
 
 
-def get_pieplot(data, identifier, args):
+def get_pieplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function plots a simple Pie plot.
 
@@ -154,7 +164,9 @@ def get_pieplot(data, identifier, args):
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_distplot(data, identifier, args):
+def get_distplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> list[dcc.Graph]:
     """
 
     :param data:
@@ -194,7 +206,9 @@ def get_distplot(data, identifier, args):
     return graphs
 
 
-def get_boxplot_grid(data, identifier, args):
+def get_boxplot_grid(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function plots a boxplot in a grid based on column values.
 
@@ -274,7 +288,9 @@ def get_boxplot_grid(data, identifier, args):
     return dcc.Graph(id=identifier, figure=fig)
 
 
-def get_barplot(data, identifier, args):
+def get_barplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function plots a simple barplot.
 
@@ -366,7 +382,9 @@ def get_barplot(data, identifier, args):
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_histogram(data, identifier, args):
+def get_histogram(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     Basic histogram figure allows facets cols and rows
 
@@ -426,7 +444,9 @@ def get_histogram(data, identifier, args):
 
 
 # ToDo
-def get_facet_grid_plot(data, identifier, args):
+def get_facet_grid_plot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function plots a scatterplot matrix where we can plot one variable against another
     to form a regular scatter plot, and we can pick a third faceting variable
@@ -484,7 +504,9 @@ def get_facet_grid_plot(data, identifier, args):
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_ranking_plot(data, identifier, args):
+def get_ranking_plot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     Creates abundance multiplots (one per sample group).
 
@@ -609,7 +631,9 @@ def get_ranking_plot(data, identifier, args):
     return dcc.Graph(id=identifier, figure=fig)
 
 
-def get_scatterplot_matrix(data, identifier, args):
+def get_scatterplot_matrix(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> go.Figure | dict[str, object]:
     """
     This function pltos a multi scatterplot (one for each unique element in args['group']).
 
@@ -693,7 +717,9 @@ def get_scatterplot_matrix(data, identifier, args):
     return fig
 
 
-def get_simple_scatterplot(data, identifier, args):
+def get_simple_scatterplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dict[str, object]:
     """
     Plots a simple scatterplot with the possibility of including in-plot annotations of data points.
 
@@ -784,7 +810,9 @@ def get_simple_scatterplot(data, identifier, args):
     return figure
 
 
-def get_scatterplot(data, identifier, args):
+def get_scatterplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> go.Figure:
     """
     This function plots a simple Scatterplot.
 
@@ -931,7 +959,7 @@ def get_scatterplot(data, identifier, args):
     return figure
 
 
-def get_density(x: np.ndarray, y: np.ndarray):
+def get_density(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     """Get kernal density estimate for each (x, y) point."""
     values = np.vstack([x, y])
     kernel = stats.gaussian_kde(values)
@@ -940,7 +968,9 @@ def get_density(x: np.ndarray, y: np.ndarray):
     return density
 
 
-def get_volcanoplot(results, args):
+def get_volcanoplot(
+    results: dict[tuple[str, str], dict[str, object]], args: dict[str, object]
+) -> list[dcc.Graph]:
     """
     This function plots volcano plots for each internal dictionary in a nested dictionary.
 
@@ -1056,10 +1086,10 @@ def get_volcanoplot(results, args):
 
 
 def run_volcano(
-    data,
-    identifier,
-    args=None,
-):
+    data: pd.DataFrame,
+    identifier: str,
+    args: dict[str, object] | None = None,
+) -> list[dcc.Graph]:
     """
     This function parsers the regulation data from statistical tests and
     creates volcano plots for all distinct group comparisons.
@@ -1259,7 +1289,9 @@ def run_volcano(
     return figures
 
 
-def get_heatmapplot(data, identifier, args):
+def get_heatmapplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function plots a simple Heatmap.
 
@@ -1314,7 +1346,9 @@ def get_heatmapplot(data, identifier, args):
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_complex_heatmapplot(data, identifier, args):
+def get_complex_heatmapplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     df = data.copy()
 
     figure = {"data": [], "layout": {}}
@@ -1432,7 +1466,9 @@ def get_complex_heatmapplot(data, identifier, args):
     )
 
 
-def get_notebook_network_pyvis(graph, args=None):
+def get_notebook_network_pyvis(
+    graph: nx.Graph, args: dict[str, object] | None = None
+) -> visnet:
     """
     This function converts a Networkx graph into a PyVis graph supporting Jupyter notebook embedding.
 
@@ -1462,7 +1498,7 @@ def get_notebook_network_pyvis(graph, args=None):
     return notebook_net
 
 
-def get_notebook_network_web(graph, args):
+def get_notebook_network_web(graph: nx.Graph, args: dict[str, object]) -> Web:
     """
     This function converts a networkX graph into a webweb interactive network in a browser.
 
@@ -1475,7 +1511,9 @@ def get_notebook_network_web(graph, args):
     return notebook_net
 
 
-def network_to_tables(graph, source, target):
+def network_to_tables(
+    graph: nx.Graph, source: str, target: str
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Creates the graph edge list and node list and returns them as separate Pandas DataFrames.
 
@@ -1490,7 +1528,9 @@ def network_to_tables(graph, source, target):
     return nodes_table, edges_table
 
 
-def generate_configuration_tree(report_pipeline, dataset_type):
+def generate_configuration_tree(
+    report_pipeline: dict[str, object], dataset_type: str
+) -> html.Div | None:
     """
     This function retrieves the analysis pipeline from a dataset .yml file
     and creates a Cytoscape network, organized hierarchically.
@@ -1633,7 +1673,9 @@ def generate_configuration_tree(report_pipeline, dataset_type):
     return conf_plot
 
 
-def get_network(data, identifier, args):
+def get_network(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dict[str, object] | None:
     """
     This function filters an input dataframe based on a threshold score and builds a cytoscape network. For more information on \
     'node_size' parameter, visit https://networkx.github.io/documentation/networkx-1.10/reference/generated/networkx.algorithms.centrality.betweenness_centrality.html and \
@@ -1822,7 +1864,9 @@ def get_network(data, identifier, args):
     return net
 
 
-def get_network_style(node_colors, color_edges):
+def get_network_style(
+    node_colors: dict[str, str], color_edges: bool
+) -> tuple[list[dict[str, object]], dict[str, object]]:
     """
     This function uses a dictionary of nodes and colors and creates a stylesheet and layout for a network.
 
@@ -1894,7 +1938,11 @@ def get_network_style(node_colors, color_edges):
     return stylesheet, layout
 
 
-def visualize_notebook_network(network, notebook_type="jupyter", layout=None):
+def visualize_notebook_network(
+    network: list[list[dict[str, object]] | dict[str, object]],
+    notebook_type: str = "jupyter",
+    layout: dict[str, object] | None = None,
+) -> Cytoscape | None:
     """
     This function returns a Cytoscape network visualization for Jupyter notebooks
 
@@ -1941,7 +1989,9 @@ def visualize_notebook_network(network, notebook_type="jupyter", layout=None):
     return net
 
 
-def visualize_notebook_path(path, notebook_type="jupyter"):
+def visualize_notebook_path(
+    path: html.Div, notebook_type: str = "jupyter"
+) -> cyto.Cytoscape | None:
     """
     This function returns a Cytoscape network visualization for Jupyter notebooks
 
@@ -1968,7 +2018,11 @@ def visualize_notebook_path(path, notebook_type="jupyter"):
     return net
 
 
-def get_pca_plot(data, identifier, args):
+def get_pca_plot(
+    data: tuple[pd.DataFrame, pd.DataFrame, pd.Series],
+    identifier: str,
+    args: dict[str, object],
+) -> go.Figure:
     """
     This function creates a pca plot with scores and top "args['loadings']" loadings.
 
@@ -2018,10 +2072,10 @@ def get_pca_plot(data, identifier, args):
 
 
 def get_sankey_plot(
-    data,
-    identifier,
-    args=None,
-):
+    data: pd.DataFrame,
+    identifier: str,
+    args: dict[str, object] | None = None,
+) -> dcc.Graph:
     """
     This function generates a Sankey plot in Plotly.
 
@@ -2147,7 +2201,9 @@ def get_sankey_plot(
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_table(data, identifier, args):
+def get_table(
+    data: pd.DataFrame | None, identifier: str, args: dict[str, object]
+) -> html.Div:
     """
     This function converts a pandas dataframe into an interactive table for viewing,
     editing and exploring large datasets.
@@ -2280,7 +2336,9 @@ def get_table(data, identifier, args):
     return html.Div(id=identifier, children=table)
 
 
-def get_multi_table(data, identifier, title):
+def get_multi_table(
+    data: dict[str, pd.DataFrame] | None, identifier: str, title: str
+) -> html.Div:
     tables = [html.H2(title)]
     if data is not None and isinstance(data, dict):
         for subtitle in data:
@@ -2296,7 +2354,9 @@ def get_multi_table(data, identifier, title):
     return html.Div(tables)
 
 
-def get_violinplot(data, identifier, args):
+def get_violinplot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> list[dcc.Graph]:
     """
     This function creates a violin plot for all columns in the input dataframe.
 
@@ -2342,7 +2402,13 @@ def get_violinplot(data, identifier, args):
     return graphs
 
 
-def create_violinplot(df, x, y, color, color_map=None):
+def create_violinplot(
+    df: pd.DataFrame,
+    x: str,
+    y: str,
+    color: str,
+    color_map: dict[str, str] | None = None,
+) -> go.Figure:
     """
     This function creates traces for a simple violin plot.
 
@@ -2367,7 +2433,9 @@ def create_violinplot(df, x, y, color, color_map=None):
     return violin
 
 
-def get_clustergrammer_plot(data, identifier, args):
+def get_clustergrammer_plot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> html.Div | None:
     """
     This function takes a pandas dataframe, calculates clustering,
     and generates the visualization json.
@@ -2401,7 +2469,9 @@ def get_clustergrammer_plot(data, identifier, args):
     return div
 
 
-def get_parallel_plot(data, identifier, args):
+def get_parallel_plot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function creates a parallel coordinates plot, with sample groups as the different
     dimensions.
@@ -2460,14 +2530,18 @@ def get_parallel_plot(data, identifier, args):
     return dcc.Graph(id=identifier, figure=fig)
 
 
-def get_parallel_coord_plot(data, identifier, args):
+def get_parallel_coord_plot(
+    data: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> go.Figure:
     color = args["color"]
     labels = {c: c for c in data.columns if c != color}
     fig = px.parallel_coordinates(data, color=color, labels=labels)
     return fig
 
 
-def get_WGCNAPlots(data, identifier):
+def get_WGCNAPlots(
+    data: dict[str, object], identifier: str
+) -> list[html.H2 | html.Div | dcc.Graph]:
     """
     Takes data from runWGCNA function and builds WGCNA plots.
 
@@ -2652,7 +2726,7 @@ def get_WGCNAPlots(data, identifier):
     return graphs
 
 
-def getMapperFigure(data, identifier, title):
+def getMapperFigure(data: dict[str, object], identifier: str, title: str) -> dcc.Graph:
     """
     This function uses the KeplerMapper python package to visualize high-dimensional data and generate a FigureWidget that can be shown or editted.
     This method is suitable for use in Jupyter notebooks. For more information visit https://kepler-mapper.scikit-tda.org/reference/stubs/kmapper.plotlyviz.plotlyviz.html.
@@ -2701,7 +2775,9 @@ def getMapperFigure(data, identifier, title):
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_2_venn_diagram(data, identifier, cond1, cond2, args):
+def get_2_venn_diagram(
+    data: pd.DataFrame, identifier: str, cond1: str, cond2: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function extracts the exlusive features in cond1 and cond2 and their common features,
     and build a two-circle venn diagram.
@@ -2744,7 +2820,15 @@ def get_2_venn_diagram(data, identifier, cond1, cond2, args):
     )
 
 
-def plot_2_venn_diagram(cond1, cond2, unique1, unique2, intersection, identifier, args):
+def plot_2_venn_diagram(
+    cond1: str,
+    cond2: str,
+    unique1: int,
+    unique2: int,
+    intersection: int,
+    identifier: str,
+    args: dict[str, object],
+) -> dcc.Graph:
     """
     This function creates a simple non area-weighted two-circle venn diagram.
 
@@ -2845,10 +2929,10 @@ def plot_2_venn_diagram(cond1, cond2, unique1, unique2, intersection, identifier
 
 
 def get_wordcloud(
-    data,
-    identifier,
-    args=None,
-):
+    data: pd.DataFrame | str,
+    identifier: str,
+    args: dict[str, object] | None = None,
+) -> dcc.Graph | None:
     """
     This function generates a Wordcloud based on the natural text in a pandas dataframe column.
 
@@ -3118,7 +3202,9 @@ def get_wordcloud(
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_cytoscape_network(net, identifier, args):
+def get_cytoscape_network(
+    net: list[dict[str, object]], identifier: str, args: dict[str, object]
+) -> html.Div:
     """
     This function creates a Cytoscpae network in dash.
 
@@ -3156,7 +3242,14 @@ def get_cytoscape_network(net, identifier, args):
     return net_div
 
 
-def save_DASH_plot(plot, name, plot_format="svg", directory=".", width=800, height=700):
+def save_DASH_plot(
+    plot: go.Figure | dcc.Graph,
+    name: str,
+    plot_format: str = "svg",
+    directory: str = ".",
+    width: int = 800,
+    height: int = 700,
+) -> None:
     """
     This function saves a plotly figure to a specified directory, in a determined format.
 
@@ -3188,7 +3281,7 @@ def save_DASH_plot(plot, name, plot_format="svg", directory=".", width=800, heig
         print(f"Plot could not be saved. Error: {err}")
 
 
-def mpl_to_plotly(fig, ci=True, legend=True):
+def mpl_to_plotly(fig: Figure, ci: bool = True, legend: bool = True) -> go.Figure:
     # ToDo Test how it works for multiple groups
     # ToDo Allow visualization of CI
     # Convert mpl fig obj to plotly fig obj, resize to plotly's default
@@ -3219,7 +3312,9 @@ def mpl_to_plotly(fig, ci=True, legend=True):
     return py_fig
 
 
-def get_km_plot_old(data, identifier, args):
+def get_km_plot_old(
+    data: tuple[object, str, Axes], identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     figure = {}
     if len(data) == 3:
         kmfit, summary, plot = data
@@ -3234,7 +3329,9 @@ def get_km_plot_old(data, identifier, args):
     return dcc.Graph(id=identifier, figure=figure)
 
 
-def get_km_plot(data, identifier, args):
+def get_km_plot(
+    data: tuple[list[object], str], identifier: str, args: dict[str, object]
+) -> html.Div | Figure:
     figure = {}
     plot = plt.subplot(111)
     environment = "app"
@@ -3272,7 +3369,9 @@ def get_km_plot(data, identifier, args):
     return result
 
 
-def get_cumulative_hazard_plot(data, identifier, args):
+def get_cumulative_hazard_plot(
+    data: tuple[object, object], identifier: str, args: dict[str, object]
+) -> html.Div | Figure:
     figure = {}
     plot = plt.subplot(111)
     environment = "app"
@@ -3310,7 +3409,9 @@ def get_cumulative_hazard_plot(data, identifier, args):
     return result
 
 
-def get_polar_plot(df, identifier, args):
+def get_polar_plot(
+    df: pd.DataFrame, identifier: str, args: dict[str, object]
+) -> dcc.Graph:
     """
     This function creates a Polar plot with data aggregated for a given group.
 

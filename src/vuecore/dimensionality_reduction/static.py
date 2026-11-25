@@ -196,7 +196,7 @@ def get_embedding_plot(
     height: int = 500,
     colors: dict[str, str] | list[str] | None = None,
     legend_marker_size: float | None = 10,
-    **kwargs,
+    **kwargs: object,
 ) -> matplotlib.figure.Figure:
     """
     Create a static 2D plot of a dimensionality reduction using matplotlib.

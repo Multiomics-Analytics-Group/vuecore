@@ -167,7 +167,7 @@ def get_enrichment_plot(
     title: str = "Enrichment",
     colors: dict[str, str] | list[str] | None = None,
     legend_marker_size: float = 14,
-    **kwargs,
+    **kwargs: object,
 ) -> matplotlib.figure.Figure:
     """
     Create a static enrichment scatter plot for a single comparison based on an

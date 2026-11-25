@@ -27,7 +27,7 @@ def pca_grid(
     meta_column: pd.Series,
     n_components: int = 4,
     meta_col_name: str | None = None,
-    figsize=(6, 8),
+    figsize: tuple[float, float] = (6, 8),
 ) -> plt.Figure:
     """Plot a grid of scatter plots for the first n_components of PCA,  per default 4.
 

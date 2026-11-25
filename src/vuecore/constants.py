@@ -32,6 +32,6 @@ class OutputFileFormat(StrEnum):
     WEBP = auto()
 
     @property
-    def value_with_dot(self):
+    def value_with_dot(self) -> str:
         """Return the file extension with the dot (e.g., '.png')."""
         return f".{self.value}"

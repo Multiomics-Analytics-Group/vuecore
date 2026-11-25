@@ -6,9 +6,10 @@ from vuecore.schemas.basic.histogram import HistogramConfig
 from vuecore.schemas.basic.line import LineConfig
 from vuecore.schemas.basic.scatter import ScatterConfig
 from vuecore.schemas.basic.violin import ViolinConfig
+from vuecore.schemas.plotly_base import PlotlyBaseConfig
 
 
-def _get_axis_title(config, axis: str) -> str:
+def _get_axis_title(config: PlotlyBaseConfig, axis: str) -> str:
     """
     Helper function to get axis title from configuration with appropriate fallbacks.
 
@@ -49,7 +50,7 @@ def _get_axis_title(config, axis: str) -> str:
     return ""
 
 
-def _apply_common_layout(fig: go.Figure, config) -> go.Figure:
+def _apply_common_layout(fig: go.Figure, config: PlotlyBaseConfig) -> go.Figure:
     """
     Applies common layout settings to a Plotly figure.
 
