@@ -19,7 +19,21 @@ import pandas as pd
 
 from .constants import EngineType, PlotType
 
-__all__ = ["EngineType", "PlotType"]
+__all__ = [
+    "EngineType",
+    "PlotType",
+    "__version__",
+    "add_height_to_barplot",
+    "add_prop_as_second_yaxis",
+    "add_text_to_barplot",
+    "figsize_a4",
+    "format_large_numbers",
+    "make_large_descriptors",
+    "savefig",
+    "select_dates",
+    "select_xticks",
+    "set_font_sizes",
+]
 
 plt.rcParams["figure.figsize"] = [4.0, 3.0]
 plt.rcParams["pdf.fonttype"] = 42
