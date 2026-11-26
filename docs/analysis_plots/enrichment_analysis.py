@@ -69,6 +69,8 @@ sel_columns = [
     # "background",
     # "foreground_pop",
     # "background_pop",
+    "odds_ratio",
+    "odds_ratio_lower",
     "pvalue",
     "padj",
     "rejected",
@@ -132,14 +134,12 @@ help(get_enrichment_plot_mpl)
 static_fig = get_enrichment_plot_mpl(
     df=df,
     comparison_key=selected_comparison,
+    col_color="padj",
     group="direction",
     width=900,
     height=500,
     title="Enrichment manual",
-    colors={
-        "upregulated in control": "pink",
-        "upregulated in 10 µm sulforaphane": "orange",
-    },
+    cmap="viridis_r",  # points are colored by adjusted p-value, shapes by group
 )
 print(
     f"Static figure size (inches based on DPI {DEFAULT_DPI}):"
