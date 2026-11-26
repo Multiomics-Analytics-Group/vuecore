@@ -98,10 +98,12 @@ def prepare_enrichment_data(
     if x not in (None, "odds_ratio_lower", "padj"):
         raise ValueError(f"`x` must be 'odds_ratio_lower' or 'padj', got '{x}'.")
     df = df.query("comparison == @comparison and rejected").copy()
+    if df.empty:
+        logger.warning(f"No rejected terms for comparison '{comparison}' to plot.")
     if x is None:
         has_bound = (df["odds_ratio_lower"] > 0).any()
         x = "odds_ratio_lower" if has_bound else "padj"
-        if not has_bound:
+        if not has_bound and not df.empty:
             logger.warning("No positive 'odds_ratio_lower' found, plotting padj.")
     df["neg_log10_padj"] = -np.log10(df["padj"])
     if x == "odds_ratio_lower":
