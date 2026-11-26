@@ -4,6 +4,7 @@ from __future__ import annotations
 from logging import getLogger
 
 import matplotlib.axes
+import matplotlib.colors
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,9 +12,16 @@ import pandas as pd
 from acore.types.enrichment_analysis import EnrichmentAnalysisSchema
 from pandera.typing.pandas import DataFrame
 
-from vuecore.enrichment_analysis.common import build_color_map, format_comparison_title
+from vuecore.enrichment_analysis.common import (
+    ODDS_RATIO_LABEL,
+    PVALUE_LABEL,
+    format_comparison_title,
+    prepare_enrichment_data,
+    select_comparison,
+)
 
 DEFAULT_DPI = 100
+DIRECTION_MARKERS = ["o", "s", "^", "D", "v", "P"]
 
 logger = getLogger(__name__)
 
@@ -63,45 +71,56 @@ def get_enrichment_plot_mpl(
     width: int,
     height: int,
     title: str,
-    colors: dict[str, str],
     col_x: str = "x",
+    col_color: str = "neg_log10_padj",
     col_markersize: str = "foreground",
+    x_label: str = PVALUE_LABEL,
+    log_x: bool = False,
+    cmap: str = "viridis_r",
+    color_label: str = PVALUE_LABEL,
     legend_marker_size: float = 14,
 ) -> matplotlib.figure.Figure:
     """Create one enrichment scatter plot as a matplotlib figure.
 
     Terms are drawn top to bottom in the order of `df`, so sort the rows before
     calling. Marker areas are scaled linearly between a minimum and maximum from
-    the values in `col_markersize`.
+    the values in `col_markersize`. Points are color coded by `col_color`, with
+    a color bar, and the marker shape distinguishes the values of `group`.
 
     Parameters
     ----------
     df : pd.DataFrame
         Rows to plot, one per enriched term. Must contain the columns `col_x`,
-        `col_markersize`, 'terms' (used as y tick labels) and, if `group` is
-        given, the grouping column.
+        `col_color`, `col_markersize`, 'terms' (used as y tick labels) and, if
+        `group` is given, the grouping column.
     comparison_key : str
         Comparison identifier of the form 'group1~group2', appended to `title`
         as 'group1 vs group2'. A key without the separator is appended as is.
     group : str, optional
-        Column to color and label the points by, e.g. 'direction'. One legend
-        entry is added per unique value. Pass None to draw all points in a
-        single color without a legend.
+        Column to assign marker shapes and legend entries by, e.g. 'direction'.
+        Pass None to draw all points with the same marker and no legend.
     width : int
         Plot width in pixels at 100 DPI.
     height : int
         Plot height in pixels at 100 DPI.
     title : str
         Base title, combined with `comparison_key` into the figure title.
-    colors : dict[str, str]
-        Color per value of the `group` column. Values missing from the mapping
-        fall back to a default blue. Ignored when `group` is None.
     col_x : str, optional
-        Column with the x values, expected to be -log10 transformed adjusted
+        Column with the x values.
+    col_color : str, optional
+        Column with the values mapped to colors, by default -log10 adjusted
         p-values.
     col_markersize : str, optional
         Column driving the marker sizes, typically the foreground counts.
         Non-numeric and missing values are treated as 0.
+    x_label : str, optional
+        x-axis label.
+    log_x : bool, optional
+        Use a log10 scale for the x-axis, e.g. for odds ratios.
+    cmap : str, optional
+        Matplotlib colormap name for `col_color`.
+    color_label : str, optional
+        Label of the color bar.
     legend_marker_size : float, optional
         Fixed marker size for the legend entries, given as a diameter in points
         (as in `Line2D.markersize`), independent of the marker sizes in the plot.
@@ -117,37 +136,54 @@ def get_enrichment_plot_mpl(
 
     y_positions = np.arange(len(df))
     marker_sizes = np.asarray(_scale_marker_sizes(df[col_markersize]), dtype=float)
+    x_values = df[col_x].to_numpy()
+    c_values = df[col_color].to_numpy(dtype=float)
+    norm = matplotlib.colors.Normalize(
+        vmin=np.nanmin(c_values) if len(c_values) else 0,
+        vmax=np.nanmax(c_values) if len(c_values) else 1,
+    )
+    scatter_kwargs = {
+        "alpha": 0.8,
+        "linewidths": 0.5,
+        "edgecolors": "DarkSlateGrey",
+        "cmap": cmap,
+        "norm": norm,
+    }
 
     if group is None:
-        ax.scatter(
-            df[col_x],
-            y_positions,
-            s=marker_sizes,
-            alpha=0.7,
-            linewidths=0.5,
-            edgecolors="DarkSlateGrey",
-            color="#4c78a8",
+        mappable = ax.scatter(
+            x_values, y_positions, s=marker_sizes, c=c_values, **scatter_kwargs
         )
     else:
-        x_values = df[col_x].to_numpy()
         # positional indices, so that a non-unique index cannot mislabel rows
         grouped = df.groupby(group, sort=False, observed=True)
-        for group_value, positions in grouped.indices.items():
-            ax.scatter(
+        for i, (group_value, positions) in enumerate(grouped.indices.items()):
+            mappable = ax.scatter(
                 x_values[positions],
                 y_positions[positions],
                 s=marker_sizes[positions],
-                alpha=0.7,
-                linewidths=0.5,
-                edgecolors="DarkSlateGrey",
-                color=colors.get(group_value, "#4c78a8"),
+                c=c_values[positions],
+                marker=DIRECTION_MARKERS[i % len(DIRECTION_MARKERS)],
                 label=group_value,
+                **scatter_kwargs,
             )
         ax.legend(loc="best", frameon=False)
         set_legend_marker_size(ax, legend_marker_size)
+        # legend markers should not carry a data color
+        legend = ax.get_legend()
+        if legend is not None:
+            for handle in legend.legend_handles:
+                handle.set_facecolor("lightgrey")
+    if len(df):
+        fig.colorbar(mappable, ax=ax, label=color_label)
+    if log_x:
+        ax.set_xscale("log")
+        low, high = ax.get_xlim()
+        if low < 1 < high:  # reference for no effect
+            ax.axvline(1, color="grey", linestyle=":", linewidth=1)
     ax.set_yticks(y_positions)
     ax.set_yticklabels(df["terms"])
-    ax.set_xlabel("-log10(padj)")
+    ax.set_xlabel(x_label)
     ax.set_ylabel("Enriched terms")
     ax.set_title(format_comparison_title(title, comparison_key))
     ax.grid(axis="x", linestyle="--", linewidth=0.5, alpha=0.4)
@@ -165,7 +201,8 @@ def get_enrichment_plot(
     width: int = 700,
     height: int = 500,
     title: str = "Enrichment",
-    colors: dict[str, str] | list[str] | None = None,
+    x: str | None = None,
+    cmap: str = "viridis_r",
     legend_marker_size: float = 14,
     **kwargs,
 ) -> matplotlib.figure.Figure:
@@ -187,10 +224,13 @@ def get_enrichment_plot(
         Plot height.
     title : str, optional
         Base title for the plot.
-    colors : dict[str, str] or list[str], optional
-        Color mapping by direction, or a palette to assign to directions in
-        order. Defaults to a built-in palette, cycling if there are more
-        unique directions than colors.
+    x : {'odds_ratio_lower', 'padj'}, optional
+        Value on the x-axis. 'odds_ratio_lower' shows the lower bound of the
+        odds ratio on a log10 scale and ranks the terms by it (rows with a
+        missing or zero lower bound are dropped with a warning). 'padj' shows
+        -log10(padj). By default 'odds_ratio_lower' is used if available.
+    cmap : str, optional
+        Matplotlib colormap name for the color bar of -log10(padj).
     legend_marker_size : float, optional
         Fixed marker size for the legend entries, given as a diameter in points
         (as in `Line2D.markersize`), independent of the marker sizes in the plot.
@@ -209,26 +249,9 @@ def get_enrichment_plot(
     if kwargs:
         logger.info(f"Additional unused kwargs passed to get_enrichment_plot: {kwargs}")
 
-    available = sorted(df["comparison"].unique())
-    if comparison is None:
-        if len(available) > 1:
-            raise ValueError(
-                "Multiple comparisons are available: "
-                f"{', '.join(available)}. Pass `comparison` to select one."
-            )
-        comparison = available[0]
-    elif comparison not in available:
-        raise ValueError(
-            f"Comparison '{comparison}' not found. Available comparisons: "
-            f"{', '.join(available)}."
-        )
-
-    df = df.query("comparison == @comparison and rejected").copy()
-    df = df.sort_values(by=["direction", "padj"], ascending=False).reset_index(
-        drop=True
-    )
-    df["x"] = -np.log10(df["padj"])
-    colors = build_color_map(df["direction"], colors)
+    comparison = select_comparison(df, comparison)
+    df, x = prepare_enrichment_data(df, comparison, x=x)
+    use_odds_ratio = x == "odds_ratio_lower"
 
     return get_enrichment_plot_mpl(
         df=df,
@@ -237,9 +260,13 @@ def get_enrichment_plot(
         width=width,
         height=height,
         title=title,
-        colors=colors,
         col_x="x",
+        col_color="neg_log10_padj",
         col_markersize="foreground",
+        x_label=ODDS_RATIO_LABEL if use_odds_ratio else PVALUE_LABEL,
+        log_x=use_odds_ratio,
+        cmap=cmap,
+        color_label=PVALUE_LABEL,
         legend_marker_size=legend_marker_size,
     )
 
