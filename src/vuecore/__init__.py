@@ -19,7 +19,19 @@ import pandas as pd
 
 from .constants import EngineType, PlotType
 
-__all__ = ["EngineType", "PlotType"]
+__all__ = [
+    "EngineType",
+    "PlotType",
+    "__version__",
+    "differential_regulation",
+    "dimensionality_reduction",
+    "engines",
+    "enrichment_analysis",
+    "plots",
+    "static",
+]
+# viz and wgcna are legacy Dash modules still to be broken down; they stay
+# importable but are left out of the public surface.
 
 plt.rcParams["figure.figsize"] = [4.0, 3.0]
 plt.rcParams["pdf.fonttype"] = 42
